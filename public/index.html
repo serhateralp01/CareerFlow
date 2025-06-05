@@ -1029,20 +1029,25 @@
         try {
           if (action === 'export') { 
             const data = { jobs, contacts, exportDate: new Date().toISOString() };
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const jsonData = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonData], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `job-tracker-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.download = `careerflow-backup-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
             a.click();
+            document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showToast('Data exported successfully!', 'success');
+            showToast('Data exported successfully! Check your Downloads folder.', 'success');
           } 
           else if (action === 'import') { 
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = '.json';
-            input.onchange = (e) => {
+            input.style.display = 'none';
+            
+            input.onchange = async (e) => {
               const file = e.target.files[0];
               if (file) {
                 const reader = new FileReader();
@@ -1050,6 +1055,7 @@
                   try {
                     const data = JSON.parse(e.target.result);
                     let importedJobs = 0, importedContacts = 0;
+                    
                     if (data.jobs && Array.isArray(data.jobs)) {
                       await updateJobs(data.jobs);
                       importedJobs = data.jobs.length;
@@ -1058,44 +1064,29 @@
                       await updateContacts(data.contacts);
                       importedContacts = data.contacts.length;
                     }
-                    showToast(`Imported ${importedJobs} jobs and ${importedContacts} contacts!`, 'success');
+                    
+                    if (importedJobs > 0 || importedContacts > 0) {
+                      showToast(`Successfully imported ${importedJobs} applications and ${importedContacts} contacts!`, 'success');
+                    } else {
+                      showToast('No valid data found in the file.', 'info');
+                    }
                   } catch (error) {
-                    showToast('Error importing data. Please check the file format.', 'error');
+                    showToast('Error: Invalid file format. Please select a valid CareerFlow backup file.', 'error');
                   }
                 };
                 reader.readAsText(file);
               }
             };
-            input.click();
-          }
-          else if (action === 'migrate_local') {
-            const localJobs = localStorage.getItem('job-tracker-jobs-v4');
-            const localContacts = localStorage.getItem('job-tracker-contacts-v4');
             
-            if (localJobs || localContacts) {
-              if (confirm('This will migrate your local data to Firebase. Your existing Firebase data will be replaced. Continue?')) {
-                if (localJobs) {
-                  const jobsToMigrate = JSON.parse(localJobs);
-                  await updateJobs(jobsToMigrate);
-                  showToast(`Migrated ${jobsToMigrate.length} job applications to Firebase!`, 'success');
-                }
-                if (localContacts) {
-                  const contactsToMigrate = JSON.parse(localContacts);
-                  await updateContacts(contactsToMigrate);
-                  showToast(`Migrated ${contactsToMigrate.length} contacts to Firebase!`, 'success');
-                }
-                localStorage.removeItem('job-tracker-jobs-v4');
-                localStorage.removeItem('job-tracker-contacts-v4');
-              }
-            } else {
-              showToast('No local data found to migrate.', 'info');
-            }
+            document.body.appendChild(input);
+            input.click();
+            document.body.removeChild(input);
           }
           else if (action === 'restore_dummy') {
-              if (confirm('Bu işlem mevcut tüm veriyi silip örnek verileri yükleyecek. Emin misiniz?')) {
+              if (confirm('This will replace all your current data with sample data. Are you sure?')) {
                   await updateJobs(sampleJobs);
                   await updateContacts(sampleContacts);
-                  showToast('Örnek veriler başarıyla yüklendi!', 'success');
+                  showToast('Sample data loaded successfully!', 'success');
               }
           }
           else if (action === 'reset') {
@@ -1106,6 +1097,7 @@
               }
           }
         } catch (error) {
+          console.error('Data action error:', error);
           showToast('An error occurred. Please try again.', 'error');
         }
       };
@@ -1136,10 +1128,9 @@
                         <li><a onClick={() => handleDataAction('export')} className="text-blue-600 hover:bg-blue-50"><Icon name="download" className="w-4 h-4"/> Export Data</a></li>
                         <li><a onClick={() => handleDataAction('import')} className="text-green-600 hover:bg-green-50"><Icon name="upload" className="w-4 h-4"/> Import Data</a></li>
                         <li><hr className="my-1"/></li>
-                        <li><a onClick={() => handleDataAction('migrate_local')} className="text-orange-600 hover:bg-orange-50"><Icon name="database" className="w-4 h-4"/> Migrate Local Data</a></li>
-                        <li><a onClick={() => handleDataAction('restore_dummy')} className="text-purple-600 hover:bg-purple-50"><Icon name="refresh-cw" className="w-4 h-4"/> Restore Demo Data</a></li>
+                        <li><a onClick={() => handleDataAction('restore_dummy')} className="text-purple-600 hover:bg-purple-50"><Icon name="refresh-cw" className="w-4 h-4"/> Load Sample Data</a></li>
                         <li><hr className="my-1"/></li>
-                        <li><a onClick={() => handleDataAction('reset')} className="text-red-600 hover:bg-red-50"><Icon name="trash" className="w-4 h-4"/> Reset All Data</a></li>
+                        <li><a onClick={() => handleDataAction('reset')} className="text-red-600 hover:bg-red-50"><Icon name="trash" className="w-4 h-4"/> Clear All Data</a></li>
                       </ul>
                     </div>
                     <UserProfile user={user} onSignOut={signOut} />
