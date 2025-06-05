@@ -922,6 +922,8 @@
           }
         }
       };
+
+      const [expandedNextStep, setExpandedNextStep] = React.useState(null);
       
       return (
         <div className="p-6">
@@ -933,57 +935,97 @@
               </div>
           ) : (
               <div className="overflow-x-auto">
-                  <table className="w-full">
+                  <table className="w-full table-auto">
                     <thead>
                       <tr className="border-b border-gray-200">
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '14%'}}>Status</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '16%'}}>Company</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '20%'}}>Role</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Type</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '12%'}}>Source</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Deadline</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '15%'}}>Next Step</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '3%'}}></th>
+                        <th className="text-left py-4 px-2 font-semibold text-gray-700 text-sm min-w-[120px]">Status</th>
+                        <th className="text-left py-4 px-2 font-semibold text-gray-700 text-sm min-w-[140px]">Company</th>
+                        <th className="text-left py-4 px-2 font-semibold text-gray-700 text-sm min-w-[160px]">Role</th>
+                        <th className="text-left py-4 px-2 font-semibold text-gray-700 text-sm min-w-[100px]">Location</th>
+                        <th className="text-left py-4 px-2 font-semibold text-gray-700 text-sm min-w-[90px]">Type</th>
+                        <th className="text-left py-4 px-2 font-semibold text-gray-700 text-sm min-w-[100px]">Source</th>
+                        <th className="text-left py-4 px-2 font-semibold text-gray-700 text-sm min-w-[110px]">Deadline</th>
+                        <th className="text-left py-4 px-2 font-semibold text-gray-700 text-sm min-w-[200px]">Next Step</th>
+                        <th className="text-left py-4 px-2 font-semibold text-gray-700 text-sm w-12"></th>
                       </tr>
                     </thead>
                     <tbody>
                       {jobs.map((j) => (
                         <tr key={j.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150">
-                          <td className="py-3 px-3">
-                            <select className="w-full bg-transparent border-none text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                          <td className="py-3 px-2">
+                            <select className="w-full bg-transparent border-none text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
                                     value={j.Status} onChange={e => updateJob(j.id, 'Status', e.target.value)}>
                               {statusList.map(s => <option key={s}>{s}</option>)}
                             </select>
                           </td>
-                          <td className="py-3 px-3">
-                            <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                          <td className="py-3 px-2">
+                            <input type="text" className="w-full bg-transparent border-none text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
                                    value={j.Company} onChange={e => updateJob(j.id, 'Company', e.target.value)} placeholder="Company" />
                           </td>
-                          <td className="py-3 px-3">
-                            <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                          <td className="py-3 px-2">
+                            <input type="text" className="w-full bg-transparent border-none text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
                                    value={j.Title} onChange={e => updateJob(j.id, 'Title', e.target.value)} placeholder="Job title" />
                           </td>
-                          <td className="py-3 px-3">
-                            <select className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                          <td className="py-3 px-2">
+                            <input type="text" className="w-full bg-transparent border-none text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                                   value={j.Location} onChange={e => updateJob(j.id, 'Location', e.target.value)} placeholder="Location" />
+                          </td>
+                          <td className="py-3 px-2">
+                            <select className="w-full bg-transparent border-none text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
                                     value={j.JobType} onChange={e => updateJob(j.id, 'JobType', e.target.value)}>
                               {jobTypeList.map(s => <option key={s}>{s}</option>)}
                             </select>
                           </td>
-                          <td className="py-3 px-3">
-                            <select className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                          <td className="py-3 px-2">
+                            <select className="w-full bg-transparent border-none text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
                                     value={j.Source} onChange={e => updateJob(j.id, 'Source', e.target.value)}>
                               {sourceList.map(s => <option key={s}>{s}</option>)}
                             </select>
                           </td>
-                          <td className={`py-3 px-3 ${getDeadlineClass(j.AppDeadline)}`}>
-                            <input type="date" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                          <td className={`py-3 px-2 ${getDeadlineClass(j.AppDeadline)}`}>
+                            <input type="date" className="w-full bg-transparent border-none text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
                                    value={j.AppDeadline} onChange={e => updateJob(j.id, 'AppDeadline', e.target.value)} />
                           </td>
-                          <td className="py-3 px-3">
-                            <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
-                                   value={j.NextStep} onChange={e => updateJob(j.id, 'NextStep', e.target.value)} placeholder="Next step" />
+                          <td className="py-3 px-2 relative">
+                            <div className="flex items-center gap-2">
+                              <input type="text" 
+                                     className="flex-1 bg-transparent border-none text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                                     value={j.NextStep} 
+                                     onChange={e => updateJob(j.id, 'NextStep', e.target.value)} 
+                                     placeholder="Next step" 
+                                     onFocus={() => setExpandedNextStep(j.id)}
+                                     onBlur={() => setTimeout(() => setExpandedNextStep(null), 150)} />
+                              {j.NextStep && j.NextStep.length > 20 && (
+                                <button 
+                                  className="text-blue-500 hover:text-blue-700 text-xs p-1 rounded"
+                                  onClick={() => setExpandedNextStep(expandedNextStep === j.id ? null : j.id)}
+                                  title="Expand next step"
+                                >
+                                  <Icon name="maximize-2" className="w-3 h-3" />
+                                </button>
+                              )}
+                            </div>
+                            {expandedNextStep === j.id && j.NextStep && (
+                              <div className="absolute top-full left-0 right-0 z-20 bg-white border border-gray-200 rounded-lg shadow-lg p-3 mt-1">
+                                <textarea 
+                                  className="w-full border-none resize-none text-xs focus:outline-none"
+                                  value={j.NextStep}
+                                  onChange={e => updateJob(j.id, 'NextStep', e.target.value)}
+                                  rows={3}
+                                  placeholder="Describe your next step..."
+                                />
+                                <div className="flex justify-end mt-2">
+                                  <button 
+                                    className="text-xs text-gray-500 hover:text-gray-700"
+                                    onClick={() => setExpandedNextStep(null)}
+                                  >
+                                    Close
+                                  </button>
+                                </div>
+                              </div>
+                            )}
                           </td>
-                          <td className="py-3 px-3">
+                          <td className="py-3 px-2">
                             <button className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-colors duration-150" 
                                     onClick={() => deleteJob(j.id)}>
                               <Icon name="trash-2" className="w-4 h-4" />
