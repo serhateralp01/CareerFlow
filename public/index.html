@@ -71,14 +71,75 @@
 
     const getTodayPlusDays = (days) => new Date(new Date().setDate(new Date().getDate() + days)).toISOString().split('T')[0];
     const sampleJobs  = [
-      { id: "job-1", Status: "Case Study / Assessment", Company: "Bain & Company", Title: "Associate Consultant Intern", JobType: "Internship", Location: "Milan", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(2), DateApplied: "2025-04-10", NextStep: "Prepare case study for Friday" },
-      { id: "job-2", Status: "Applied", Company: "Google", Title: "Business Analyst", JobType: "Thesis Project", Location: "Berlin", Source: "Company Website", AppDeadline: getTodayPlusDays(30), DateApplied: "2025-04-06", NextStep: "Follow up next week" },
-      { id: "job-3", Status: "HR Screening", Company: "Ferrari", Title: "Mechanical Engineer", JobType: "Full-Time", Location: "Maranello", Source: "LinkedIn", AppDeadline: getTodayPlusDays(6), DateApplied: "2025-05-18", NextStep: "HR call scheduled for tomorrow" },
-      { id: "job-4", Status: "Offer Accepted", Company: "Enel", Title: "Data Scientist", JobType: "Full-Time", Location: "Remote", Source: "Referral", AppDeadline: "2025-03-16", DateApplied: "2025-03-27", NextStep: "Contract signed, onboarding starts 01/09" },
-      { id: "job-5", Status: "Rejected", Company: "Nestlé", Title: "Supply Chain Intern", JobType: "Internship", Location: "Dublin", Source: "Networking Event", AppDeadline: "2025-02-23", DateApplied: "2025-03-21", NextStep: "Rejected after final interview" },
-      { id: "job-6", Status: "Technical Interview", Company: "Amazon", Title: "Cloud Support Associate", JobType: "Internship", Location: "Dublin", Source: "Company Website", AppDeadline: getTodayPlusDays(-5), DateApplied: "2025-04-19", NextStep: "Waiting for feedback" },
-      { id: "job-7", Status: "Wishlist", Company: "McKinsey & Co", Title: "Business Analyst Intern", JobType: "Internship", Location: "Milan", Source: "Networking Event", AppDeadline: getTodayPlusDays(90), DateApplied: "", NextStep: "Network with alumni" },
-      { id: "job-8", Status: "Offer Received", Company: "Pirelli", Title: "Junior PMO", JobType: "Full-Time", Location: "Milan", Source: "Other", AppDeadline: getTodayPlusDays(25), DateApplied: "2025-03-22", NextStep: "Negotiate salary" },
+      // Tech Companies
+      { id: "job-1", Status: "Technical Interview", Company: "Google", Title: "Software Engineer Intern", JobType: "Internship", Location: "Mountain View, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(5), DateApplied: "2025-01-02", NextStep: "Coding interview scheduled for Friday" },
+      { id: "job-2", Status: "Offer Received", Company: "Microsoft", Title: "Product Manager", JobType: "Full-Time", Location: "Seattle, WA", Source: "LinkedIn", AppDeadline: getTodayPlusDays(15), DateApplied: "2024-12-20", NextStep: "Negotiating salary and start date" },
+      { id: "job-3", Status: "Applied", Company: "Meta", Title: "Data Scientist", JobType: "Full-Time", Location: "Menlo Park, CA", Source: "Referral", AppDeadline: getTodayPlusDays(8), DateApplied: "2025-01-05", NextStep: "Waiting for initial screening call" },
+      { id: "job-4", Status: "HR Screening", Company: "Apple", Title: "iOS Developer", JobType: "Full-Time", Location: "Cupertino, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(12), DateApplied: "2024-12-28", NextStep: "Technical phone screen next week" },
+      { id: "job-5", Status: "Rejected", Company: "Netflix", Title: "Machine Learning Engineer", JobType: "Full-Time", Location: "Los Gatos, CA", Source: "LinkedIn", AppDeadline: "2024-11-30", DateApplied: "2024-11-25", NextStep: "Rejected after final round - too junior" },
+      
+      // Consulting
+      { id: "job-6", Status: "Case Study / Assessment", Company: "McKinsey & Company", Title: "Business Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(3), DateApplied: "2024-12-15", NextStep: "Final case interview on Monday" },
+      { id: "job-7", Status: "Final Interview", Company: "Boston Consulting Group", Title: "Associate Consultant", JobType: "Full-Time", Location: "Chicago, IL", Source: "Networking Event", AppDeadline: getTodayPlusDays(7), DateApplied: "2024-12-18", NextStep: "Partner interview scheduled" },
+      { id: "job-8", Status: "Applied", Company: "Bain & Company", Title: "Summer Associate", JobType: "Internship", Location: "London, UK", Source: "Company Website", AppDeadline: getTodayPlusDays(20), DateApplied: "2025-01-03", NextStep: "Application under review" },
+      { id: "job-9", Status: "Offer Accepted", Company: "Deloitte", Title: "Technology Consultant", JobType: "Full-Time", Location: "Milan, Italy", Source: "Polimi CareerService", AppDeadline: "2024-10-15", DateApplied: "2024-10-10", NextStep: "Starting March 1st, 2025" },
+      
+      // Finance
+      { id: "job-10", Status: "HR Screening", Company: "Goldman Sachs", Title: "Investment Banking Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Company Website", AppDeadline: getTodayPlusDays(25), DateApplied: "2024-12-22", NextStep: "Superday invitation pending" },
+      { id: "job-11", Status: "Technical Interview", Company: "JPMorgan Chase", Title: "Quantitative Analyst", JobType: "Full-Time", Location: "London, UK", Source: "LinkedIn", AppDeadline: getTodayPlusDays(18), DateApplied: "2024-12-30", NextStep: "Technical modeling test this week" },
+      { id: "job-12", Status: "Rejected", Company: "Morgan Stanley", Title: "Summer Analyst", JobType: "Internship", Location: "New York, NY", Source: "Networking Event", AppDeadline: "2024-11-01", DateApplied: "2024-10-28", NextStep: "Did not pass online assessment" },
+      
+      // Automotive
+      { id: "job-13", Status: "Applied", Company: "Tesla", Title: "Mechanical Engineer", JobType: "Full-Time", Location: "Fremont, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(30), DateApplied: "2025-01-06", NextStep: "Resume screening in progress" },
+      { id: "job-14", Status: "Final Interview", Company: "Ferrari", Title: "Aerodynamics Engineer", JobType: "Full-Time", Location: "Maranello, Italy", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(10), DateApplied: "2024-12-12", NextStep: "Final presentation next Friday" },
+      { id: "job-15", Status: "Offer Received", Company: "BMW", Title: "Electric Vehicle Engineer", JobType: "Full-Time", Location: "Munich, Germany", Source: "Referral", AppDeadline: getTodayPlusDays(14), DateApplied: "2024-12-20", NextStep: "Considering offer - deadline Jan 20" },
+      
+      // Startups & Scale-ups
+      { id: "job-16", Status: "HR Screening", Company: "Stripe", Title: "Product Marketing Manager", JobType: "Full-Time", Location: "San Francisco, CA", Source: "LinkedIn", AppDeadline: getTodayPlusDays(22), DateApplied: "2025-01-01", NextStep: "Culture fit interview scheduled" },
+      { id: "job-17", Status: "Technical Interview", Company: "Revolut", Title: "Backend Developer", JobType: "Full-Time", Location: "London, UK", Source: "Company Website", AppDeadline: getTodayPlusDays(16), DateApplied: "2024-12-27", NextStep: "System design interview tomorrow" },
+      { id: "job-18", Status: "Applied", Company: "Klarna", Title: "UX Designer", JobType: "Full-Time", Location: "Stockholm, Sweden", Source: "LinkedIn", AppDeadline: getTodayPlusDays(35), DateApplied: "2025-01-04", NextStep: "Portfolio review in progress" },
+      
+      // Energy & Sustainability
+      { id: "job-19", Status: "Case Study / Assessment", Company: "Enel", Title: "Renewable Energy Analyst", JobType: "Full-Time", Location: "Rome, Italy", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(6), DateApplied: "2024-12-19", NextStep: "Sustainability project case study due Friday" },
+      { id: "job-20", Status: "Applied", Company: "Shell", Title: "Energy Transition Consultant", JobType: "Full-Time", Location: "The Hague, Netherlands", Source: "Company Website", AppDeadline: getTodayPlusDays(28), DateApplied: "2025-01-02", NextStep: "Online assessment to complete" },
+      
+      // Aerospace
+      { id: "job-21", Status: "HR Screening", Company: "SpaceX", Title: "Propulsion Engineer", JobType: "Full-Time", Location: "Hawthorne, CA", Source: "Referral", AppDeadline: getTodayPlusDays(40), DateApplied: "2024-12-23", NextStep: "Phone interview with hiring manager" },
+      { id: "job-22", Status: "Rejected", Company: "Boeing", Title: "Systems Engineer", JobType: "Full-Time", Location: "Seattle, WA", Source: "Company Website", AppDeadline: "2024-10-20", DateApplied: "2024-10-15", NextStep: "Position filled internally" },
+      
+      // Consumer Goods
+      { id: "job-23", Status: "Final Interview", Company: "Unilever", Title: "Brand Manager", JobType: "Full-Time", Location: "London, UK", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(9), DateApplied: "2024-12-14", NextStep: "Assessment center next week" },
+      { id: "job-24", Status: "Applied", Company: "Nestlé", Title: "Supply Chain Analyst", JobType: "Internship", Location: "Vevey, Switzerland", Source: "Company Website", AppDeadline: getTodayPlusDays(45), DateApplied: "2025-01-07", NextStep: "Application submitted today" },
+      
+      // Thesis Projects
+      { id: "job-25", Status: "HR Screening", Company: "CERN", Title: "Research Associate", JobType: "Thesis Project", Location: "Geneva, Switzerland", Source: "Networking Event", AppDeadline: getTodayPlusDays(60), DateApplied: "2024-12-18", NextStep: "Meeting with supervisor next week" },
+      { id: "job-26", Status: "Applied", Company: "European Space Agency", Title: "Space Technology Researcher", JobType: "Thesis Project", Location: "Noordwijk, Netherlands", Source: "Other", AppDeadline: getTodayPlusDays(75), DateApplied: "2024-12-21", NextStep: "Thesis proposal under review" },
+      
+      // Media & Entertainment
+      { id: "job-27", Status: "Technical Interview", Company: "Spotify", Title: "Data Engineer", JobType: "Full-Time", Location: "Stockholm, Sweden", Source: "LinkedIn", AppDeadline: getTodayPlusDays(19), DateApplied: "2024-12-29", NextStep: "Take-home coding challenge completed" },
+      { id: "job-28", Status: "Applied", Company: "Disney", Title: "Creative Technologist", JobType: "Full-Time", Location: "Burbank, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(50), DateApplied: "2025-01-05", NextStep: "Creative portfolio review" },
+      
+      // Financial Services
+      { id: "job-29", Status: "Offer Received", Company: "BlackRock", Title: "Risk Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Networking Event", AppDeadline: getTodayPlusDays(12), DateApplied: "2024-12-16", NextStep: "Offer expires January 18th" },
+      { id: "job-30", Status: "HR Screening", Company: "Visa", Title: "Payment Systems Engineer", JobType: "Full-Time", Location: "San Francisco, CA", Source: "LinkedIn", AppDeadline: getTodayPlusDays(26), DateApplied: "2025-01-01", NextStep: "Behavioral interview scheduled" },
+      
+      // Wishlist Companies
+      { id: "job-31", Status: "Wishlist", Company: "OpenAI", Title: "AI Research Engineer", JobType: "Full-Time", Location: "San Francisco, CA", Source: "Other", AppDeadline: getTodayPlusDays(90), DateApplied: "", NextStep: "Waiting for position to open" },
+      { id: "job-32", Status: "Wishlist", Company: "Y Combinator", Title: "Investment Associate", JobType: "Full-Time", Location: "Mountain View, CA", Source: "Networking Event", AppDeadline: getTodayPlusDays(120), DateApplied: "", NextStep: "Building relevant experience first" },
+      { id: "job-33", Status: "Wishlist", Company: "ASML", Title: "Lithography Engineer", JobType: "Full-Time", Location: "Veldhoven, Netherlands", Source: "Company Website", AppDeadline: getTodayPlusDays(100), DateApplied: "", NextStep: "Completing relevant coursework" },
+      
+      // Healthcare & Biotech
+      { id: "job-34", Status: "Applied", Company: "Johnson & Johnson", Title: "Medical Device Engineer", JobType: "Full-Time", Location: "New Brunswick, NJ", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(33), DateApplied: "2025-01-03", NextStep: "Technical screening pending" },
+      { id: "job-35", Status: "Case Study / Assessment", Company: "Novartis", Title: "Digital Health Analyst", JobType: "Internship", Location: "Basel, Switzerland", Source: "Company Website", AppDeadline: getTodayPlusDays(4), DateApplied: "2024-12-17", NextStep: "Healthcare innovation case study due Monday" },
+      
+      // Telecommunications
+      { id: "job-36", Status: "Technical Interview", Company: "Ericsson", Title: "5G Network Engineer", JobType: "Full-Time", Location: "Stockholm, Sweden", Source: "LinkedIn", AppDeadline: getTodayPlusDays(21), DateApplied: "2024-12-26", NextStep: "Technical deep-dive interview" },
+      { id: "job-37", Status: "Rejected", Company: "Nokia", Title: "RF Engineer", JobType: "Full-Time", Location: "Espoo, Finland", Source: "Company Website", AppDeadline: "2024-09-30", DateApplied: "2024-09-25", NextStep: "Position required more experience" },
+      
+      // Additional Tech
+      { id: "job-38", Status: "Applied", Company: "Palantir", Title: "Forward Deployed Engineer", JobType: "Full-Time", Location: "London, UK", Source: "Referral", AppDeadline: getTodayPlusDays(37), DateApplied: "2025-01-06", NextStep: "Karat technical screen scheduled" },
+      { id: "job-39", Status: "HR Screening", Company: "Databricks", Title: "Solutions Architect", JobType: "Full-Time", Location: "Amsterdam, Netherlands", Source: "LinkedIn", AppDeadline: getTodayPlusDays(27), DateApplied: "2024-12-31", NextStep: "Recruiter call this Thursday" },
+      { id: "job-40", Status: "To Apply", Company: "NVIDIA", Title: "GPU Software Engineer", JobType: "Full-Time", Location: "Santa Clara, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(42), DateApplied: "", NextStep: "Preparing application materials" }
     ];
     const sampleContacts = [
       { id: "contact-1", Name: "Mario Rossi", Company: "McKinsey & Co", Role: "Engagement Manager", ContactDate: "2025-05-29", Notes: "Referral for internship" },
@@ -396,6 +457,136 @@
     }
     
     /********* Main Components *********/
+    function ExportModal({ onCancel }) {
+      const [filename, setFilename] = React.useState(`careerflow-backup-${new Date().toISOString().split('T')[0]}`);
+      const [isExporting, setIsExporting] = React.useState(false);
+      const { jobs, contacts } = useFirebaseData(useAuth().user);
+      
+      const handleExport = async (method) => {
+        setIsExporting(true);
+        try {
+          const data = { 
+            jobs, 
+            contacts, 
+            exportDate: new Date().toISOString(),
+            exportedBy: useAuth().user?.displayName || useAuth().user?.email || 'User'
+          };
+          const jsonData = JSON.stringify(data, null, 2);
+          
+          if (method === 'local') {
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${filename}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`Successfully exported to Downloads folder!`, 'success');
+          } else if (method === 'drive') {
+            // Google Drive integration would go here
+            // For now, we'll show a helpful message
+            showToast('Google Drive integration coming soon! Using local download instead.', 'info');
+            // Fall back to local download
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${filename}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }
+          
+          onCancel();
+        } catch (error) {
+          showToast('Export failed. Please try again.', 'error');
+        }
+        setIsExporting(false);
+      };
+      
+      return (
+        <div className="space-y-6">
+          <div className="text-center text-gray-600 text-sm mb-6">
+            Choose how you'd like to save your CareerFlow data backup
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">File Name</label>
+            <input 
+              type="text" 
+              className="input input-bordered w-full" 
+              value={filename}
+              onChange={(e) => setFilename(e.target.value)}
+              placeholder="Enter filename (without .json extension)"
+            />
+            <p className="text-xs text-gray-500 mt-1">File will be saved as: <span className="font-mono">{filename}.json</span></p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button 
+              onClick={() => handleExport('local')}
+              disabled={isExporting || !filename.trim()}
+              className="flex flex-col items-center p-6 border-2 border-blue-200 rounded-xl hover:border-blue-400 hover:bg-blue-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
+            >
+              <div className="bg-blue-100 p-3 rounded-full mb-3 group-hover:bg-blue-200 transition-colors">
+                <Icon name="download" className="w-6 h-6 text-blue-600"/>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-1">Save to Computer</h3>
+              <p className="text-sm text-gray-600 text-center">Download directly to your Downloads folder</p>
+              <div className="text-xs text-gray-500 mt-2 bg-gray-100 px-2 py-1 rounded">
+                💻 Local Download
+              </div>
+            </button>
+            
+            <button 
+              onClick={() => handleExport('drive')}
+              disabled={isExporting || !filename.trim()}
+              className="flex flex-col items-center p-6 border-2 border-green-200 rounded-xl hover:border-green-400 hover:bg-green-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group relative"
+            >
+              <div className="bg-green-100 p-3 rounded-full mb-3 group-hover:bg-green-200 transition-colors">
+                <Icon name="cloud" className="w-6 h-6 text-green-600"/>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-1">Save to Google Drive</h3>
+              <p className="text-sm text-gray-600 text-center">Store securely in your Google Drive</p>
+              <div className="text-xs text-gray-500 mt-2 bg-green-100 px-2 py-1 rounded">
+                ☁️ Cloud Storage
+              </div>
+              <div className="absolute top-2 right-2 bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full">
+                Coming Soon
+              </div>
+            </button>
+          </div>
+          
+          <div className="flex justify-between items-center pt-4 border-t">
+            <div className="text-sm text-gray-500">
+              {jobs.length} applications • {contacts.length} contacts
+            </div>
+            <div className="flex gap-3">
+              <button 
+                onClick={onCancel}
+                className="btn btn-ghost"
+                disabled={isExporting}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+          
+          {isExporting && (
+            <div className="text-center">
+              <div className="inline-flex items-center gap-2 text-blue-600">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                Preparing your export...
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+    
     function Analytics({ jobs, selectedMetricFilters, onMetricFilterToggle }) {
       const metrics = React.useMemo(() => {
         return jobs.reduce((acc, job) => {
@@ -1028,18 +1219,7 @@
       const handleDataAction = async (action) => {
         try {
           if (action === 'export') { 
-            const data = { jobs, contacts, exportDate: new Date().toISOString() };
-            const jsonData = JSON.stringify(data, null, 2);
-            const blob = new Blob([jsonData], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `careerflow-backup-${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showToast('Data exported successfully! Check your Downloads folder.', 'success');
+            document.getElementById('export_data_modal').showModal();
           } 
           else if (action === 'import') { 
             const input = document.createElement('input');
@@ -1267,6 +1447,10 @@
             
             <Modal id="add_job_modal" title="Add New Job Application">
               <JobForm jobData={newJob} onSave={handleSaveNewJob} onCancel={() => document.getElementById('add_job_modal').close()} />
+            </Modal>
+            
+            <Modal id="export_data_modal" title="Export Your Data">
+              <ExportModal onCancel={() => document.getElementById('export_data_modal').close()} />
             </Modal>
         </div>
       );
