@@ -66,6 +66,7 @@
     const jobTypeList = ["Internship", "Full-Time", "Part-Time", "Thesis Project"];
     const sourceList  = ["Polimi CareerService", "LinkedIn", "Company Website", "Referral", "Networking Event", "Other"];
     const DOUGHNUT_COLORS = { Offers: '#22C55E', Rejected: '#EF4444', 'In-Progress': '#F59E0B', Other: '#8B5CF6' };
+    const KANBAN_COLUMNS = ["Backlog", "Applied", "HR Screening", "Technical Interview", "Case Study / Assessment", "Final Interview", "Offer Received"];
 
     const getTodayPlusDays = (days) => new Date(new Date().setDate(new Date().getDate() + days)).toISOString().split('T')[0];
     const sampleJobs  = [
@@ -881,6 +882,101 @@
         );
     }
     
+    /********* Kanban Components *********/
+    function KanbanCard({ job, onDragStart }) {
+      return (
+        <div 
+          draggable
+          onDragStart={(e) => onDragStart(e, job.id)}
+          className="bg-white rounded-lg p-3 mb-2 shadow-sm border border-gray-200 cursor-grab active:cursor-grabbing"
+        >
+          <h4 className="font-bold text-sm text-gray-800">{job.Company}</h4>
+          <p className="text-xs text-gray-600">{job.Title}</p>
+          <div className={`text-xs mt-2 font-medium ${getDeadlineClass(job.AppDeadline)}`}>
+            Deadline: {job.AppDeadline || 'N/A'}
+          </div>
+        </div>
+      );
+    }
+
+    function KanbanColumn({ title, jobs, onDragOver, onDrop, onDragStart }) {
+      return (
+        <div 
+          className="bg-gray-100 rounded-xl p-3 w-64 md:w-72 flex-shrink-0"
+          onDragOver={onDragOver}
+          onDrop={(e) => onDrop(e, title)}
+        >
+          <h3 className="font-semibold text-sm text-gray-700 mb-3 px-1">{title} ({jobs.length})</h3>
+          <div className="space-y-2 min-h-[100px]">
+            {jobs.map(job => <KanbanCard key={job.id} job={job} onDragStart={onDragStart} />)}
+          </div>
+        </div>
+      );
+    }
+
+    function KanbanBoard({ jobs, setJobs }) {
+      const [showBoard, setShowBoard] = React.useState(false);
+
+      const handleDragStart = (e, jobId) => {
+        e.dataTransfer.setData("jobId", jobId);
+      };
+
+      const handleDragOver = (e) => {
+        e.preventDefault();
+      };
+
+      const handleDrop = (e, targetStatus) => {
+        const jobId = e.dataTransfer.getData("jobId");
+        const updatedJobs = jobs.map(job => {
+          if (job.id === jobId) {
+            // "Backlog" is not a real status, so don't update if dropped there
+            const newStatus = targetStatus === "Backlog" ? job.Status : targetStatus;
+            return { ...job, Status: newStatus };
+          }
+          return job;
+        });
+        setJobs(updatedJobs);
+      };
+
+      // Separate jobs for the board and the backlog
+      const boardJobs = jobs.filter(j => KANBAN_COLUMNS.slice(1).includes(j.Status));
+      const backlogJobs = jobs.filter(j => !KANBAN_COLUMNS.slice(1).includes(j.Status));
+
+      return (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+          <div className="p-4 cursor-pointer" onClick={() => setShowBoard(!showBoard)}>
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-900">Kanban View</h2>
+              <Icon name={showBoard ? "chevron-up" : "chevron-down"} className="w-6 h-6" />
+            </div>
+          </div>
+          {showBoard && (
+            <div className="p-4 overflow-x-auto">
+              <div className="flex space-x-4">
+                <KanbanColumn 
+                    title="Backlog" 
+                    jobs={backlogJobs} 
+                    onDragOver={handleDragOver} 
+                    onDrop={handleDrop} 
+                    onDragStart={handleDragStart} 
+                />
+                {KANBAN_COLUMNS.slice(1).map(status => (
+                  <KanbanColumn
+                    key={status}
+                    title={status}
+                    jobs={boardJobs.filter(job => job.Status === status)}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
+                    onDragStart={handleDragStart}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
     function App() {
       const { user, loading: authLoading, signOut } = useAuth();
       const { jobs, contacts, loading: dataLoading, updateJobs, updateContacts, loadUserData } = useFirebaseData(user);
@@ -1100,6 +1196,8 @@
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
               <Analytics jobs={filteredJobs} selectedMetricFilters={selectedMetricFilters} onMetricFilterToggle={handleMetricFilterToggle} />
               
+              <KanbanBoard jobs={jobs} setJobs={updateJobs} />
+
               <div className="space-y-6">
                 <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                   <div className="flex justify-between items-center mb-4">
