@@ -992,30 +992,8 @@
       const [selectedMetricFilters, setSelectedMetricFilters] = React.useState([]);
       const [newJob, setNewJob] = React.useState(emptyJob);
 
-      const filteredJobs = React.useMemo(() => {
-        let filtered = jobs;
-        
-        // Apply metric-based filters if any are selected
-        if (selectedMetricFilters.length > 0) {
-          filtered = filtered.filter(job => {
-            return selectedMetricFilters.some(filter => {
-              switch(filter) {
-                case 'offers':
-                  return ["Offer Received", "Offer Accepted"].includes(job.Status);
-                case 'rejected':
-                  return job.Status === "Rejected";
-                case 'inProgress':
-                  return ["Applied", "HR Screening", "Technical Interview", "Case Study / Assessment", "Final Interview"].includes(job.Status);
-                case 'total':
-                  return true; // All jobs
-                default:
-                  return false;
-              }
-            });
-          });
-        }
-        
-        return filtered
+      const jobsForAnalytics = React.useMemo(() => {
+        return jobs
           .filter(job => statusFilter === 'All' || job.Status === statusFilter)
           .filter(job => jobTypeFilter === 'All' || job.JobType === jobTypeFilter)
           .filter(job => sourceFilter === 'All' || job.Source === sourceFilter)
@@ -1025,7 +1003,30 @@
             job.Title.toLowerCase().includes(jobSearchTerm.toLowerCase()) ||
             job.NextStep.toLowerCase().includes(jobSearchTerm.toLowerCase())
           );
-      }, [jobs, selectedMetricFilters, statusFilter, jobTypeFilter, sourceFilter, locationFilter, jobSearchTerm]);
+      }, [jobs, statusFilter, jobTypeFilter, sourceFilter, locationFilter, jobSearchTerm]);
+
+      const filteredJobs = React.useMemo(() => {
+        if (selectedMetricFilters.length === 0) {
+          return jobsForAnalytics;
+        }
+
+        return jobsForAnalytics.filter(job => {
+          return selectedMetricFilters.some(filter => {
+            switch(filter) {
+              case 'offers':
+                return ["Offer Received", "Offer Accepted"].includes(job.Status);
+              case 'rejected':
+                return job.Status === "Rejected";
+              case 'inProgress':
+                return ["Applied", "HR Screening", "Technical Interview", "Case Study / Assessment", "Final Interview"].includes(job.Status);
+              case 'total':
+                return true; 
+              default:
+                return false;
+            }
+          });
+        });
+      }, [jobsForAnalytics, selectedMetricFilters]);
 
       const filteredContacts = React.useMemo(() => {
         return contacts.filter(contact => 
@@ -1196,7 +1197,7 @@
             </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-              <Analytics jobs={filteredJobs} selectedMetricFilters={selectedMetricFilters} onMetricFilterToggle={handleMetricFilterToggle} />
+              <Analytics jobs={jobsForAnalytics} selectedMetricFilters={selectedMetricFilters} onMetricFilterToggle={handleMetricFilterToggle} />
               
               <KanbanComponents.KanbanBoard jobs={jobs} setJobs={updateJobs} />
 
