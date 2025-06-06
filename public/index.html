@@ -38,7 +38,7 @@
     /********* Injected data & Config *********/
     const statusList = ["Wishlist", "To Apply", "Applied", "HR Screening", "Technical Interview", "Case Study / Assessment", "Final Interview", "Offer Received", "Offer Accepted", "Rejected", "Withdrawn"];
     const jobTypeList = ["Internship", "Full-Time", "Part-Time", "Thesis Project"];
-    const sourceList  = ["Polimi CareerService", "LinkedIn", "Company Website", "Referral", "Networking Event", "Other"];
+          const sourceList  = ["School Career Service", "LinkedIn", "Company Website", "Referral", "Networking Event", "Other"];
     const DOUGHNUT_COLORS = { Offers: '#22C55E', Rejected: '#EF4444', 'In-Progress': '#F59E0B', Other: '#8B5CF6' };
 
     // Email Templates
@@ -98,10 +98,10 @@ Best regards,
       { id: "job-5", Status: "Rejected", Company: "Netflix", Title: "Machine Learning Engineer", JobType: "Full-Time", Location: "Los Gatos, CA", Source: "LinkedIn", AppDeadline: getRecentDate(60), DateApplied: getRecentDate(65), Notes: "Rejected after final round - too junior" },
       
       // Consulting
-      { id: "job-6", Status: "Case Study / Assessment", Company: "McKinsey & Company", Title: "Business Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(3), DateApplied: getRecentDate(22), Notes: "Final case interview on Monday" },
+      { id: "job-6", Status: "Case Study / Assessment", Company: "McKinsey & Company", Title: "Business Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "School Career Service", AppDeadline: getTodayPlusDays(3), DateApplied: getRecentDate(22), Notes: "Final case interview on Monday" },
       { id: "job-7", Status: "Final Interview", Company: "Boston Consulting Group", Title: "Associate Consultant", JobType: "Full-Time", Location: "Chicago, IL", Source: "Networking Event", AppDeadline: getTodayPlusDays(7), DateApplied: getRecentDate(19), Notes: "Partner interview scheduled" },
       { id: "job-8", Status: "Applied", Company: "Bain & Company", Title: "Summer Associate", JobType: "Internship", Location: "London, UK", Source: "Company Website", AppDeadline: getTodayPlusDays(20), DateApplied: getRecentDate(4), Notes: "Application under review" },
-      { id: "job-9", Status: "Offer Accepted", Company: "Deloitte", Title: "Technology Consultant", JobType: "Full-Time", Location: "Milan, Italy", Source: "Polimi CareerService", AppDeadline: getRecentDate(90), DateApplied: getRecentDate(95), Notes: "Starting March 1st, 2025" },
+      { id: "job-9", Status: "Offer Accepted", Company: "Deloitte", Title: "Technology Consultant", JobType: "Full-Time", Location: "Milan, Italy", Source: "School Career Service", AppDeadline: getRecentDate(90), DateApplied: getRecentDate(95), Notes: "Starting March 1st, 2025" },
       
       // Finance
       { id: "job-10", Status: "HR Screening", Company: "Goldman Sachs", Title: "Investment Banking Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Company Website", AppDeadline: getTodayPlusDays(25), DateApplied: getRecentDate(15), Notes: "Superday invitation pending" },
@@ -110,7 +110,7 @@ Best regards,
       
       // Automotive
       { id: "job-13", Status: "Applied", Company: "Tesla", Title: "Mechanical Engineer", JobType: "Full-Time", Location: "Fremont, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(30), DateApplied: getRecentDate(1), Notes: "Resume screening in progress" },
-      { id: "job-14", Status: "Final Interview", Company: "Ferrari", Title: "Aerodynamics Engineer", JobType: "Full-Time", Location: "Maranello, Italy", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(10), DateApplied: getRecentDate(25), Notes: "Final presentation next Friday" },
+      { id: "job-14", Status: "Final Interview", Company: "Ferrari", Title: "Aerodynamics Engineer", JobType: "Full-Time", Location: "Maranello, Italy", Source: "School Career Service", AppDeadline: getTodayPlusDays(10), DateApplied: getRecentDate(25), Notes: "Final presentation next Friday" },
       { id: "job-15", Status: "Offer Received", Company: "BMW", Title: "Electric Vehicle Engineer", JobType: "Full-Time", Location: "Munich, Germany", Source: "Referral", AppDeadline: getTodayPlusDays(14), DateApplied: getRecentDate(18), Notes: "Considering offer - deadline Jan 20" },
       
       // Startups & Scale-ups
@@ -119,7 +119,7 @@ Best regards,
       { id: "job-18", Status: "Applied", Company: "Klarna", Title: "UX Designer", JobType: "Full-Time", Location: "Stockholm, Sweden", Source: "LinkedIn", AppDeadline: getTodayPlusDays(35), DateApplied: getRecentDate(3), Notes: "Portfolio review in progress" },
       
       // Energy & Sustainability
-      { id: "job-19", Status: "Case Study / Assessment", Company: "Enel", Title: "Renewable Energy Analyst", JobType: "Full-Time", Location: "Rome, Italy", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(6), DateApplied: getRecentDate(18), Notes: "Sustainability project case study due Friday" },
+      { id: "job-19", Status: "Case Study / Assessment", Company: "Enel", Title: "Renewable Energy Analyst", JobType: "Full-Time", Location: "Rome, Italy", Source: "School Career Service", AppDeadline: getTodayPlusDays(6), DateApplied: getRecentDate(18), Notes: "Sustainability project case study due Friday" },
       { id: "job-20", Status: "Applied", Company: "Shell", Title: "Energy Transition Consultant", JobType: "Full-Time", Location: "The Hague, Netherlands", Source: "Company Website", AppDeadline: getTodayPlusDays(28), DateApplied: getRecentDate(5), Notes: "Online assessment to complete" },
       
       // Aerospace
@@ -127,7 +127,7 @@ Best regards,
       { id: "job-22", Status: "Rejected", Company: "Boeing", Title: "Systems Engineer", JobType: "Full-Time", Location: "Seattle, WA", Source: "Company Website", AppDeadline: getRecentDate(85), DateApplied: getRecentDate(90), Notes: "Position filled internally" },
       
       // Consumer Goods
-      { id: "job-23", Status: "Final Interview", Company: "Unilever", Title: "Brand Manager", JobType: "Full-Time", Location: "London, UK", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(9), DateApplied: getRecentDate(23), Notes: "Assessment center next week" },
+      { id: "job-23", Status: "Final Interview", Company: "Unilever", Title: "Brand Manager", JobType: "Full-Time", Location: "London, UK", Source: "School Career Service", AppDeadline: getTodayPlusDays(9), DateApplied: getRecentDate(23), Notes: "Assessment center next week" },
       { id: "job-24", Status: "Applied", Company: "Nestlé", Title: "Supply Chain Analyst", JobType: "Internship", Location: "Vevey, Switzerland", Source: "Company Website", AppDeadline: getTodayPlusDays(45), DateApplied: "2025-01-07", Notes: "Application submitted today" },
       
       // Thesis Projects
@@ -148,7 +148,7 @@ Best regards,
       { id: "job-33", Status: "Wishlist", Company: "ASML", Title: "Lithography Engineer", JobType: "Full-Time", Location: "Veldhoven, Netherlands", Source: "Company Website", AppDeadline: getTodayPlusDays(100), DateApplied: "", Notes: "Completing relevant coursework" },
       
       // Healthcare & Biotech
-      { id: "job-34", Status: "Applied", Company: "Johnson & Johnson", Title: "Medical Device Engineer", JobType: "Full-Time", Location: "New Brunswick, NJ", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(33), DateApplied: getRecentDate(4), Notes: "Technical screening pending" },
+      { id: "job-34", Status: "Applied", Company: "Johnson & Johnson", Title: "Medical Device Engineer", JobType: "Full-Time", Location: "New Brunswick, NJ", Source: "School Career Service", AppDeadline: getTodayPlusDays(33), DateApplied: getRecentDate(4), Notes: "Technical screening pending" },
       { id: "job-35", Status: "Case Study / Assessment", Company: "Novartis", Title: "Digital Health Analyst", JobType: "Internship", Location: "Basel, Switzerland", Source: "Company Website", AppDeadline: getTodayPlusDays(4), DateApplied: getRecentDate(20), Notes: "Healthcare innovation case study due Monday" },
       
       // Telecommunications
@@ -223,7 +223,7 @@ Best regards,
     };
 
     /********* Helpers & Custom Hooks *********/
-            const emptyJob = { Status:"Wishlist", Company:"", Title:"", JobType:"Internship", Location:"", Source:"Polimi CareerService", AppDeadline:"", DateApplied:"", Notes:"" };
+            const emptyJob = { Status:"Wishlist", Company:"", Title:"", JobType:"Internship", Location:"", Source:"School Career Service", AppDeadline:"", DateApplied:"", Notes:"" };
             const emptyContact = { Name:"", Company:"", Role:"", Location:"", ContactDate:"", Notes:"" };
 
     function useAuth() {
@@ -1412,7 +1412,7 @@ Best regards,
       );
     }
     
-    function ContactsTable({ contacts, setContacts, searchTerm, companyFilter, setCompanyFilter, locationFilter, setLocationFilter }) {
+    function ContactsTable({ contacts, setContacts, searchTerm, setSearchTerm, companyFilter, setCompanyFilter, locationFilter, setLocationFilter }) {
         const updateContact = async (id, field, value) => {
           try {
             await setContacts(contacts.map(c => c.id === id ? { ...c, [field]: value } : c));
@@ -1465,7 +1465,7 @@ Best regards,
                             placeholder="Search contacts..." 
                             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                             value={searchTerm}
-                            readOnly
+                            onChange={(e) => setSearchTerm(e.target.value)}
                           />
                           <Icon name="search" className="absolute left-3 top-2.5 w-4 h-4 text-gray-400"/>
                         </div>
@@ -1999,9 +1999,6 @@ Best regards,
                 <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                   <div className="flex justify-between items-center mb-4">
                       <h2 className="text-2xl font-bold text-gray-900">Networking</h2>
-                      <input type="text" placeholder="Search contacts by name, company, or role..." 
-                             className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-80" 
-                             onChange={e => setContactSearchTerm(e.target.value)} />
                   </div>
                   {filteredContacts.length !== contacts.length && (
                     <div className="mb-4 text-sm text-gray-600">
@@ -2012,6 +2009,7 @@ Best regards,
                   contacts={filteredContacts} 
                   setContacts={updateContacts} 
                   searchTerm={contactSearchTerm}
+                  setSearchTerm={setContactSearchTerm}
                   companyFilter={contactCompanyFilter}
                   setCompanyFilter={setContactCompanyFilter}
                   locationFilter={contactLocationFilter}
