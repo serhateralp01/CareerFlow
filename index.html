@@ -12,6 +12,7 @@
   <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel" src="kanban.js"></script>
   
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -728,17 +729,17 @@
                       <tr className="border-b border-gray-200">
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '14%'}}>Status</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '16%'}}>Company</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '20%'}}>Role</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '25%'}}>Role</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Type</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '12%'}}>Source</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Deadline</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '15%'}}>Next Step</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Next Step</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '3%'}}></th>
                       </tr>
                     </thead>
                     <tbody>
                       {jobs.map((j) => (
-                        <tr key={j.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150">
+                        <tr key={j.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150" title={`[${j.Company}] ${j.Title}`}>
                           <td className="py-3 px-3">
                             <select className="w-full bg-transparent border-none text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
                                     value={j.Status} onChange={e => updateJob(j.id, 'Status', e.target.value)}>
@@ -929,7 +930,6 @@
         const jobId = e.dataTransfer.getData("jobId");
         const updatedJobs = jobs.map(job => {
           if (job.id === jobId) {
-            // "Backlog" is not a real status, so don't update if dropped there
             const newStatus = targetStatus === "Backlog" ? job.Status : targetStatus;
             return { ...job, Status: newStatus };
           }
@@ -938,20 +938,22 @@
         setJobs(updatedJobs);
       };
 
-      // Separate jobs for the board and the backlog
       const boardJobs = jobs.filter(j => KANBAN_COLUMNS.slice(1).includes(j.Status));
       const backlogJobs = jobs.filter(j => !KANBAN_COLUMNS.slice(1).includes(j.Status));
 
       return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-          <div className="p-4 cursor-pointer" onClick={() => setShowBoard(!showBoard)}>
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100">
+          <div className="p-6 cursor-pointer hover:bg-gray-50 transition-colors duration-150" onClick={() => setShowBoard(!showBoard)}>
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-gray-900">Kanban View</h2>
+              <div className="flex items-center gap-3">
+                <Icon name="trello" className="w-6 h-6 text-blue-500"/>
+                <h2 className="text-xl font-semibold text-gray-800">Kanban View</h2>
+              </div>
               <Icon name={showBoard ? "chevron-up" : "chevron-down"} className="w-6 h-6" />
             </div>
           </div>
           {showBoard && (
-            <div className="p-4 overflow-x-auto">
+            <div className="px-6 pb-6 pt-2 overflow-x-auto">
               <div className="flex space-x-4">
                 <KanbanColumn 
                     title="Backlog" 
@@ -1196,7 +1198,7 @@
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
               <Analytics jobs={filteredJobs} selectedMetricFilters={selectedMetricFilters} onMetricFilterToggle={handleMetricFilterToggle} />
               
-              <KanbanBoard jobs={jobs} setJobs={updateJobs} />
+              <KanbanComponents.KanbanBoard jobs={jobs} setJobs={updateJobs} />
 
               <div className="space-y-6">
                 <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
