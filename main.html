@@ -721,7 +721,9 @@
                     </thead>
                     <tbody>
                       {jobs.map((j) => (
-                        <tr key={j.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150">
+                        <tr key={j.id} className="border-b border-gray-100 transition-colors duration-150" 
+                            onMouseOver={e => e.currentTarget.style.backgroundColor = '#F9FAFB'}
+                            onMouseOut={e => e.currentTarget.style.backgroundColor = 'transparent'}>
                           <td className="py-3 px-3">
                             <select className="w-full bg-transparent border-none text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
                                     value={j.Status} onChange={e => updateJob(j.id, 'Status', e.target.value)}>
@@ -809,7 +811,9 @@
                                 </thead>
                                 <tbody>
                                     {contacts.map((c) => (
-                                        <tr key={c.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150">
+                                        <tr key={c.id} className="border-b border-gray-100 transition-colors duration-150"
+                                            onMouseOver={e => e.currentTarget.style.backgroundColor = '#F9FAFB'}
+                                            onMouseOut={e => e.currentTarget.style.backgroundColor = 'transparent'}>
                                             <td className="py-3 px-3">
                                                 <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
                                                        value={c.Name} onChange={e => updateContact(c.id, 'Name', e.target.value)} placeholder="Name" />
