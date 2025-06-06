@@ -879,7 +879,7 @@
                                             </td>
                                             <td className="py-3 px-3">
                                                 <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
-                                                       value={c.Location} onChange={e => updateContact(c.id, 'Location', e.target.value)} placeholder="Location" />
+                                                       value={c.Location || ''} onChange={e => updateContact(c.id, 'Location', e.target.value)} placeholder="Location" />
                                             </td>
                                             <td className="py-3 px-3">
                                                 <input type="date" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
@@ -1295,6 +1295,37 @@
                 showToast('All data has been cleared.', 'info');
             }
         }
+      };
+
+      const MultiSelectFilter = ({ title, options, selectedOptions, setSelectedOptions }) => {
+        const handleToggle = (option) => {
+            setSelectedOptions(prev => 
+                prev.includes(option) ? prev.filter(item => item !== option) : [...prev, option]
+            );
+        };
+
+        return (
+            <div className="dropdown">
+                <div tabIndex={0} role="button" className="btn btn-sm btn-outline w-full justify-start font-normal">
+                    {title} {selectedOptions.length > 0 ? `(${selectedOptions.length})` : ''}
+                </div>
+                <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 max-h-60 overflow-y-auto">
+                    {options.map(option => (
+                        <li key={option}>
+                            <label className="label cursor-pointer p-2">
+                                <span className="label-text">{option}</span>
+                                <input 
+                                    type="checkbox" 
+                                    checked={selectedOptions.includes(option)} 
+                                    onChange={() => handleToggle(option)}
+                                    className="checkbox checkbox-primary checkbox-sm"
+                                />
+                            </label>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        );
       };
 
       return (
