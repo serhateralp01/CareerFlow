@@ -91,78 +91,78 @@ Best regards,
     
     const sampleJobs  = [
       // Tech Companies
-      { id: "job-1", Status: "Technical Interview", Company: "Google", Title: "Software Engineer Intern", JobType: "Internship", Location: "Mountain View, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(5), DateApplied: getRecentDate(3), NextStep: "Coding interview scheduled for Friday" },
-      { id: "job-2", Status: "Offer Received", Company: "Microsoft", Title: "Product Manager", JobType: "Full-Time", Location: "Seattle, WA", Source: "LinkedIn", AppDeadline: getTodayPlusDays(15), DateApplied: getRecentDate(18), NextStep: "Negotiating salary and start date" },
-      { id: "job-3", Status: "Applied", Company: "Meta", Title: "Data Scientist", JobType: "Full-Time", Location: "Menlo Park, CA", Source: "Referral", AppDeadline: getTodayPlusDays(8), DateApplied: getRecentDate(2), NextStep: "Waiting for initial screening call" },
-      { id: "job-4", Status: "HR Screening", Company: "Apple", Title: "iOS Developer", JobType: "Full-Time", Location: "Cupertino, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(12), DateApplied: getRecentDate(9), NextStep: "Technical phone screen next week" },
-      { id: "job-5", Status: "Rejected", Company: "Netflix", Title: "Machine Learning Engineer", JobType: "Full-Time", Location: "Los Gatos, CA", Source: "LinkedIn", AppDeadline: getRecentDate(60), DateApplied: getRecentDate(65), NextStep: "Rejected after final round - too junior" },
+      { id: "job-1", Status: "Technical Interview", Company: "Google", Title: "Software Engineer Intern", JobType: "Internship", Location: "Mountain View, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(5), DateApplied: getRecentDate(3), Notes: "Coding interview scheduled for Friday" },
+      { id: "job-2", Status: "Offer Received", Company: "Microsoft", Title: "Product Manager", JobType: "Full-Time", Location: "Seattle, WA", Source: "LinkedIn", AppDeadline: getTodayPlusDays(15), DateApplied: getRecentDate(18), Notes: "Negotiating salary and start date" },
+      { id: "job-3", Status: "Applied", Company: "Meta", Title: "Data Scientist", JobType: "Full-Time", Location: "Menlo Park, CA", Source: "Referral", AppDeadline: getTodayPlusDays(8), DateApplied: getRecentDate(2), Notes: "Waiting for initial screening call" },
+      { id: "job-4", Status: "HR Screening", Company: "Apple", Title: "iOS Developer", JobType: "Full-Time", Location: "Cupertino, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(12), DateApplied: getRecentDate(9), Notes: "Technical phone screen next week" },
+      { id: "job-5", Status: "Rejected", Company: "Netflix", Title: "Machine Learning Engineer", JobType: "Full-Time", Location: "Los Gatos, CA", Source: "LinkedIn", AppDeadline: getRecentDate(60), DateApplied: getRecentDate(65), Notes: "Rejected after final round - too junior" },
       
       // Consulting
-      { id: "job-6", Status: "Case Study / Assessment", Company: "McKinsey & Company", Title: "Business Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(3), DateApplied: getRecentDate(22), NextStep: "Final case interview on Monday" },
-      { id: "job-7", Status: "Final Interview", Company: "Boston Consulting Group", Title: "Associate Consultant", JobType: "Full-Time", Location: "Chicago, IL", Source: "Networking Event", AppDeadline: getTodayPlusDays(7), DateApplied: getRecentDate(19), NextStep: "Partner interview scheduled" },
-      { id: "job-8", Status: "Applied", Company: "Bain & Company", Title: "Summer Associate", JobType: "Internship", Location: "London, UK", Source: "Company Website", AppDeadline: getTodayPlusDays(20), DateApplied: getRecentDate(4), NextStep: "Application under review" },
-      { id: "job-9", Status: "Offer Accepted", Company: "Deloitte", Title: "Technology Consultant", JobType: "Full-Time", Location: "Milan, Italy", Source: "Polimi CareerService", AppDeadline: getRecentDate(90), DateApplied: getRecentDate(95), NextStep: "Starting March 1st, 2025" },
+      { id: "job-6", Status: "Case Study / Assessment", Company: "McKinsey & Company", Title: "Business Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(3), DateApplied: getRecentDate(22), Notes: "Final case interview on Monday" },
+      { id: "job-7", Status: "Final Interview", Company: "Boston Consulting Group", Title: "Associate Consultant", JobType: "Full-Time", Location: "Chicago, IL", Source: "Networking Event", AppDeadline: getTodayPlusDays(7), DateApplied: getRecentDate(19), Notes: "Partner interview scheduled" },
+      { id: "job-8", Status: "Applied", Company: "Bain & Company", Title: "Summer Associate", JobType: "Internship", Location: "London, UK", Source: "Company Website", AppDeadline: getTodayPlusDays(20), DateApplied: getRecentDate(4), Notes: "Application under review" },
+      { id: "job-9", Status: "Offer Accepted", Company: "Deloitte", Title: "Technology Consultant", JobType: "Full-Time", Location: "Milan, Italy", Source: "Polimi CareerService", AppDeadline: getRecentDate(90), DateApplied: getRecentDate(95), Notes: "Starting March 1st, 2025" },
       
       // Finance
-      { id: "job-10", Status: "HR Screening", Company: "Goldman Sachs", Title: "Investment Banking Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Company Website", AppDeadline: getTodayPlusDays(25), DateApplied: getRecentDate(15), NextStep: "Superday invitation pending" },
-      { id: "job-11", Status: "Technical Interview", Company: "JPMorgan Chase", Title: "Quantitative Analyst", JobType: "Full-Time", Location: "London, UK", Source: "LinkedIn", AppDeadline: getTodayPlusDays(18), DateApplied: getRecentDate(7), NextStep: "Technical modeling test this week" },
-      { id: "job-12", Status: "Rejected", Company: "Morgan Stanley", Title: "Summer Analyst", JobType: "Internship", Location: "New York, NY", Source: "Networking Event", AppDeadline: getRecentDate(75), DateApplied: getRecentDate(80), NextStep: "Did not pass online assessment" },
+      { id: "job-10", Status: "HR Screening", Company: "Goldman Sachs", Title: "Investment Banking Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Company Website", AppDeadline: getTodayPlusDays(25), DateApplied: getRecentDate(15), Notes: "Superday invitation pending" },
+      { id: "job-11", Status: "Technical Interview", Company: "JPMorgan Chase", Title: "Quantitative Analyst", JobType: "Full-Time", Location: "London, UK", Source: "LinkedIn", AppDeadline: getTodayPlusDays(18), DateApplied: getRecentDate(7), Notes: "Technical modeling test this week" },
+      { id: "job-12", Status: "Rejected", Company: "Morgan Stanley", Title: "Summer Analyst", JobType: "Internship", Location: "New York, NY", Source: "Networking Event", AppDeadline: getRecentDate(75), DateApplied: getRecentDate(80), Notes: "Did not pass online assessment" },
       
       // Automotive
-      { id: "job-13", Status: "Applied", Company: "Tesla", Title: "Mechanical Engineer", JobType: "Full-Time", Location: "Fremont, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(30), DateApplied: getRecentDate(1), NextStep: "Resume screening in progress" },
-      { id: "job-14", Status: "Final Interview", Company: "Ferrari", Title: "Aerodynamics Engineer", JobType: "Full-Time", Location: "Maranello, Italy", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(10), DateApplied: getRecentDate(25), NextStep: "Final presentation next Friday" },
-      { id: "job-15", Status: "Offer Received", Company: "BMW", Title: "Electric Vehicle Engineer", JobType: "Full-Time", Location: "Munich, Germany", Source: "Referral", AppDeadline: getTodayPlusDays(14), DateApplied: getRecentDate(18), NextStep: "Considering offer - deadline Jan 20" },
+      { id: "job-13", Status: "Applied", Company: "Tesla", Title: "Mechanical Engineer", JobType: "Full-Time", Location: "Fremont, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(30), DateApplied: getRecentDate(1), Notes: "Resume screening in progress" },
+      { id: "job-14", Status: "Final Interview", Company: "Ferrari", Title: "Aerodynamics Engineer", JobType: "Full-Time", Location: "Maranello, Italy", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(10), DateApplied: getRecentDate(25), Notes: "Final presentation next Friday" },
+      { id: "job-15", Status: "Offer Received", Company: "BMW", Title: "Electric Vehicle Engineer", JobType: "Full-Time", Location: "Munich, Germany", Source: "Referral", AppDeadline: getTodayPlusDays(14), DateApplied: getRecentDate(18), Notes: "Considering offer - deadline Jan 20" },
       
       // Startups & Scale-ups
-      { id: "job-16", Status: "HR Screening", Company: "Stripe", Title: "Product Marketing Manager", JobType: "Full-Time", Location: "San Francisco, CA", Source: "LinkedIn", AppDeadline: getTodayPlusDays(22), DateApplied: getRecentDate(6), NextStep: "Culture fit interview scheduled" },
-      { id: "job-17", Status: "Technical Interview", Company: "Revolut", Title: "Backend Developer", JobType: "Full-Time", Location: "London, UK", Source: "Company Website", AppDeadline: getTodayPlusDays(16), DateApplied: getRecentDate(10), NextStep: "System design interview tomorrow" },
-      { id: "job-18", Status: "Applied", Company: "Klarna", Title: "UX Designer", JobType: "Full-Time", Location: "Stockholm, Sweden", Source: "LinkedIn", AppDeadline: getTodayPlusDays(35), DateApplied: getRecentDate(3), NextStep: "Portfolio review in progress" },
+      { id: "job-16", Status: "HR Screening", Company: "Stripe", Title: "Product Marketing Manager", JobType: "Full-Time", Location: "San Francisco, CA", Source: "LinkedIn", AppDeadline: getTodayPlusDays(22), DateApplied: getRecentDate(6), Notes: "Culture fit interview scheduled" },
+      { id: "job-17", Status: "Technical Interview", Company: "Revolut", Title: "Backend Developer", JobType: "Full-Time", Location: "London, UK", Source: "Company Website", AppDeadline: getTodayPlusDays(16), DateApplied: getRecentDate(10), Notes: "System design interview tomorrow" },
+      { id: "job-18", Status: "Applied", Company: "Klarna", Title: "UX Designer", JobType: "Full-Time", Location: "Stockholm, Sweden", Source: "LinkedIn", AppDeadline: getTodayPlusDays(35), DateApplied: getRecentDate(3), Notes: "Portfolio review in progress" },
       
       // Energy & Sustainability
-      { id: "job-19", Status: "Case Study / Assessment", Company: "Enel", Title: "Renewable Energy Analyst", JobType: "Full-Time", Location: "Rome, Italy", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(6), DateApplied: getRecentDate(18), NextStep: "Sustainability project case study due Friday" },
-      { id: "job-20", Status: "Applied", Company: "Shell", Title: "Energy Transition Consultant", JobType: "Full-Time", Location: "The Hague, Netherlands", Source: "Company Website", AppDeadline: getTodayPlusDays(28), DateApplied: getRecentDate(5), NextStep: "Online assessment to complete" },
+      { id: "job-19", Status: "Case Study / Assessment", Company: "Enel", Title: "Renewable Energy Analyst", JobType: "Full-Time", Location: "Rome, Italy", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(6), DateApplied: getRecentDate(18), Notes: "Sustainability project case study due Friday" },
+      { id: "job-20", Status: "Applied", Company: "Shell", Title: "Energy Transition Consultant", JobType: "Full-Time", Location: "The Hague, Netherlands", Source: "Company Website", AppDeadline: getTodayPlusDays(28), DateApplied: getRecentDate(5), Notes: "Online assessment to complete" },
       
       // Aerospace
-      { id: "job-21", Status: "HR Screening", Company: "SpaceX", Title: "Propulsion Engineer", JobType: "Full-Time", Location: "Hawthorne, CA", Source: "Referral", AppDeadline: getTodayPlusDays(40), DateApplied: getRecentDate(14), NextStep: "Phone interview with hiring manager" },
-      { id: "job-22", Status: "Rejected", Company: "Boeing", Title: "Systems Engineer", JobType: "Full-Time", Location: "Seattle, WA", Source: "Company Website", AppDeadline: getRecentDate(85), DateApplied: getRecentDate(90), NextStep: "Position filled internally" },
+      { id: "job-21", Status: "HR Screening", Company: "SpaceX", Title: "Propulsion Engineer", JobType: "Full-Time", Location: "Hawthorne, CA", Source: "Referral", AppDeadline: getTodayPlusDays(40), DateApplied: getRecentDate(14), Notes: "Phone interview with hiring manager" },
+      { id: "job-22", Status: "Rejected", Company: "Boeing", Title: "Systems Engineer", JobType: "Full-Time", Location: "Seattle, WA", Source: "Company Website", AppDeadline: getRecentDate(85), DateApplied: getRecentDate(90), Notes: "Position filled internally" },
       
       // Consumer Goods
-      { id: "job-23", Status: "Final Interview", Company: "Unilever", Title: "Brand Manager", JobType: "Full-Time", Location: "London, UK", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(9), DateApplied: getRecentDate(23), NextStep: "Assessment center next week" },
-      { id: "job-24", Status: "Applied", Company: "Nestlé", Title: "Supply Chain Analyst", JobType: "Internship", Location: "Vevey, Switzerland", Source: "Company Website", AppDeadline: getTodayPlusDays(45), DateApplied: "2025-01-07", NextStep: "Application submitted today" },
+      { id: "job-23", Status: "Final Interview", Company: "Unilever", Title: "Brand Manager", JobType: "Full-Time", Location: "London, UK", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(9), DateApplied: getRecentDate(23), Notes: "Assessment center next week" },
+      { id: "job-24", Status: "Applied", Company: "Nestlé", Title: "Supply Chain Analyst", JobType: "Internship", Location: "Vevey, Switzerland", Source: "Company Website", AppDeadline: getTodayPlusDays(45), DateApplied: "2025-01-07", Notes: "Application submitted today" },
       
       // Thesis Projects
-      { id: "job-25", Status: "HR Screening", Company: "CERN", Title: "Research Associate", JobType: "Thesis Project", Location: "Geneva, Switzerland", Source: "Networking Event", AppDeadline: getTodayPlusDays(60), DateApplied: getRecentDate(19), NextStep: "Meeting with supervisor next week" },
-      { id: "job-26", Status: "Applied", Company: "European Space Agency", Title: "Space Technology Researcher", JobType: "Thesis Project", Location: "Noordwijk, Netherlands", Source: "Other", AppDeadline: getTodayPlusDays(75), DateApplied: getRecentDate(16), NextStep: "Thesis proposal under review" },
+      { id: "job-25", Status: "HR Screening", Company: "CERN", Title: "Research Associate", JobType: "Thesis Project", Location: "Geneva, Switzerland", Source: "Networking Event", AppDeadline: getTodayPlusDays(60), DateApplied: getRecentDate(19), Notes: "Meeting with supervisor next week" },
+      { id: "job-26", Status: "Applied", Company: "European Space Agency", Title: "Space Technology Researcher", JobType: "Thesis Project", Location: "Noordwijk, Netherlands", Source: "Other", AppDeadline: getTodayPlusDays(75), DateApplied: getRecentDate(16), Notes: "Thesis proposal under review" },
       
       // Media & Entertainment
-      { id: "job-27", Status: "Technical Interview", Company: "Spotify", Title: "Data Engineer", JobType: "Full-Time", Location: "Stockholm, Sweden", Source: "LinkedIn", AppDeadline: getTodayPlusDays(19), DateApplied: getRecentDate(8), NextStep: "Take-home coding challenge completed" },
-      { id: "job-28", Status: "Applied", Company: "Disney", Title: "Creative Technologist", JobType: "Full-Time", Location: "Burbank, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(50), DateApplied: getRecentDate(2), NextStep: "Creative portfolio review" },
+      { id: "job-27", Status: "Technical Interview", Company: "Spotify", Title: "Data Engineer", JobType: "Full-Time", Location: "Stockholm, Sweden", Source: "LinkedIn", AppDeadline: getTodayPlusDays(19), DateApplied: getRecentDate(8), Notes: "Take-home coding challenge completed" },
+      { id: "job-28", Status: "Applied", Company: "Disney", Title: "Creative Technologist", JobType: "Full-Time", Location: "Burbank, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(50), DateApplied: getRecentDate(2), Notes: "Creative portfolio review" },
       
       // Financial Services
-      { id: "job-29", Status: "Offer Received", Company: "BlackRock", Title: "Risk Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Networking Event", AppDeadline: getTodayPlusDays(12), DateApplied: getRecentDate(21), NextStep: "Offer expires January 18th" },
-      { id: "job-30", Status: "HR Screening", Company: "Visa", Title: "Payment Systems Engineer", JobType: "Full-Time", Location: "San Francisco, CA", Source: "LinkedIn", AppDeadline: getTodayPlusDays(26), DateApplied: getRecentDate(6), NextStep: "Behavioral interview scheduled" },
+      { id: "job-29", Status: "Offer Received", Company: "BlackRock", Title: "Risk Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Networking Event", AppDeadline: getTodayPlusDays(12), DateApplied: getRecentDate(21), Notes: "Offer expires January 18th" },
+      { id: "job-30", Status: "HR Screening", Company: "Visa", Title: "Payment Systems Engineer", JobType: "Full-Time", Location: "San Francisco, CA", Source: "LinkedIn", AppDeadline: getTodayPlusDays(26), DateApplied: getRecentDate(6), Notes: "Behavioral interview scheduled" },
       
       // Wishlist Companies
-      { id: "job-31", Status: "Wishlist", Company: "OpenAI", Title: "AI Research Engineer", JobType: "Full-Time", Location: "San Francisco, CA", Source: "Other", AppDeadline: getTodayPlusDays(90), DateApplied: "", NextStep: "Waiting for position to open" },
-      { id: "job-32", Status: "Wishlist", Company: "Y Combinator", Title: "Investment Associate", JobType: "Full-Time", Location: "Mountain View, CA", Source: "Networking Event", AppDeadline: getTodayPlusDays(120), DateApplied: "", NextStep: "Building relevant experience first" },
-      { id: "job-33", Status: "Wishlist", Company: "ASML", Title: "Lithography Engineer", JobType: "Full-Time", Location: "Veldhoven, Netherlands", Source: "Company Website", AppDeadline: getTodayPlusDays(100), DateApplied: "", NextStep: "Completing relevant coursework" },
+      { id: "job-31", Status: "Wishlist", Company: "OpenAI", Title: "AI Research Engineer", JobType: "Full-Time", Location: "San Francisco, CA", Source: "Other", AppDeadline: getTodayPlusDays(90), DateApplied: "", Notes: "Waiting for position to open" },
+      { id: "job-32", Status: "Wishlist", Company: "Y Combinator", Title: "Investment Associate", JobType: "Full-Time", Location: "Mountain View, CA", Source: "Networking Event", AppDeadline: getTodayPlusDays(120), DateApplied: "", Notes: "Building relevant experience first" },
+      { id: "job-33", Status: "Wishlist", Company: "ASML", Title: "Lithography Engineer", JobType: "Full-Time", Location: "Veldhoven, Netherlands", Source: "Company Website", AppDeadline: getTodayPlusDays(100), DateApplied: "", Notes: "Completing relevant coursework" },
       
       // Healthcare & Biotech
-      { id: "job-34", Status: "Applied", Company: "Johnson & Johnson", Title: "Medical Device Engineer", JobType: "Full-Time", Location: "New Brunswick, NJ", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(33), DateApplied: getRecentDate(4), NextStep: "Technical screening pending" },
-      { id: "job-35", Status: "Case Study / Assessment", Company: "Novartis", Title: "Digital Health Analyst", JobType: "Internship", Location: "Basel, Switzerland", Source: "Company Website", AppDeadline: getTodayPlusDays(4), DateApplied: getRecentDate(20), NextStep: "Healthcare innovation case study due Monday" },
+      { id: "job-34", Status: "Applied", Company: "Johnson & Johnson", Title: "Medical Device Engineer", JobType: "Full-Time", Location: "New Brunswick, NJ", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(33), DateApplied: getRecentDate(4), Notes: "Technical screening pending" },
+      { id: "job-35", Status: "Case Study / Assessment", Company: "Novartis", Title: "Digital Health Analyst", JobType: "Internship", Location: "Basel, Switzerland", Source: "Company Website", AppDeadline: getTodayPlusDays(4), DateApplied: getRecentDate(20), Notes: "Healthcare innovation case study due Monday" },
       
       // Telecommunications
-      { id: "job-36", Status: "Technical Interview", Company: "Ericsson", Title: "5G Network Engineer", JobType: "Full-Time", Location: "Stockholm, Sweden", Source: "LinkedIn", AppDeadline: getTodayPlusDays(21), DateApplied: getRecentDate(11), NextStep: "Technical deep-dive interview" },
-      { id: "job-37", Status: "Rejected", Company: "Nokia", Title: "RF Engineer", JobType: "Full-Time", Location: "Espoo, Finland", Source: "Company Website", AppDeadline: getRecentDate(120), DateApplied: getRecentDate(125), NextStep: "Position required more experience" },
+      { id: "job-36", Status: "Technical Interview", Company: "Ericsson", Title: "5G Network Engineer", JobType: "Full-Time", Location: "Stockholm, Sweden", Source: "LinkedIn", AppDeadline: getTodayPlusDays(21), DateApplied: getRecentDate(11), Notes: "Technical deep-dive interview" },
+      { id: "job-37", Status: "Rejected", Company: "Nokia", Title: "RF Engineer", JobType: "Full-Time", Location: "Espoo, Finland", Source: "Company Website", AppDeadline: getRecentDate(120), DateApplied: getRecentDate(125), Notes: "Position required more experience" },
       
       // Additional Tech
-      { id: "job-38", Status: "Applied", Company: "Palantir", Title: "Forward Deployed Engineer", JobType: "Full-Time", Location: "London, UK", Source: "Referral", AppDeadline: getTodayPlusDays(37), DateApplied: getRecentDate(1), NextStep: "Karat technical screen scheduled" },
-      { id: "job-39", Status: "HR Screening", Company: "Databricks", Title: "Solutions Architect", JobType: "Full-Time", Location: "Amsterdam, Netherlands", Source: "LinkedIn", AppDeadline: getTodayPlusDays(27), DateApplied: getRecentDate(6), NextStep: "Recruiter call this Thursday" },
-      { id: "job-40", Status: "To Apply", Company: "NVIDIA", Title: "GPU Software Engineer", JobType: "Full-Time", Location: "Santa Clara, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(42), DateApplied: "", NextStep: "Preparing application materials" }
+      { id: "job-38", Status: "Applied", Company: "Palantir", Title: "Forward Deployed Engineer", JobType: "Full-Time", Location: "London, UK", Source: "Referral", AppDeadline: getTodayPlusDays(37), DateApplied: getRecentDate(1), Notes: "Karat technical screen scheduled" },
+      { id: "job-39", Status: "HR Screening", Company: "Databricks", Title: "Solutions Architect", JobType: "Full-Time", Location: "Amsterdam, Netherlands", Source: "LinkedIn", AppDeadline: getTodayPlusDays(27), DateApplied: getRecentDate(6), Notes: "Recruiter call this Thursday" },
+      { id: "job-40", Status: "To Apply", Company: "NVIDIA", Title: "GPU Software Engineer", JobType: "Full-Time", Location: "Santa Clara, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(42), DateApplied: "", Notes: "Preparing application materials" }
     ];
     const sampleContacts = [
-      { id: "contact-1", Name: "Mario Rossi", Company: "McKinsey & Co", Role: "Engagement Manager", ContactDate: "2025-05-29", Notes: "Referral for internship" },
-      { id: "contact-2", Name: "Giulia Bianchi", Company: "Google", Role: "Recruiter", ContactDate: "2025-05-22", Notes: "Coffee chat, very helpful" },
+              { id: "contact-1", Name: "Mario Rossi", Company: "McKinsey & Co", Role: "Engagement Manager", Location: "Milan, Italy", ContactDate: "2025-05-29", Notes: "Referral for internship" },
+        { id: "contact-2", Name: "Giulia Bianchi", Company: "Google", Role: "Recruiter", Location: "Dublin, Ireland", ContactDate: "2025-05-22", Notes: "Coffee chat, very helpful" },
     ];
 
     /********* Firebase Services *********/
@@ -223,8 +223,8 @@ Best regards,
     };
 
     /********* Helpers & Custom Hooks *********/
-    const emptyJob = { Status:"Wishlist", Company:"", Title:"", JobType:"Internship", Location:"", Source:"Polimi CareerService", AppDeadline:"", DateApplied:"", NextStep:"" };
-    const emptyContact = { Name:"", Company:"", Role:"", ContactDate:"", Notes:"" };
+            const emptyJob = { Status:"Wishlist", Company:"", Title:"", JobType:"Internship", Location:"", Source:"Polimi CareerService", AppDeadline:"", DateApplied:"", Notes:"" };
+            const emptyContact = { Name:"", Company:"", Role:"", Location:"", ContactDate:"", Notes:"" };
 
     function useAuth() {
       const [user, setUser] = React.useState(null);
@@ -360,13 +360,127 @@ Best regards,
       const today = new Date(); today.setHours(0, 0, 0, 0);
       const deadlineDate = new Date(deadline);
       const diffDays = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
-      if (diffDays <= 0) return 'text-error font-bold';
-      if (diffDays <= 3) return 'text-warning font-bold';
-      if (diffDays <= 7) return 'text-success font-bold';
-      return '';
+      if (diffDays < 0) return 'text-gray-500'; // Past deadline - Gray
+      if (diffDays <= 3) return 'text-red-600 font-semibold'; // Critical - Red
+      if (diffDays <= 7) return 'text-orange-500 font-medium'; // Urgent - Orange  
+      if (diffDays <= 14) return 'text-yellow-600'; // Soon - Yellow
+      return 'text-gray-700'; // Normal
     };
 
     /********* Reusable Components *********/
+    function DebugInfo({ jobs, contacts }) {
+      const [debugView, setDebugView] = React.useState('overview');
+      
+      const stats = {
+        totalJobs: jobs.length,
+        appliedJobs: jobs.filter(j => j.Status === 'Applied').length,
+        interviewJobs: jobs.filter(j => j.Status.includes('Interview')).length,
+        rejectedJobs: jobs.filter(j => j.Status === 'Rejected').length,
+        offerJobs: jobs.filter(j => j.Status.includes('Offer')).length,
+        upcomingDeadlines: jobs.filter(j => {
+          if (!j.AppDeadline) return false;
+          const deadline = new Date(j.AppDeadline);
+          const today = new Date();
+          const diffDays = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
+          return diffDays >= 0 && diffDays <= 7;
+        }).length,
+        totalContacts: contacts.length,
+        dataSize: JSON.stringify({jobs, contacts}).length
+      };
+
+      return (
+        <div className="space-y-4">
+          <div className="flex gap-2 mb-4">
+            <button 
+              className={`px-3 py-1 rounded text-sm ${debugView === 'overview' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+              onClick={() => setDebugView('overview')}
+            >
+              Overview
+            </button>
+            <button 
+              className={`px-3 py-1 rounded text-sm ${debugView === 'performance' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+              onClick={() => setDebugView('performance')}
+            >
+              Performance
+            </button>
+            <button 
+              className={`px-3 py-1 rounded text-sm ${debugView === 'validation' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+              onClick={() => setDebugView('validation')}
+            >
+              Validation
+            </button>
+          </div>
+
+          {debugView === 'overview' && (
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-blue-50 p-3 rounded">
+                <h4 className="font-semibold text-blue-800">Application Stats</h4>
+                <p className="text-sm text-blue-600">Total: {stats.totalJobs}</p>
+                <p className="text-sm text-blue-600">Applied: {stats.appliedJobs}</p>
+                <p className="text-sm text-blue-600">Interviews: {stats.interviewJobs}</p>
+                <p className="text-sm text-blue-600">Offers: {stats.offerJobs}</p>
+                <p className="text-sm text-blue-600">Rejected: {stats.rejectedJobs}</p>
+              </div>
+              <div className="bg-green-50 p-3 rounded">
+                <h4 className="font-semibold text-green-800">Deadlines & Contacts</h4>
+                <p className="text-sm text-green-600">Upcoming Deadlines: {stats.upcomingDeadlines}</p>
+                <p className="text-sm text-green-600">Total Contacts: {stats.totalContacts}</p>
+                <p className="text-sm text-green-600">Data Size: {(stats.dataSize/1024).toFixed(1)} KB</p>
+              </div>
+            </div>
+          )}
+
+          {debugView === 'performance' && (
+            <div className="space-y-3">
+              <div className="bg-yellow-50 p-3 rounded">
+                <h4 className="font-semibold text-yellow-800">Performance Metrics</h4>
+                <p className="text-sm text-yellow-600">Last Update: {new Date().toLocaleString()}</p>
+                <p className="text-sm text-yellow-600">Browser: {navigator.userAgent.split(' ')[0]}</p>
+                <p className="text-sm text-yellow-600">Screen: {screen.width}x{screen.height}</p>
+                <p className="text-sm text-yellow-600">Memory: {navigator.deviceMemory ? navigator.deviceMemory + 'GB' : 'Unknown'}</p>
+              </div>
+              <div className="bg-purple-50 p-3 rounded">
+                <h4 className="font-semibold text-purple-800">Firebase Status</h4>
+                <p className="text-sm text-purple-600">Auth State: {auth.currentUser ? 'Authenticated' : 'Not Authenticated'}</p>
+                <p className="text-sm text-purple-600">User ID: {auth.currentUser?.uid || 'N/A'}</p>
+                <p className="text-sm text-purple-600">Connection: Online</p>
+              </div>
+            </div>
+          )}
+
+          {debugView === 'validation' && (
+            <div className="space-y-3">
+              <div className="bg-red-50 p-3 rounded">
+                <h4 className="font-semibold text-red-800">Data Validation</h4>
+                <p className="text-sm text-red-600">Missing Company Names: {jobs.filter(j => !j.Company).length}</p>
+                <p className="text-sm text-red-600">Missing Titles: {jobs.filter(j => !j.Title).length}</p>
+                <p className="text-sm text-red-600">Missing Deadlines: {jobs.filter(j => !j.AppDeadline).length}</p>
+                <p className="text-sm text-red-600">Past Deadlines: {jobs.filter(j => j.AppDeadline && new Date(j.AppDeadline) < new Date()).length}</p>
+              </div>
+              <div className="bg-orange-50 p-3 rounded">
+                <h4 className="font-semibold text-orange-800">Quick Actions</h4>
+                <button 
+                  onClick={() => showToast('Debug: Clearing localStorage cache', 'info')}
+                  className="text-sm bg-orange-500 text-white px-3 py-1 rounded mr-2 mb-2"
+                >
+                  Clear Cache
+                </button>
+                <button 
+                  onClick={() => {
+                    console.log('Jobs:', jobs);
+                    console.log('Contacts:', contacts);
+                    showToast('Debug: Data logged to console', 'info');
+                  }}
+                  className="text-sm bg-orange-500 text-white px-3 py-1 rounded mr-2 mb-2"
+                >
+                  Log Data
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
     function Icon({ name, className = "", ...props }) {
       React.useEffect(() => {
         if (typeof feather !== 'undefined') {
@@ -519,6 +633,7 @@ Best regards,
                 <span className="text-xs text-gray-500">{user.email}</span>
               </div>
             </li>
+            <li><a onClick={() => document.getElementById('debug_modal').showModal()} className="text-blue-600 hover:bg-blue-50"><Icon name="info" className="w-4 h-4"/> Debug Info</a></li>
             <li><a onClick={onSignOut} className="text-red-600 hover:bg-red-50"><Icon name="log-out" className="w-4 h-4"/> Sign Out</a></li>
           </ul>
         </div>
@@ -934,13 +1049,14 @@ Best regards,
           <div className="p-6 space-y-6">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className={`bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 text-center border transition-all duration-200 cursor-pointer transform hover:scale-105 border-blue-200/50 hover:shadow-md`} onClick={() => onMetricFilterToggle('total')}>
-                    <div className="text-xs font-medium text-blue-600 uppercase tracking-wide mb-2">Clear Filters</div>
-                    <div className="text-2xl font-bold text-blue-700 mb-2">
+                    <div className="text-xs font-medium text-blue-600 uppercase tracking-wide mb-1">Total Apps</div>
+                    <div className="text-2xl font-bold text-blue-700 mb-1">
                       {metrics.total}
                     </div>
-                    <div className="flex items-center justify-center gap-1 text-xs text-blue-600">
-                      <Icon name="filter-x" className="w-3 h-3"/>
-                      <span>Total Apps</span>
+                    <div className="text-xs text-gray-600 mb-2">applications</div>
+                    <div className="flex items-center justify-center gap-1 text-xs text-red-600 font-medium">
+                      <Icon name="x" className="w-3 h-3"/>
+                      <span>CLEAR FILTERS</span>
                     </div>
                   </div>
                   <div className={`bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 text-center border transition-all duration-200 cursor-pointer transform hover:scale-105 ${
@@ -1120,7 +1236,7 @@ Best regards,
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4"><label className="form-control w-full"><div className="label"><span className="label-text">Company</span></div><input type="text" placeholder="e.g., Google" className="input input-bordered w-full" value={job.Company} onChange={e => handleChange('Company', e.target.value)} /></label><label className="form-control w-full"><div className="label"><span className="label-text">Job Title</span></div><input type="text" placeholder="e.g., Software Engineer" className="input input-bordered w-full" value={job.Title} onChange={e => handleChange('Title', e.target.value)} /></label></div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4"><label className="form-control w-full"><div className="label"><span className="label-text">Status</span></div><select className="select select-bordered" value={job.Status} onChange={e => handleChange('Status', e.target.value)}>{statusList.map(s => <option key={s}>{s}</option>)}</select></label><label className="form-control w-full"><div className="label"><span className="label-text">Job Type</span></div><select className="select select-bordered" value={job.JobType} onChange={e => handleChange('JobType', e.target.value)}>{jobTypeList.map(t => <option key={t}>{t}</option>)}</select></label><label className="form-control w-full"><div className="label"><span className="label-text">Source</span></div><select className="select select-bordered" value={job.Source} onChange={e => handleChange('Source', e.target.value)}>{sourceList.map(s => <option key={s}>{s}</option>)}</select></label></div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4"><label className="form-control w-full"><div className="label"><span className="label-text">Location</span></div><input type="text" placeholder="e.g., Milan" className="input input-bordered w-full" value={job.Location} onChange={e => handleChange('Location', e.target.value)} /></label><label className="form-control w-full"><div className="label"><span className="label-text">Application Deadline</span></div><input type="date" className="input input-bordered w-full" value={job.AppDeadline} onChange={e => handleChange('AppDeadline', e.target.value)} /></label><label className="form-control w-full"><div className="label"><span className="label-text">Date Applied</span></div><input type="date" className="input input-bordered w-full" value={job.DateApplied} onChange={e => handleChange('DateApplied', e.target.value)} /></label></div>
-                <label className="form-control w-full"><div className="label"><span className="label-text">Next Step / Notes</span></div><input type="text" placeholder="e.g., Prepare for interview" className="input input-bordered w-full" value={job.NextStep} onChange={e => handleChange('NextStep', e.target.value)} /></label>
+                <label className="form-control w-full"><div className="label"><span className="label-text">Next Step / Notes</span></div><input type="text" placeholder="e.g., Prepare for interview" className="input input-bordered w-full" value={job.Notes} onChange={e => handleChange('Notes', e.target.value)} /></label>
                 <div className="modal-action"><button className="btn" onClick={onCancel}>Cancel</button><button className="btn btn-primary" onClick={handleSave}>Save</button></div>
             </div>
         );
@@ -1146,7 +1262,7 @@ Best regards,
         }
       };
 
-      const [expandedNextStep, setExpandedNextStep] = React.useState(null);
+      const [expandedNotes, setExpandedNotes] = React.useState(null);
 
       const getStatusRowColor = (status) => {
         const colors = {
@@ -1183,7 +1299,7 @@ Best regards,
                         <th className="text-left py-4 px-2 font-semibold text-gray-700 text-sm min-w-[120px]">Type</th>
                         <th className="text-left py-4 px-2 font-semibold text-gray-700 text-sm min-w-[130px]">Source</th>
                         <th className="text-left py-4 px-2 font-semibold text-gray-700 text-sm min-w-[110px]">Deadline</th>
-                        <th className="text-left py-4 px-2 font-semibold text-gray-700 text-sm min-w-[200px]">Next Step</th>
+                        <th className="text-left py-4 px-2 font-semibold text-gray-700 text-sm min-w-[200px]">Notes</th>
                         <th className="text-left py-4 px-2 font-semibold text-gray-700 text-sm w-12"></th>
                       </tr>
                     </thead>
@@ -1245,34 +1361,34 @@ Best regards,
                             <div className="flex items-center gap-2">
                               <input type="text" 
                                      className="flex-1 bg-transparent border-none text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
-                                     value={j.NextStep} 
-                                     onChange={e => updateJob(j.id, 'NextStep', e.target.value)} 
+                                     value={j.Notes} 
+                                     onChange={e => updateJob(j.id, 'Notes', e.target.value)} 
                                      placeholder="Next step" 
-                                     onFocus={() => setExpandedNextStep(j.id)}
-                                     onBlur={() => setTimeout(() => setExpandedNextStep(null), 150)} />
-                              {j.NextStep && j.NextStep.length > 20 && (
+                                     onFocus={() => setExpandedNotes(j.id)}
+                                     onBlur={() => setTimeout(() => setExpandedNotes(null), 150)} />
+                              {j.Notes && j.Notes.length > 20 && (
                                 <button 
                                   className="text-blue-500 hover:text-blue-700 text-xs p-1 rounded"
-                                  onClick={() => setExpandedNextStep(expandedNextStep === j.id ? null : j.id)}
+                                  onClick={() => setExpandedNotes(expandedNotes === j.id ? null : j.id)}
                                   title="Expand next step"
                                 >
                                   <Icon name="maximize-2" className="w-3 h-3" />
                                 </button>
                               )}
                             </div>
-                            {expandedNextStep === j.id && j.NextStep && (
+                            {expandedNotes === j.id && j.Notes && (
                               <div className="absolute top-full left-0 right-0 z-20 bg-white border border-gray-200 rounded-lg shadow-lg p-3 mt-1">
                                 <textarea 
                                   className="w-full border-none resize-none text-xs focus:outline-none"
-                                  value={j.NextStep}
-                                  onChange={e => updateJob(j.id, 'NextStep', e.target.value)}
+                                  value={j.Notes}
+                                  onChange={e => updateJob(j.id, 'Notes', e.target.value)}
                                   rows={3}
                                   placeholder="Describe your next step..."
                                 />
                                 <div className="flex justify-end mt-2">
                                   <button 
                                     className="text-xs text-gray-500 hover:text-gray-700"
-                                    onClick={() => setExpandedNextStep(null)}
+                                    onClick={() => setExpandedNotes(null)}
                                   >
                                     Close
                                   </button>
@@ -1296,7 +1412,7 @@ Best regards,
       );
     }
     
-    function ContactsTable({ contacts, setContacts, searchTerm }) {
+    function ContactsTable({ contacts, setContacts, searchTerm, companyFilter, setCompanyFilter, locationFilter, setLocationFilter }) {
         const updateContact = async (id, field, value) => {
           try {
             await setContacts(contacts.map(c => c.id === id ? { ...c, [field]: value } : c));
@@ -1339,6 +1455,73 @@ Best regards,
                             <Icon name="plus" className="w-4 h-4"/> Add Contact
                         </button>
                     </div>
+                    
+                    {/* Contact Filters */}
+                    <div className="mb-6 space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="relative">
+                          <input 
+                            type="text" 
+                            placeholder="Search contacts..." 
+                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                            value={searchTerm}
+                            readOnly
+                          />
+                          <Icon name="search" className="absolute left-3 top-2.5 w-4 h-4 text-gray-400"/>
+                        </div>
+                        <div className="relative">
+                          <input 
+                            type="text" 
+                            placeholder="Filter by company..." 
+                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                            value={companyFilter}
+                            onChange={(e) => setCompanyFilter(e.target.value)}
+                          />
+                          <Icon name="briefcase" className="absolute left-3 top-2.5 w-4 h-4 text-gray-400"/>
+                        </div>
+                        <div className="relative">
+                          <input 
+                            type="text" 
+                            placeholder="Filter by location..." 
+                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                            value={locationFilter}
+                            onChange={(e) => setLocationFilter(e.target.value)}
+                          />
+                          <Icon name="map-pin" className="absolute left-3 top-2.5 w-4 h-4 text-gray-400"/>
+                        </div>
+                      </div>
+                      
+                      {/* Active Filters */}
+                      {(companyFilter || locationFilter) && (
+                        <div className="flex flex-wrap gap-2">
+                          {companyFilter && (
+                            <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full flex items-center gap-1">
+                              Company: {companyFilter}
+                              <button onClick={() => setCompanyFilter('')} className="ml-1 text-blue-600 hover:text-blue-800">
+                                <Icon name="x" className="w-3 h-3"/>
+                              </button>
+                            </span>
+                          )}
+                          {locationFilter && (
+                            <span className="px-3 py-1 bg-green-100 text-green-800 text-xs rounded-full flex items-center gap-1">
+                              Location: {locationFilter}
+                              <button onClick={() => setLocationFilter('')} className="ml-1 text-green-600 hover:text-green-800">
+                                <Icon name="x" className="w-3 h-3"/>
+                              </button>
+                            </span>
+                          )}
+                          <button 
+                            onClick={() => {
+                              setCompanyFilter('');
+                              setLocationFilter('');
+                            }}
+                            className="px-3 py-1 bg-red-100 text-red-800 text-xs rounded-full hover:bg-red-200 transition-colors"
+                          >
+                            Clear All
+                          </button>
+                        </div>
+                      )}
+                    </div>
                     {contacts.length === 0 ? (
                         <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
                             <Icon name="users" className="w-16 h-16 mx-auto text-gray-300" />
@@ -1350,10 +1533,11 @@ Best regards,
                             <table className="w-full">
                                 <thead>
                                     <tr className="border-b border-gray-200">
-                                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width:'20%'}}>Name</th>
-                                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width:'20%'}}>Company</th>
-                                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width:'20%'}}>Role</th>
-                                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width:'15%'}}>Contact Date</th>
+                                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width:'18%'}}>Name</th>
+                                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width:'18%'}}>Company</th>
+                                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width:'16%'}}>Role</th>
+                                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width:'12%'}}>Location</th>
+                                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width:'12%'}}>Contact Date</th>
                                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm">Notes</th>
                                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width:'5%'}}></th>
                                     </tr>
@@ -1372,6 +1556,21 @@ Best regards,
                                             <td className="py-3 px-3">
                                                 <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
                                                        value={c.Role} onChange={e => updateContact(c.id, 'Role', e.target.value)} placeholder="Role" />
+                                            </td>
+                                            <td className="py-3 px-3">
+                                                <div className="flex items-center gap-1">
+                                                  <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                                                         value={c.Location} onChange={e => updateContact(c.id, 'Location', e.target.value)} placeholder="Location" />
+                                                  {c.Location && (
+                                                    <button 
+                                                      onClick={() => window.open(`https://www.google.com/maps/search/${encodeURIComponent(c.Location)}`, '_blank')}
+                                                      className="text-blue-500 hover:text-blue-700 p-1 rounded"
+                                                      title="Open in Google Maps"
+                                                    >
+                                                      <Icon name="map-pin" className="w-3 h-3"/>
+                                                    </button>
+                                                  )}
+                                                </div>
                                             </td>
                                             <td className="py-3 px-3">
                                                 <input type="date" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
@@ -1402,6 +1601,8 @@ Best regards,
                                value={newContact.Company} onChange={e => setNewContact({...newContact, Company: e.target.value})} />
                         <input type="text" placeholder="Role" className="input input-bordered w-full" 
                                value={newContact.Role} onChange={e => setNewContact({...newContact, Role: e.target.value})} />
+                        <input type="text" placeholder="Location" className="input input-bordered w-full" 
+                               value={newContact.Location} onChange={e => setNewContact({...newContact, Location: e.target.value})} />
                         <input type="date" className="input input-bordered w-full" 
                                value={newContact.ContactDate} onChange={e => setNewContact({...newContact, ContactDate: e.target.value})} />
                         <textarea className="textarea textarea-bordered w-full" placeholder="Notes" 
@@ -1421,6 +1622,8 @@ Best regards,
       const { jobs, contacts, loading: dataLoading, updateJobs, updateContacts, loadUserData } = useFirebaseData(user);
       const [jobSearchTerm, setJobSearchTerm] = React.useState('');
       const [contactSearchTerm, setContactSearchTerm] = React.useState('');
+      const [contactCompanyFilter, setContactCompanyFilter] = React.useState('');
+      const [contactLocationFilter, setContactLocationFilter] = React.useState('');
       const [statusFilters, setStatusFilters] = React.useState([]);
       const [jobTypeFilters, setJobTypeFilters] = React.useState([]);
       const [sourceFilters, setSourceFilters] = React.useState([]);
@@ -1460,18 +1663,20 @@ Best regards,
           .filter(job => jobSearchTerm === '' || 
             job.Company.toLowerCase().includes(jobSearchTerm.toLowerCase()) || 
             job.Title.toLowerCase().includes(jobSearchTerm.toLowerCase()) ||
-            job.NextStep.toLowerCase().includes(jobSearchTerm.toLowerCase())
+            job.Notes.toLowerCase().includes(jobSearchTerm.toLowerCase())
           );
       }, [jobs, selectedMetricFilters, statusFilters, jobTypeFilters, sourceFilters, locationFilter, jobSearchTerm]);
 
       const filteredContacts = React.useMemo(() => {
         return contacts.filter(contact => 
-          contactSearchTerm === '' || 
-          contact.Name.toLowerCase().includes(contactSearchTerm.toLowerCase()) || 
-          contact.Company.toLowerCase().includes(contactSearchTerm.toLowerCase()) ||
-          contact.Role.toLowerCase().includes(contactSearchTerm.toLowerCase())
+          (contactSearchTerm === '' || 
+           contact.Name.toLowerCase().includes(contactSearchTerm.toLowerCase()) || 
+           contact.Company.toLowerCase().includes(contactSearchTerm.toLowerCase()) ||
+           contact.Role.toLowerCase().includes(contactSearchTerm.toLowerCase())) &&
+          (contactCompanyFilter === '' || contact.Company.toLowerCase().includes(contactCompanyFilter.toLowerCase())) &&
+          (contactLocationFilter === '' || contact.Location.toLowerCase().includes(contactLocationFilter.toLowerCase()))
         );
-      }, [contacts, contactSearchTerm]);
+      }, [contacts, contactSearchTerm, contactCompanyFilter, contactLocationFilter]);
 
       const handleSaveNewJob = async (job) => {
         try {
@@ -1803,7 +2008,15 @@ Best regards,
                       Showing {filteredContacts.length} of {contacts.length} contacts
                     </div>
                   )}
-                  <ContactsTable contacts={filteredContacts} setContacts={updateContacts} />
+                  <ContactsTable 
+                  contacts={filteredContacts} 
+                  setContacts={updateContacts} 
+                  searchTerm={contactSearchTerm}
+                  companyFilter={contactCompanyFilter}
+                  setCompanyFilter={setContactCompanyFilter}
+                  locationFilter={contactLocationFilter}
+                  setLocationFilter={setContactLocationFilter}
+                />
                 </div>
               </div>
             </div>
@@ -1820,9 +2033,13 @@ Best regards,
               />
             </Modal>
 
-            <Modal id="email_templates_modal" title="Email Templates">
-              <EmailTemplatesModal onCancel={() => document.getElementById('email_templates_modal').close()} />
-            </Modal>
+                    <Modal id="debug_modal" title="🔧 Debug Info">
+          <DebugInfo jobs={jobs} contacts={contacts} />
+        </Modal>
+        
+        <Modal id="email_templates_modal" title="Email Templates">
+          <EmailTemplatesModal onCancel={() => document.getElementById('email_templates_modal').close()} />
+        </Modal>
         </div>
       );
     }
