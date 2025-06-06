@@ -70,18 +70,35 @@
 
     const getTodayPlusDays = (days) => new Date(new Date().setDate(new Date().getDate() + days)).toISOString().split('T')[0];
     const sampleJobs  = [
-      { id: "job-1", Status: "Case Study / Assessment", Company: "Bain & Company", Title: "Associate Consultant Intern", JobType: "Internship", Location: "Milan", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(2), DateApplied: "2025-04-10", NextStep: "Prepare case study for Friday" },
-      { id: "job-2", Status: "Applied", Company: "Google", Title: "Business Analyst", JobType: "Thesis Project", Location: "Berlin", Source: "Company Website", AppDeadline: getTodayPlusDays(30), DateApplied: "2025-04-06", NextStep: "Follow up next week" },
-      { id: "job-3", Status: "HR Screening", Company: "Ferrari", Title: "Mechanical Engineer", JobType: "Full-Time", Location: "Maranello", Source: "LinkedIn", AppDeadline: getTodayPlusDays(6), DateApplied: "2025-05-18", NextStep: "HR call scheduled for tomorrow" },
-      { id: "job-4", Status: "Offer Accepted", Company: "Enel", Title: "Data Scientist", JobType: "Full-Time", Location: "Remote", Source: "Referral", AppDeadline: "2025-03-16", DateApplied: "2025-03-27", NextStep: "Contract signed, onboarding starts 01/09" },
-      { id: "job-5", Status: "Rejected", Company: "Nestlé", Title: "Supply Chain Intern", JobType: "Internship", Location: "Dublin", Source: "Networking Event", AppDeadline: "2025-02-23", DateApplied: "2025-03-21", NextStep: "Rejected after final interview" },
-      { id: "job-6", Status: "Technical Interview", Company: "Amazon", Title: "Cloud Support Associate", JobType: "Internship", Location: "Dublin", Source: "Company Website", AppDeadline: getTodayPlusDays(-5), DateApplied: "2025-04-19", NextStep: "Waiting for feedback" },
-      { id: "job-7", Status: "Wishlist", Company: "McKinsey & Co", Title: "Business Analyst Intern", JobType: "Internship", Location: "Milan", Source: "Networking Event", AppDeadline: getTodayPlusDays(90), DateApplied: "", NextStep: "Network with alumni" },
-      { id: "job-8", Status: "Offer Received", Company: "Pirelli", Title: "Junior PMO", JobType: "Full-Time", Location: "Milan", Source: "Other", AppDeadline: getTodayPlusDays(25), DateApplied: "2025-03-22", NextStep: "Negotiate salary" },
+      { id: "job-1", Status: "Offer Received", Company: "Bain & Company", Title: "Associate Consultant Intern", JobType: "Internship", Location: "Milan", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(7), DateApplied: getTodayPlusDays(-30), NextStep: "Final round interview went well, waiting for written offer details." },
+      { id: "job-2", Status: "Applied", Company: "Google", Title: "Software Engineer Intern", JobType: "Internship", Location: "Zurich", Source: "Company Website", AppDeadline: getTodayPlusDays(45), DateApplied: getTodayPlusDays(-2), NextStep: "Submitted application, waiting for Online Assessment link." },
+      { id: "job-3", Status: "Technical Interview", Company: "Ferrari", Title: "Aerodynamics Engineer", JobType: "Full-Time", Location: "Maranello", Source: "LinkedIn", AppDeadline: getTodayPlusDays(10), DateApplied: getTodayPlusDays(-25), NextStep: "Technical interview with team lead scheduled for next Tuesday." },
+      { id: "job-4", Status: "Offer Accepted", Company: "Enel", Title: "Data Scientist", JobType: "Full-Time", Location: "Remote", Source: "Referral", AppDeadline: getTodayPlusDays(-40), DateApplied: getTodayPlusDays(-60), NextStep: "Onboarding starts 01/09. Complete pre-work tasks." },
+      { id: "job-5", Status: "Rejected", Company: "Nestlé", Title: "Brand Manager", JobType: "Full-Time", Location: "Dublin", Source: "Networking Event", AppDeadline: getTodayPlusDays(-50), DateApplied: getTodayPlusDays(-70), NextStep: "Rejected after final interview. Sent a thank-you note." },
+      { id: "job-6", Status: "Final Interview", Company: "Amazon", Title: "Cloud Support Associate", JobType: "Internship", Location: "London", Source: "Company Website", AppDeadline: getTodayPlusDays(-10), DateApplied: getTodayPlusDays(-40), NextStep: "Final loop interview is tomorrow. Review STAR method." },
+      { id: "job-7", Status: "Wishlist", Company: "McKinsey & Company", Title: "Business Analyst Intern", JobType: "Internship", Location: "Milan", Source: "Networking Event", AppDeadline: getTodayPlusDays(90), DateApplied: "", NextStep: "Need to network with alumni from Polimi. Attending their event next month." },
+      { id: "job-8", Status: "HR Screening", Company: "Pirelli", Title: "Junior PMO", JobType: "Full-Time", Location: "Milan", Source: "Other", AppDeadline: getTodayPlusDays(20), DateApplied: getTodayPlusDays(-5), NextStep: "Completed HR call, waiting for feedback and next steps." },
+      { id: "job-9", Status: "Withdrawn", Company: "Microsoft", Title: "UX Designer", JobType: "Part-Time", Location: "Remote", Source: "LinkedIn", AppDeadline: getTodayPlusDays(15), DateApplied: getTodayPlusDays(-18), NextStep: "Withdrew application to focus on other opportunities." },
+      { id: "job-10", Status: "To Apply", Company: "Goldman Sachs", Title: "Investment Banking Analyst", JobType: "Full-Time", Location: "London", Source: "Company Website", AppDeadline: getTodayPlusDays(28), DateApplied: "", NextStep: "Tailor resume and write cover letter." },
+      { id: "job-11", Status: "Case Study / Assessment", Company: "Procter & Gamble", Title: "Marketing Intern", JobType: "Internship", Location: "Geneva", Source: "Referral", AppDeadline: getTodayPlusDays(5), DateApplied: getTodayPlusDays(-15), NextStep: "Received online assessment, due in 3 days." },
+      { id: "job-12", Status: "Applied", Company: "Siemens", Title: "Control Systems Engineer", JobType: "Thesis Project", Location: "Munich", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(60), DateApplied: getTodayPlusDays(-1), NextStep: "Just applied. Need to follow up with Prof. Rossi." },
+      { id: "job-13", Status: "Rejected", Company: "L'Oréal", Title: "Product Manager", JobType: "Full-Time", Location: "Paris", Source: "LinkedIn", AppDeadline: getTodayPlusDays(-35), DateApplied: getTodayPlusDays(-55), NextStep: "Failed the online assessment. Did not move forward." },
+      { id: "job-14", Status: "Technical Interview", Company: "Meta", Title: "Data Engineer Intern", JobType: "Internship", Location: "Dublin", Source: "Networking Event", AppDeadline: getTodayPlusDays(12), DateApplied: getTodayPlusDays(-22), NextStep: "Passed the first technical screen. Second one is with a senior engineer." },
+      { id: "job-15", Status: "Wishlist", Company: "Lamborghini", Title: "Composites Engineer", JobType: "Full-Time", Location: "Sant'Agata Bolognese", Source: "Company Website", AppDeadline: getTodayPlusDays(120), DateApplied: "", NextStep: "Dream job. Need more experience in composites first." },
+      { id: "job-16", Status: "Offer Received", Company: "Unilever", Title: "Finance Intern", JobType: "Internship", Location: "Rome", Source: "Referral", AppDeadline: getTodayPlusDays(-2), DateApplied: getTodayPlusDays(-28), NextStep: "Received offer, deadline to accept is in one week. Compare with Bain." },
+      { id: "job-17", Status: "Applied", Company: "Tesla", Title: "Firmware Engineer", JobType: "Full-Time", Location: "Amsterdam", Source: "LinkedIn", AppDeadline: getTodayPlusDays(33), DateApplied: getTodayPlusDays(-3), NextStep: "Application sent. The role seems like a perfect fit for my thesis." },
+      { id: "job-18", Status: "HR Screening", Company: "Salesforce", Title: "Sales Development Rep", JobType: "Full-Time", Location: "Dublin", Source: "Company Website", AppDeadline: getTodayPlusDays(18), DateApplied: getTodayPlusDays(-8), NextStep: "Initial call with HR was positive. They will schedule a call with the hiring manager." },
+      { id: "job-19", Status: "Case Study / Assessment", Company: "Boston Consulting Group (BCG)", Title: "Associate Intern", JobType: "Internship", Location: "Milan", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(9), DateApplied: getTodayPlusDays(-19), NextStep: "Online case (Casey bot). Need to practice." },
+      { id: "job-20", Status: "Wishlist", Company: "European Space Agency", Title: "Propulsion Intern", JobType: "Thesis Project", Location: "Noordwijk", Source: "Other", AppDeadline: getTodayPlusDays(200), DateApplied: "", NextStep: "Check for Young Graduate Trainee (YGT) program opening." },
     ];
     const sampleContacts = [
-      { id: "contact-1", Name: "Mario Rossi", Company: "McKinsey & Co", Role: "Engagement Manager", ContactDate: "2025-05-29", Notes: "Referral for internship" },
-      { id: "contact-2", Name: "Giulia Bianchi", Company: "Google", Role: "Recruiter", ContactDate: "2025-05-22", Notes: "Coffee chat, very helpful" },
+      { id: "contact-1", Name: "Mario Rossi", Company: "McKinsey & Company", Role: "Engagement Manager", ContactDate: getTodayPlusDays(-15), Notes: "Met at Polimi event. He mentioned the Business Analyst internship program and suggested I highlight my thesis work on my CV. Sent a follow-up email." },
+      { id: "contact-2", Name: "Giulia Bianchi", Company: "Google", Role: "University Recruiter", ContactDate: getTodayPlusDays(-30), Notes: "Informational interview (coffee chat). She was very helpful and gave tips for the technical interviews. Mentioned that they value coding outside of coursework." },
+      { id: "contact-3", Name: "Francesco Conti", Company: "Ferrari", Role: "Head of Aerodynamics", ContactDate: getTodayPlusDays(-5), Notes: "Alumnus from my department. Connected on LinkedIn and he agreed to a brief call next week to discuss the Aerodynamics Engineer role." },
+      { id: "contact-4", Name: "Elena Ricci", Company: "Enel", Role: "HR Business Partner", ContactDate: getTodayPlusDays(-65), Notes: "The HR representative who managed my interview process. She was my main point of contact and extended the final offer." },
+      { id: "contact-5", Name: "David O'Brien", Company: "Salesforce", Role: "Account Executive", ContactDate: getTodayPlusDays(-22), Notes: "Met at a networking dinner. He's not on the team I applied to but offered to pass my resume to the right hiring manager." },
+      { id: "contact-6", Name: "Ana Petrova", Company: "Amazon Web Services", Role: "Senior Cloud Support Engineer", ContactDate: getTodayPlusDays(-45), Notes: "Interviewer for the final round at Amazon. Seemed impressed with my knowledge of their S3 service. Should connect on LinkedIn." },
+      { id: "contact-7", Name: "Wei Zhang", Company: "Meta", Role: "Data Engineering Manager", ContactDate: getTodayPlusDays(-10), Notes: "Hiring manager for the Data Engineer internship. Had the second technical interview with him. Very sharp, asked tough questions about ETL pipelines." },
     ];
 
     /********* Firebase Services *********/
@@ -712,18 +729,20 @@
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '14%'}}>Status</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '16%'}}>Company</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '20%'}}>Role</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Location</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Type</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '12%'}}>Source</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Deadline</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '15%'}}>Next Step</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Next Step</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '3%'}}></th>
                       </tr>
                     </thead>
                     <tbody>
                       {jobs.map((j) => (
-                        <tr key={j.id} className="border-b border-gray-100 transition-colors duration-150" 
-                            onMouseOver={e => e.currentTarget.style.backgroundColor = '#F9FAFB'}
-                            onMouseOut={e => e.currentTarget.style.backgroundColor = 'transparent'}>
+                        <tr key={j.id} className="border-b border-gray-100 transition-colors duration-150" title={`[${j.Company}] ${j.Title}`}
+                            onMouseEnter={(e) => e.currentTarget.classList.add('bg-gray-50')}
+                            onMouseLeave={(e) => e.currentTarget.classList.remove('bg-gray-50')}
+                        >
                           <td className="py-3 px-3">
                             <select className="w-full bg-transparent border-none text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
                                     value={j.Status} onChange={e => updateJob(j.id, 'Status', e.target.value)}>
@@ -737,6 +756,18 @@
                           <td className="py-3 px-3">
                             <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
                                    value={j.Title} onChange={e => updateJob(j.id, 'Title', e.target.value)} placeholder="Job title" />
+                          </td>
+                          <td className="py-3 px-3">
+                            <div className="flex items-center gap-1">
+                                <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                                        value={j.Location} onChange={e => updateJob(j.id, 'Location', e.target.value)} placeholder="Location" />
+                                {j.Location && (
+                                <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(j.Location)}`} target="_blank" rel="noopener noreferrer" 
+                                    className="text-blue-500 hover:text-blue-700 p-1 rounded-full hover:bg-blue-100 transition-colors duration-150">
+                                    <Icon name="map-pin" className="w-4 h-4"/>
+                                </a>
+                                )}
+                            </div>
                           </td>
                           <td className="py-3 px-3">
                             <select className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
@@ -756,7 +787,7 @@
                           </td>
                           <td className="py-3 px-3">
                             <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
-                                   value={j.NextStep} onChange={e => updateJob(j.id, 'NextStep', e.target.value)} placeholder="Next step" />
+                                   value={j.NextStep} onChange={e => updateJob(j.id, 'NextStep', e.target.value)} placeholder="Next step" title={j.NextStep}/>
                           </td>
                           <td className="py-3 px-3">
                             <button className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-colors duration-150" 
@@ -811,9 +842,7 @@
                                 </thead>
                                 <tbody>
                                     {contacts.map((c) => (
-                                        <tr key={c.id} className="border-b border-gray-100 transition-colors duration-150"
-                                            onMouseOver={e => e.currentTarget.style.backgroundColor = '#F9FAFB'}
-                                            onMouseOut={e => e.currentTarget.style.backgroundColor = 'transparent'}>
+                                        <tr key={c.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150">
                                             <td className="py-3 px-3">
                                                 <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
                                                        value={c.Name} onChange={e => updateContact(c.id, 'Name', e.target.value)} placeholder="Name" />
@@ -870,115 +899,173 @@
     }
     
     /********* Kanban Components *********/
-    function KanbanCard({ job }) {
-      const handleDragStart = (e) => {
-        e.dataTransfer.setData("jobId", job.id);
-        e.currentTarget.classList.add('opacity-50', 'scale-95');
-      };
-      
-      const handleDragEnd = (e) => {
-        e.currentTarget.classList.remove('opacity-50', 'scale-95');
-      };
+    const KanbanComponents = {};
 
+    KanbanComponents.KanbanCard = function({ job, onDragStart }) {
       return (
         <div 
-          id={job.id}
-          draggable="true" 
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-          className="bg-white p-3 rounded-lg shadow-sm border border-gray-200 hover:shadow-md hover:border-blue-400 transition-all duration-200 cursor-grab active:cursor-grabbing"
+          draggable
+          onDragStart={(e) => onDragStart(e, job.id)}
+          className="bg-white rounded-lg p-3 mb-2 shadow-sm border border-gray-200 cursor-grab active:cursor-grabbing"
         >
-          <div className="font-semibold text-gray-800 text-sm">{job.Company}</div>
+          <h4 className="font-bold text-sm text-gray-800">{job.Company}</h4>
           <p className="text-xs text-gray-600">{job.Title}</p>
-          <div className={`text-xs mt-2 p-1 rounded-md inline-block ${getDeadlineClass(job.AppDeadline)}`}>
-            {job.AppDeadline ? `Due: ${job.AppDeadline}` : 'No Deadline'}
+          <div className={`text-xs mt-2 font-medium ${getDeadlineClass(job.AppDeadline)}`}>
+            Deadline: {job.AppDeadline || 'N/A'}
           </div>
         </div>
       );
     }
 
-    function KanbanColumn({ status, jobs, onDropJob }) {
-      const [isDragOver, setIsDragOver] = React.useState(false);
+    KanbanComponents.KanbanColumn = function({ title, jobs, onDragOver, onDrop, onDragStart }) {
+      return (
+        <div 
+          className="bg-gray-100 rounded-xl p-3 w-64 md:w-72 flex-shrink-0"
+          onDragOver={onDragOver}
+          onDrop={(e) => onDrop(e, title)}
+        >
+          <h3 className="font-semibold text-sm text-gray-700 mb-3 px-1">{title} ({jobs.length})</h3>
+          <div className="space-y-2 min-h-[100px]">
+            {jobs.map(job => <KanbanComponents.KanbanCard key={job.id} job={job} onDragStart={onDragStart} />)}
+          </div>
+        </div>
+      );
+    }
+
+    KanbanComponents.KanbanBoard = function({ jobs, setJobs }) {
+      const [showBoard, setShowBoard] = React.useState(false);
+
+      const handleDragStart = (e, jobId) => {
+        e.dataTransfer.setData("jobId", jobId);
+      };
 
       const handleDragOver = (e) => {
         e.preventDefault();
-        setIsDragOver(true);
-      };
-      
-      const handleDragLeave = () => {
-        setIsDragOver(false);
       };
 
-      const handleDrop = (e) => {
-        e.preventDefault();
+      const handleDrop = (e, targetStatus) => {
         const jobId = e.dataTransfer.getData("jobId");
-        onDropJob(jobId, status);
-        setIsDragOver(false);
+        const updatedJobs = jobs.map(job => {
+          if (job.id === jobId) {
+            // If dropped on backlog, set status to "Wishlist". Otherwise, use the column's status.
+            const newStatus = targetStatus === "Backlog" ? "Wishlist" : targetStatus;
+            return { ...job, Status: newStatus };
+          }
+          return job;
+        });
+        setJobs(updatedJobs);
       };
+
+      const boardJobs = jobs.filter(j => KANBAN_COLUMNS.slice(1).includes(j.Status));
+      const backlogJobs = jobs.filter(j => !KANBAN_COLUMNS.slice(1).includes(j.Status));
 
       return (
-        <div 
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
-          onDragLeave={handleDragLeave}
-          className={`flex-shrink-0 w-72 bg-gray-50 rounded-xl p-3 transition-colors duration-300 ${isDragOver ? 'bg-blue-100' : ''}`}
-        >
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="font-semibold text-gray-700">{status}</h3>
-            <span className="bg-gray-200 text-gray-600 text-xs font-bold px-2 py-1 rounded-full">{jobs.length}</span>
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100">
+          <div className="p-6 cursor-pointer hover:bg-gray-50 transition-colors duration-150" onClick={() => setShowBoard(!showBoard)}>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <Icon name="trello" className="w-6 h-6 text-blue-500"/>
+                <h2 className="text-xl font-semibold text-gray-800">Kanban View</h2>
+              </div>
+              <Icon name={showBoard ? "chevron-up" : "chevron-down"} className="w-6 h-6" />
+            </div>
           </div>
-          <div className="space-y-3 min-h-48">
-            {jobs.map(job => <KanbanCard key={job.id} job={job} />)}
-            {isDragOver && <div className="rounded-lg border-2 border-dashed border-blue-400 bg-blue-50 h-24" />}
-          </div>
+          {showBoard && (
+            <div className="px-6 pb-6 pt-2 overflow-x-auto">
+              <div className="flex space-x-4">
+                <KanbanComponents.KanbanColumn 
+                    title="Backlog" 
+                    jobs={backlogJobs} 
+                    onDragOver={handleDragOver} 
+                    onDrop={handleDrop} 
+                    onDragStart={handleDragStart} 
+                />
+                {KANBAN_COLUMNS.slice(1).map(status => (
+                  <KanbanComponents.KanbanColumn
+                    key={status}
+                    title={status}
+                    jobs={boardJobs.filter(job => job.Status === status)}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
+                    onDragStart={handleDragStart}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       );
     }
-    
-    function KanbanBoard({ jobs, onJobStatusChange }) {
-      const handleDropJob = (jobId, newStatus) => {
-        const job = jobs.find(j => j.id === jobId);
-        if (job && job.Status !== newStatus) {
-            let newJobStatus = newStatus;
-            if(newStatus === 'Backlog') {
-                const isRejectedOrWithdrawn = ["Rejected", "Withdrawn", "Offer Accepted"].includes(job.Status);
-                newJobStatus = isRejectedOrWithdrawn ? job.Status : "To Apply";
+
+    function EmailTemplatesModal({ jobData, onCancel }) {
+        const [activeTemplate, setActiveTemplate] = React.useState('followUp');
+        const company = jobData?.Company || "[Company Name]";
+        const title = jobData?.Title || "[Job Title]";
+        const templates = {
+            followUp: {
+                name: "Follow-Up After Application",
+                subject: `Following Up on My Application for the ${title} Position`,
+                body: `Dear Hiring Manager,\n\nI hope this email finds you well.\n\nI am writing to follow up on my application for the ${title} position at ${company}. I submitted my application on [Date of Application] and I am very interested in this opportunity.\n\nI am confident that my skills in [mention 1-2 key skills] and my experience with [mention relevant experience] make me a strong candidate for this role. I am particularly excited about [mention something specific about the company or role].\n\nCould you please provide an update on the status of my application? I am available for an interview at your earliest convenience.\n\nThank you for your time and consideration.\n\nSincerely,\n[Your Name]`
+            },
+            thankYou: {
+                name: "Thank You After Interview",
+                subject: `Thank You - Interview for ${title} at ${company}`,
+                body: `Dear [Interviewer's Name],\n\nThank you so much for taking the time to speak with me today about the ${title} position at ${company}.\n\nI enjoyed our conversation and learning more about [mention something specific you discussed]. Our discussion confirmed my interest in this role and my enthusiasm to join your team. I was particularly interested in [mention another specific point].\n\nI am very excited about the opportunity to contribute my skills in [mention skills] to your team. Please let me know if there is any other information I can provide.\n\nI look forward to hearing from you soon.\n\nBest regards,\n[Your Name]`
+            },
+            networking: {
+                name: "Networking Follow-Up",
+                subject: `Following Up: ${title} at ${company}`,
+                body: `Dear [Contact's Name],\n\nIt was a pleasure speaking with you at [Event or Occasion where you met]. I really enjoyed our conversation about [mention topic you discussed].\n\nAs we discussed, I am very interested in the ${title} role at ${company}. I have attached my resume for your consideration. I believe my background in [mention your experience] aligns well with the requirements of this position.\n\nThank you again for your time and advice. I hope to stay in touch.\n\nBest,\n[Your Name]`
             }
-            onJobStatusChange(jobId, newJobStatus);
-        }
-      };
+        };
 
-      const boardJobs = jobs.filter(j => KANBAN_COLUMNS.includes(j.Status) || j.Status === 'Backlog');
-      const backlogJobs = jobs.filter(j => !KANBAN_COLUMNS.includes(j.Status) || j.Status === 'Backlog');
-      
-      const jobsByStatus = KANBAN_COLUMNS.reduce((acc, status) => {
-          acc[status] = [];
-          return acc;
-      }, {});
+        const copyToClipboard = (text) => {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Copied to clipboard!', 'success');
+            }, (err) => {
+                showToast('Failed to copy.', 'error');
+            });
+        };
 
-      jobs.forEach(job => {
-          if (KANBAN_COLUMNS.includes(job.Status)) {
-              jobsByStatus[job.Status].push(job);
-          } else {
-              if(!jobsByStatus['Backlog']) jobsByStatus['Backlog'] = [];
-              jobsByStatus['Backlog'].push(job);
-          }
-      });
+        const currentTemplate = templates[activeTemplate];
 
-      return (
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
-            <div className="flex overflow-x-auto space-x-4 pb-4">
-                {KANBAN_COLUMNS.map(status => (
-                    <KanbanColumn 
-                        key={status}
-                        status={status}
-                        jobs={jobsByStatus[status] || []}
-                        onDropJob={handleDropJob}
-                    />
-                ))}
-            </div>
-        </div>
-      );
+        return (
+            <dialog id="email_templates_modal" className="modal">
+                <div className="modal-box w-11/12 max-w-4xl">
+                    <form method="dialog"><button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={onCancel}>✕</button></form>
+                    <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><Icon name="mail" className="w-5 h-5"/> Email Templates</h3>
+                    <div className="flex gap-6">
+                        <div className="w-1/3">
+                            <ul className="menu bg-base-200 rounded-box">
+                                {Object.keys(templates).map(key => (
+                                    <li key={key}><a className={activeTemplate === key ? 'active' : ''} onClick={() => setActiveTemplate(key)}>{templates[key].name}</a></li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div className="w-2/3">
+                            <div className="form-control">
+                                <label className="label"><span className="label-text">Subject</span></label>
+                                <div className="join">
+                                    <input type="text" readOnly className="input input-bordered w-full join-item" value={currentTemplate.subject} />
+                                    <button className="btn join-item" onClick={() => copyToClipboard(currentTemplate.subject)}><Icon name="copy" className="w-4 h-4" /></button>
+                                </div>
+                            </div>
+                            <div className="form-control mt-4">
+                                <label className="label"><span className="label-text">Body</span></label>
+                                <div className="join">
+                                    <textarea readOnly className="textarea textarea-bordered w-full h-64 join-item" value={currentTemplate.body}></textarea>
+                                    <button className="btn join-item" onClick={() => copyToClipboard(currentTemplate.body)}><Icon name="copy" className="w-4 h-4" /></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="modal-action">
+                        <button className="btn" onClick={onCancel}>Close</button>
+                    </div>
+                </div>
+                <form method="dialog" className="modal-backdrop"><button onClick={onCancel}>close</button></form>
+            </dialog>
+        );
     }
 
     function App() {
@@ -993,32 +1080,10 @@
       const [showAdvancedFilters, setShowAdvancedFilters] = React.useState(false);
       const [selectedMetricFilters, setSelectedMetricFilters] = React.useState([]);
       const [newJob, setNewJob] = React.useState(emptyJob);
-      const [showKanban, setShowKanban] = React.useState(false);
+      const [selectedJobForEmail, setSelectedJobForEmail] = React.useState(null);
 
-      const filteredJobs = React.useMemo(() => {
-        let filtered = jobs;
-        
-        // Apply metric-based filters if any are selected
-        if (selectedMetricFilters.length > 0) {
-          filtered = filtered.filter(job => {
-            return selectedMetricFilters.some(filter => {
-              switch(filter) {
-                case 'offers':
-                  return ["Offer Received", "Offer Accepted"].includes(job.Status);
-                case 'rejected':
-                  return job.Status === "Rejected";
-                case 'inProgress':
-                  return ["Applied", "HR Screening", "Technical Interview", "Case Study / Assessment", "Final Interview"].includes(job.Status);
-                case 'total':
-                  return true; // All jobs
-                default:
-                  return false;
-              }
-            });
-          });
-        }
-        
-        return filtered
+      const jobsForAnalytics = React.useMemo(() => {
+        return jobs
           .filter(job => statusFilter === 'All' || job.Status === statusFilter)
           .filter(job => jobTypeFilter === 'All' || job.JobType === jobTypeFilter)
           .filter(job => sourceFilter === 'All' || job.Source === sourceFilter)
@@ -1028,7 +1093,30 @@
             job.Title.toLowerCase().includes(jobSearchTerm.toLowerCase()) ||
             job.NextStep.toLowerCase().includes(jobSearchTerm.toLowerCase())
           );
-      }, [jobs, selectedMetricFilters, statusFilter, jobTypeFilter, sourceFilter, locationFilter, jobSearchTerm]);
+      }, [jobs, statusFilter, jobTypeFilter, sourceFilter, locationFilter, jobSearchTerm]);
+
+      const filteredJobs = React.useMemo(() => {
+        if (selectedMetricFilters.length === 0) {
+          return jobsForAnalytics;
+        }
+
+        return jobsForAnalytics.filter(job => {
+          return selectedMetricFilters.some(filter => {
+            switch(filter) {
+              case 'offers':
+                return ["Offer Received", "Offer Accepted"].includes(job.Status);
+              case 'rejected':
+                return job.Status === "Rejected";
+              case 'inProgress':
+                return ["Applied", "HR Screening", "Technical Interview", "Case Study / Assessment", "Final Interview"].includes(job.Status);
+              case 'total':
+                return true; 
+              default:
+                return false;
+            }
+          });
+        });
+      }, [jobsForAnalytics, selectedMetricFilters]);
 
       const filteredContacts = React.useMemo(() => {
         return contacts.filter(contact => 
@@ -1046,12 +1134,21 @@
         showToast('Application added!');
       };
 
-      const handleJobStatusChange = (jobId, newStatus) => {
-        const newJobs = jobs.map(job => 
-          job.id === jobId ? { ...job, Status: newStatus } : job
-        );
-        updateJobs(newJobs);
-        showToast(`Moved to ${newStatus}`, 'info');
+      const clearAllFilters = () => {
+        setSelectedMetricFilters([]);
+        setStatusFilter('All');
+        setJobTypeFilter('All');
+        setSourceFilter('All');
+        setLocationFilter('');
+        setJobSearchTerm('');
+        // This is a bit of a hack to clear the input field manually if it's not controlled by state
+        const searchInput = document.querySelector('input[placeholder="Search by company, title, or notes..."]');
+        if (searchInput) searchInput.value = '';
+      };
+      
+      const openEmailModal = (job) => {
+        setSelectedJobForEmail(job);
+        document.getElementById('email_templates_modal').showModal();
       };
 
       // Show loading screen while authenticating
@@ -1074,6 +1171,10 @@
       }
 
       const handleMetricFilterToggle = (filterType) => {
+        if (filterType === 'total') {
+            clearAllFilters();
+            return;
+        }
         setSelectedMetricFilters(prev => {
           if (prev.includes(filterType)) {
             return prev.filter(f => f !== filterType);
@@ -1193,8 +1294,9 @@
                       <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[10] p-2 shadow-lg bg-white rounded-xl border border-gray-200 w-56">
                         <li><a onClick={() => handleDataAction('export')} className="text-blue-600 hover:bg-blue-50"><Icon name="download" className="w-4 h-4"/> Export Data</a></li>
                         <li><a onClick={() => handleDataAction('import')} className="text-green-600 hover:bg-green-50"><Icon name="upload" className="w-4 h-4"/> Import Data</a></li>
+                        <li className="disabled"><a><Icon name="upload-cloud" className="w-4 h-4"/> Export to Google Drive <span className="text-xs badge badge-ghost">Coming Soon</span></a></li>
                         <li><hr className="my-1"/></li>
-                        <li><a onClick={() => handleDataAction('migrate_local')} className="text-orange-600 hover:bg-orange-50"><Icon name="database" className="w-4 h-4"/> Migrate Local Data</a></li>
+                        <li><a onClick={() => document.getElementById('email_templates_modal').showModal()}><Icon name="mail" className="w-4 h-4"/> Email Templates</a></li>
                         <li><a onClick={() => handleDataAction('restore_dummy')} className="text-purple-600 hover:bg-purple-50"><Icon name="refresh-cw" className="w-4 h-4"/> Restore Demo Data</a></li>
                         <li><hr className="my-1"/></li>
                         <li><a onClick={() => handleDataAction('reset')} className="text-red-600 hover:bg-red-50"><Icon name="trash" className="w-4 h-4"/> Reset All Data</a></li>
@@ -1207,25 +1309,9 @@
             </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-              <Analytics jobs={jobs} selectedMetricFilters={selectedMetricFilters} onMetricFilterToggle={handleMetricFilterToggle} />
+              <Analytics jobs={jobsForAnalytics} selectedMetricFilters={selectedMetricFilters} onMetricFilterToggle={handleMetricFilterToggle} />
               
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                <div className="flex justify-between items-center">
-                    <h2 className="text-2xl font-bold text-gray-900">Kanban View</h2>
-                    <button 
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg flex items-center gap-2 transition-transform duration-300"
-                        onClick={() => setShowKanban(!showKanban)}
-                    >
-                        <Icon name={showKanban ? 'chevrons-up' : 'chevrons-down'} className="w-5 h-5"/>
-                        {showKanban ? 'Close Board' : 'Open Board'}
-                    </button>
-                </div>
-                {showKanban && (
-                    <div className="mt-6">
-                        <KanbanBoard jobs={jobs} onJobStatusChange={handleJobStatusChange} />
-                    </div>
-                )}
-              </div>
+              <KanbanComponents.KanbanBoard jobs={jobs} setJobs={updateJobs} />
 
               <div className="space-y-6">
                 <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
@@ -1301,14 +1387,7 @@
                         {jobSearchTerm !== '' && <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">Search: "{jobSearchTerm}"</span>}
                         <button 
                           className="text-xs text-red-600 hover:text-red-800 ml-2"
-                          onClick={() => {
-                            setSelectedMetricFilters([]);
-                            setStatusFilter('All');
-                            setJobTypeFilter('All');
-                            setSourceFilter('All');
-                            setLocationFilter('');
-                            setJobSearchTerm('');
-                          }}
+                          onClick={clearAllFilters}
                         >
                           Clear all
                         </button>
@@ -1353,6 +1432,8 @@
             <Modal id="add_job_modal" title="Add New Job Application">
               <JobForm jobData={newJob} onSave={handleSaveNewJob} onCancel={() => document.getElementById('add_job_modal').close()} />
             </Modal>
+
+            <EmailTemplatesModal jobData={selectedJobForEmail} onCancel={() => setSelectedJobForEmail(null)} />
         </div>
       );
     }
@@ -1360,5 +1441,4 @@
     ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   </script>
 </body>
-</html>
 </html>
