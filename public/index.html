@@ -21,40 +21,12 @@
   <script src="./firebase.js"></script>
   
   <script>
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyBmc11Cf_-op_e2HikOKhx2zhlUKN51aew",
-      authDomain: "careerflow-app.firebaseapp.com",
-      projectId: "careerflow-app",
-      storageBucket: "careerflow-app.firebasestorage.app",
-      messagingSenderId: "616353508218",
-      appId: "1:616353508218:web:f9ca9d3d028fd6b7b484c3",
-      measurementId: "G-V8RW33STR9"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    const provider = new firebase.auth.GoogleAuthProvider();
-
-    // Make Firebase services available globally
-    window.firebase = {
-      auth: auth,
-      db: db,
-      provider: provider,
-      signInWithPopup: auth.signInWithPopup.bind(auth),
-      signOut: auth.signOut.bind(auth),
-      onAuthStateChanged: auth.onAuthStateChanged.bind(auth),
-      collection: db.collection.bind(db),
-      doc: db.doc.bind(db),
-      setDoc: (docRef, data) => docRef.set(data),
-      getDoc: (docRef) => docRef.get(),
-      getDocs: (query) => query.get(),
-      deleteDoc: (docRef) => docRef.delete(),
-      onSnapshot: (query, callback) => query.onSnapshot(callback),
-      serverTimestamp: firebase.firestore.FieldValue.serverTimestamp
-    };
+    // Initialize feather icons after loading
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof feather !== 'undefined') {
+        feather.replace();
+      }
+    });
   </script>
 </head>
 <body class="bg-base-200 min-h-screen font-sans">
@@ -395,8 +367,58 @@ Best regards,
     };
 
     /********* Reusable Components *********/
-    function Icon({ name, className = "w-5 h-5" }) {
-        return <span className="inline-block" dangerouslySetInnerHTML={{ __html: feather.icons[name].toSvg({ class: className }) }} />;
+    function Icon({ name, className = "", ...props }) {
+      React.useEffect(() => {
+        if (typeof feather !== 'undefined') {
+          feather.replace();
+        }
+      }, []);
+
+      if (typeof feather === 'undefined' || !feather.icons[name]) {
+        // Fallback to simple span with emoji or text
+        const fallbacks = {
+          'briefcase': '💼',
+          'settings': '⚙️',
+          'download': '⬇️',
+          'upload': '⬆️',
+          'mail': '✉️',
+          'refresh-cw': '🔄',
+          'trash': '🗑️',
+          'plus': '➕',
+          'filter': '🔍',
+          'filter-x': '❌',
+          'layers': '📚',
+          'clock': '⏰',
+          'thumbs-up': '👍',
+          'x-circle': '❌',
+          'trending-up': '📈',
+          'map-pin': '📍',
+          'maximize-2': '⛶',
+          'copy': '📋',
+          'check': '✅',
+          'info': 'ℹ️',
+          'send': '📤',
+          'heart': '❤️',
+          'users': '👥',
+          'monitor': '💻',
+          'cloud': '☁️',
+          'check-circle': '✅',
+          'download-cloud': '☁️⬇️',
+          'inbox': '📥',
+          'user': '👤',
+          'log-out': '🚪',
+          'lock': '🔒',
+          'target': '🎯',
+          'pie-chart': '📊'
+        };
+        return React.createElement('span', { className: `inline-block ${className}`, ...props }, fallbacks[name] || '⚫');
+      }
+
+      return React.createElement('span', {
+        className: `inline-block ${className}`,
+        dangerouslySetInnerHTML: { __html: feather.icons[name].toSvg() },
+        ...props
+      });
     }
 
     function Modal({ id, title, children }) {
@@ -504,7 +526,7 @@ Best regards,
     }
     
     /********* Main Components *********/
-    function ExportModal({ onCancel }) {
+    function ExportModal({ onCancel, jobs, contacts }) {
       const [exportOption, setExportOption] = React.useState('computer');
       const [fileName, setFileName] = React.useState(() => {
         const today = new Date().toISOString().split('T')[0];
@@ -526,8 +548,8 @@ Best regards,
             const data = {
               exportDate: new Date().toISOString(),
               version: "1.0",
-              jobs: jobs,
-              contacts: contacts
+              jobs: jobs || [],
+              contacts: contacts || []
             };
             
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -629,15 +651,15 @@ Best regards,
 
             <div className="bg-gray-50 rounded-lg p-4">
               <h4 className="font-medium text-gray-800 mb-2">Export Summary</h4>
-              <div className="space-y-1 text-sm text-gray-600">
-                <div className="flex justify-between">
-                  <span>Applications:</span>
-                  <span className="font-medium">{jobs.length}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Contacts:</span>
-                  <span className="font-medium">{contacts.length}</span>
-                </div>
+                              <div className="space-y-1 text-sm text-gray-600">
+                  <div className="flex justify-between">
+                    <span>Applications:</span>
+                    <span className="font-medium">{jobs?.length || 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Contacts:</span>
+                    <span className="font-medium">{contacts?.length || 0}</span>
+                  </div>
                 <div className="flex justify-between">
                   <span>Export Date:</span>
                   <span className="font-medium">{new Date().toLocaleDateString()}</span>
@@ -1807,7 +1829,11 @@ Best regards,
             </Modal>
             
             <Modal id="export_data_modal" title="Export Your Data">
-              <ExportModal onCancel={() => document.getElementById('export_data_modal').close()} />
+              <ExportModal 
+                onCancel={() => document.getElementById('export_data_modal').close()} 
+                jobs={jobs} 
+                contacts={contacts} 
+              />
             </Modal>
 
             <Modal id="email_templates_modal" title="Email Templates">
