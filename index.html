@@ -12,7 +12,6 @@
   <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script type="text/babel" src="kanban.js"></script>
   
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -729,7 +728,8 @@
                       <tr className="border-b border-gray-200">
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '14%'}}>Status</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '16%'}}>Company</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '25%'}}>Role</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '20%'}}>Role</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Location</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Type</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '12%'}}>Source</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Deadline</th>
@@ -739,7 +739,10 @@
                     </thead>
                     <tbody>
                       {jobs.map((j) => (
-                        <tr key={j.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150" title={`[${j.Company}] ${j.Title}`}>
+                        <tr key={j.id} className="border-b border-gray-100 transition-colors duration-150" title={`[${j.Company}] ${j.Title}`}
+                            onMouseEnter={(e) => e.currentTarget.classList.add('bg-gray-50')}
+                            onMouseLeave={(e) => e.currentTarget.classList.remove('bg-gray-50')}
+                        >
                           <td className="py-3 px-3">
                             <select className="w-full bg-transparent border-none text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
                                     value={j.Status} onChange={e => updateJob(j.id, 'Status', e.target.value)}>
@@ -753,6 +756,18 @@
                           <td className="py-3 px-3">
                             <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
                                    value={j.Title} onChange={e => updateJob(j.id, 'Title', e.target.value)} placeholder="Job title" />
+                          </td>
+                          <td className="py-3 px-3">
+                            <div className="flex items-center gap-1">
+                                <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                                        value={j.Location} onChange={e => updateJob(j.id, 'Location', e.target.value)} placeholder="Location" />
+                                {j.Location && (
+                                <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(j.Location)}`} target="_blank" rel="noopener noreferrer" 
+                                    className="text-blue-500 hover:text-blue-700 p-1 rounded-full hover:bg-blue-100 transition-colors duration-150">
+                                    <Icon name="map-pin" className="w-4 h-4"/>
+                                </a>
+                                )}
+                            </div>
                           </td>
                           <td className="py-3 px-3">
                             <select className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
@@ -772,7 +787,7 @@
                           </td>
                           <td className="py-3 px-3">
                             <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
-                                   value={j.NextStep} onChange={e => updateJob(j.id, 'NextStep', e.target.value)} placeholder="Next step" />
+                                   value={j.NextStep} onChange={e => updateJob(j.id, 'NextStep', e.target.value)} placeholder="Next step" title={j.NextStep}/>
                           </td>
                           <td className="py-3 px-3">
                             <button className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-colors duration-150" 
@@ -884,7 +899,9 @@
     }
     
     /********* Kanban Components *********/
-    function KanbanCard({ job, onDragStart }) {
+    const KanbanComponents = {};
+
+    KanbanComponents.KanbanCard = function({ job, onDragStart }) {
       return (
         <div 
           draggable
@@ -900,7 +917,7 @@
       );
     }
 
-    function KanbanColumn({ title, jobs, onDragOver, onDrop, onDragStart }) {
+    KanbanComponents.KanbanColumn = function({ title, jobs, onDragOver, onDrop, onDragStart }) {
       return (
         <div 
           className="bg-gray-100 rounded-xl p-3 w-64 md:w-72 flex-shrink-0"
@@ -909,13 +926,13 @@
         >
           <h3 className="font-semibold text-sm text-gray-700 mb-3 px-1">{title} ({jobs.length})</h3>
           <div className="space-y-2 min-h-[100px]">
-            {jobs.map(job => <KanbanCard key={job.id} job={job} onDragStart={onDragStart} />)}
+            {jobs.map(job => <KanbanComponents.KanbanCard key={job.id} job={job} onDragStart={onDragStart} />)}
           </div>
         </div>
       );
     }
 
-    function KanbanBoard({ jobs, setJobs }) {
+    KanbanComponents.KanbanBoard = function({ jobs, setJobs }) {
       const [showBoard, setShowBoard] = React.useState(false);
 
       const handleDragStart = (e, jobId) => {
@@ -930,7 +947,8 @@
         const jobId = e.dataTransfer.getData("jobId");
         const updatedJobs = jobs.map(job => {
           if (job.id === jobId) {
-            const newStatus = targetStatus === "Backlog" ? job.Status : targetStatus;
+            // If dropped on backlog, set status to "Wishlist". Otherwise, use the column's status.
+            const newStatus = targetStatus === "Backlog" ? "Wishlist" : targetStatus;
             return { ...job, Status: newStatus };
           }
           return job;
@@ -955,7 +973,7 @@
           {showBoard && (
             <div className="px-6 pb-6 pt-2 overflow-x-auto">
               <div className="flex space-x-4">
-                <KanbanColumn 
+                <KanbanComponents.KanbanColumn 
                     title="Backlog" 
                     jobs={backlogJobs} 
                     onDragOver={handleDragOver} 
@@ -963,7 +981,7 @@
                     onDragStart={handleDragStart} 
                 />
                 {KANBAN_COLUMNS.slice(1).map(status => (
-                  <KanbanColumn
+                  <KanbanComponents.KanbanColumn
                     key={status}
                     title={status}
                     jobs={boardJobs.filter(job => job.Status === status)}
@@ -979,6 +997,77 @@
       );
     }
 
+    function EmailTemplatesModal({ jobData, onCancel }) {
+        const [activeTemplate, setActiveTemplate] = React.useState('followUp');
+        const company = jobData?.Company || "[Company Name]";
+        const title = jobData?.Title || "[Job Title]";
+        const templates = {
+            followUp: {
+                name: "Follow-Up After Application",
+                subject: `Following Up on My Application for the ${title} Position`,
+                body: `Dear Hiring Manager,\n\nI hope this email finds you well.\n\nI am writing to follow up on my application for the ${title} position at ${company}. I submitted my application on [Date of Application] and I am very interested in this opportunity.\n\nI am confident that my skills in [mention 1-2 key skills] and my experience with [mention relevant experience] make me a strong candidate for this role. I am particularly excited about [mention something specific about the company or role].\n\nCould you please provide an update on the status of my application? I am available for an interview at your earliest convenience.\n\nThank you for your time and consideration.\n\nSincerely,\n[Your Name]`
+            },
+            thankYou: {
+                name: "Thank You After Interview",
+                subject: `Thank You - Interview for ${title} at ${company}`,
+                body: `Dear [Interviewer's Name],\n\nThank you so much for taking the time to speak with me today about the ${title} position at ${company}.\n\nI enjoyed our conversation and learning more about [mention something specific you discussed]. Our discussion confirmed my interest in this role and my enthusiasm to join your team. I was particularly interested in [mention another specific point].\n\nI am very excited about the opportunity to contribute my skills in [mention skills] to your team. Please let me know if there is any other information I can provide.\n\nI look forward to hearing from you soon.\n\nBest regards,\n[Your Name]`
+            },
+            networking: {
+                name: "Networking Follow-Up",
+                subject: `Following Up: ${title} at ${company}`,
+                body: `Dear [Contact's Name],\n\nIt was a pleasure speaking with you at [Event or Occasion where you met]. I really enjoyed our conversation about [mention topic you discussed].\n\nAs we discussed, I am very interested in the ${title} role at ${company}. I have attached my resume for your consideration. I believe my background in [mention your experience] aligns well with the requirements of this position.\n\nThank you again for your time and advice. I hope to stay in touch.\n\nBest,\n[Your Name]`
+            }
+        };
+
+        const copyToClipboard = (text) => {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Copied to clipboard!', 'success');
+            }, (err) => {
+                showToast('Failed to copy.', 'error');
+            });
+        };
+
+        const currentTemplate = templates[activeTemplate];
+
+        return (
+            <dialog id="email_templates_modal" className="modal">
+                <div className="modal-box w-11/12 max-w-4xl">
+                    <form method="dialog"><button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={onCancel}>✕</button></form>
+                    <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><Icon name="mail" className="w-5 h-5"/> Email Templates</h3>
+                    <div className="flex gap-6">
+                        <div className="w-1/3">
+                            <ul className="menu bg-base-200 rounded-box">
+                                {Object.keys(templates).map(key => (
+                                    <li key={key}><a className={activeTemplate === key ? 'active' : ''} onClick={() => setActiveTemplate(key)}>{templates[key].name}</a></li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div className="w-2/3">
+                            <div className="form-control">
+                                <label className="label"><span className="label-text">Subject</span></label>
+                                <div className="join">
+                                    <input type="text" readOnly className="input input-bordered w-full join-item" value={currentTemplate.subject} />
+                                    <button className="btn join-item" onClick={() => copyToClipboard(currentTemplate.subject)}><Icon name="copy" className="w-4 h-4" /></button>
+                                </div>
+                            </div>
+                            <div className="form-control mt-4">
+                                <label className="label"><span className="label-text">Body</span></label>
+                                <div className="join">
+                                    <textarea readOnly className="textarea textarea-bordered w-full h-64 join-item" value={currentTemplate.body}></textarea>
+                                    <button className="btn join-item" onClick={() => copyToClipboard(currentTemplate.body)}><Icon name="copy" className="w-4 h-4" /></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="modal-action">
+                        <button className="btn" onClick={onCancel}>Close</button>
+                    </div>
+                </div>
+                <form method="dialog" className="modal-backdrop"><button onClick={onCancel}>close</button></form>
+            </dialog>
+        );
+    }
+
     function App() {
       const { user, loading: authLoading, signOut } = useAuth();
       const { jobs, contacts, loading: dataLoading, updateJobs, updateContacts, loadUserData } = useFirebaseData(user);
@@ -991,6 +1080,7 @@
       const [showAdvancedFilters, setShowAdvancedFilters] = React.useState(false);
       const [selectedMetricFilters, setSelectedMetricFilters] = React.useState([]);
       const [newJob, setNewJob] = React.useState(emptyJob);
+      const [selectedJobForEmail, setSelectedJobForEmail] = React.useState(null);
 
       const jobsForAnalytics = React.useMemo(() => {
         return jobs
@@ -1044,6 +1134,23 @@
         showToast('Application added!');
       };
 
+      const clearAllFilters = () => {
+        setSelectedMetricFilters([]);
+        setStatusFilter('All');
+        setJobTypeFilter('All');
+        setSourceFilter('All');
+        setLocationFilter('');
+        setJobSearchTerm('');
+        // This is a bit of a hack to clear the input field manually if it's not controlled by state
+        const searchInput = document.querySelector('input[placeholder="Search by company, title, or notes..."]');
+        if (searchInput) searchInput.value = '';
+      };
+      
+      const openEmailModal = (job) => {
+        setSelectedJobForEmail(job);
+        document.getElementById('email_templates_modal').showModal();
+      };
+
       // Show loading screen while authenticating
       if (authLoading) {
         return (
@@ -1064,6 +1171,10 @@
       }
 
       const handleMetricFilterToggle = (filterType) => {
+        if (filterType === 'total') {
+            clearAllFilters();
+            return;
+        }
         setSelectedMetricFilters(prev => {
           if (prev.includes(filterType)) {
             return prev.filter(f => f !== filterType);
@@ -1183,8 +1294,9 @@
                       <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[10] p-2 shadow-lg bg-white rounded-xl border border-gray-200 w-56">
                         <li><a onClick={() => handleDataAction('export')} className="text-blue-600 hover:bg-blue-50"><Icon name="download" className="w-4 h-4"/> Export Data</a></li>
                         <li><a onClick={() => handleDataAction('import')} className="text-green-600 hover:bg-green-50"><Icon name="upload" className="w-4 h-4"/> Import Data</a></li>
+                        <li className="disabled"><a><Icon name="upload-cloud" className="w-4 h-4"/> Export to Google Drive <span className="text-xs badge badge-ghost">Coming Soon</span></a></li>
                         <li><hr className="my-1"/></li>
-                        <li><a onClick={() => handleDataAction('migrate_local')} className="text-orange-600 hover:bg-orange-50"><Icon name="database" className="w-4 h-4"/> Migrate Local Data</a></li>
+                        <li><a onClick={() => document.getElementById('email_templates_modal').showModal()}><Icon name="mail" className="w-4 h-4"/> Email Templates</a></li>
                         <li><a onClick={() => handleDataAction('restore_dummy')} className="text-purple-600 hover:bg-purple-50"><Icon name="refresh-cw" className="w-4 h-4"/> Restore Demo Data</a></li>
                         <li><hr className="my-1"/></li>
                         <li><a onClick={() => handleDataAction('reset')} className="text-red-600 hover:bg-red-50"><Icon name="trash" className="w-4 h-4"/> Reset All Data</a></li>
@@ -1275,14 +1387,7 @@
                         {jobSearchTerm !== '' && <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">Search: "{jobSearchTerm}"</span>}
                         <button 
                           className="text-xs text-red-600 hover:text-red-800 ml-2"
-                          onClick={() => {
-                            setSelectedMetricFilters([]);
-                            setStatusFilter('All');
-                            setJobTypeFilter('All');
-                            setSourceFilter('All');
-                            setLocationFilter('');
-                            setJobSearchTerm('');
-                          }}
+                          onClick={clearAllFilters}
                         >
                           Clear all
                         </button>
@@ -1327,6 +1432,8 @@
             <Modal id="add_job_modal" title="Add New Job Application">
               <JobForm jobData={newJob} onSave={handleSaveNewJob} onCancel={() => document.getElementById('add_job_modal').close()} />
             </Modal>
+
+            <EmailTemplatesModal jobData={selectedJobForEmail} onCancel={() => setSelectedJobForEmail(null)} />
         </div>
       );
     }
