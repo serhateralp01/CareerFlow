@@ -867,10 +867,14 @@ Best regards,
                 <label className="block text-sm font-medium text-gray-700">Subject</label>
                 <button
                   onClick={() => copyToClipboard(emailTemplates[selectedTemplate].subject, 'subject')}
-                  className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1 px-2 py-1 rounded hover:bg-blue-50 transition-colors"
+                  className={`text-xs flex items-center gap-2 px-3 py-1.5 rounded-lg font-medium transition-all ${
+                    copiedField === 'subject' 
+                      ? 'bg-green-100 text-green-700 border border-green-200' 
+                      : 'bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 hover:border-blue-300'
+                  }`}
                 >
-                  <Icon name={copiedField === 'subject' ? 'check' : 'copy'} className="w-3 h-3"/>
-                  <span>{copiedField === 'subject' ? 'Copied!' : 'Copy'}</span>
+                  <Icon name={copiedField === 'subject' ? 'check' : 'copy'} className="w-3.5 h-3.5"/>
+                  <span>{copiedField === 'subject' ? 'Copied!' : 'Copy Subject'}</span>
                 </button>
               </div>
               <div className="p-3 bg-gray-50 rounded-lg border text-sm">
@@ -883,10 +887,14 @@ Best regards,
                 <label className="block text-sm font-medium text-gray-700">Email Body</label>
                 <button
                   onClick={() => copyToClipboard(emailTemplates[selectedTemplate].body, 'body')}
-                  className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1 px-2 py-1 rounded hover:bg-blue-50 transition-colors"
+                  className={`text-xs flex items-center gap-2 px-3 py-1.5 rounded-lg font-medium transition-all ${
+                    copiedField === 'body' 
+                      ? 'bg-green-100 text-green-700 border border-green-200' 
+                      : 'bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200 hover:border-blue-300'
+                  }`}
                 >
-                  <Icon name={copiedField === 'body' ? 'check' : 'copy'} className="w-3 h-3"/>
-                  <span>{copiedField === 'body' ? 'Copied!' : 'Copy'}</span>
+                  <Icon name={copiedField === 'body' ? 'check' : 'copy'} className="w-3.5 h-3.5"/>
+                  <span>{copiedField === 'body' ? 'Copied!' : 'Copy Body'}</span>
                 </button>
               </div>
               <div className="p-3 bg-gray-50 rounded-lg border text-sm whitespace-pre-line max-h-64 overflow-y-auto">
@@ -1845,14 +1853,14 @@ Best regards,
                         <Icon name="settings" className="w-5 h-5"/>
                       </div>
                       <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[10] p-2 shadow-lg bg-white rounded-xl border border-gray-200 w-56">
-                        <li><a onClick={() => handleDataAction('export')} className="text-blue-600 hover:bg-blue-50"><Icon name="download" className="w-4 h-4"/> 📤 Export Data</a></li>
-                        <li><a onClick={() => handleDataAction('import')} className="text-green-600 hover:bg-green-50"><Icon name="upload" className="w-4 h-4"/> 📥 Import Data</a></li>
+                        <li><a onClick={() => handleDataAction('export')} className="text-blue-600 hover:bg-blue-50 flex items-center gap-3"><span className="text-lg">📤</span> Export Data</a></li>
+                        <li><a onClick={() => handleDataAction('import')} className="text-green-600 hover:bg-green-50 flex items-center gap-3"><span className="text-lg">📥</span> Import Data</a></li>
                         <li><hr className="my-1"/></li>
-                        <li><a onClick={() => document.getElementById('email_templates_modal').showModal()} className="text-purple-600 hover:bg-purple-50"><Icon name="mail" className="w-4 h-4"/> 📧 Email Templates</a></li>
+                        <li><a onClick={() => document.getElementById('email_templates_modal').showModal()} className="text-purple-600 hover:bg-purple-50 flex items-center gap-3"><span className="text-lg">📧</span> Email Templates</a></li>
                         <li><hr className="my-1"/></li>
-                        <li><a onClick={() => handleDataAction('restore_dummy')} className="text-purple-600 hover:bg-purple-50"><Icon name="refresh-cw" className="w-4 h-4"/> 🔄 Load Sample Data</a></li>
+                        <li><a onClick={() => handleDataAction('restore_dummy')} className="text-purple-600 hover:bg-purple-50 flex items-center gap-3"><span className="text-lg">🔄</span> Load Sample Data</a></li>
                         <li><hr className="my-1"/></li>
-                        <li><a onClick={() => handleDataAction('reset')} className="text-red-600 hover:bg-red-50"><Icon name="trash" className="w-4 h-4"/> 🗑️ Clear All Data</a></li>
+                        <li><a onClick={() => handleDataAction('reset')} className="text-red-600 hover:bg-red-50 flex items-center gap-3"><span className="text-lg">🗑️</span> Clear All Data</a></li>
                       </ul>
                     </div>
                     <UserProfile user={user} onSignOut={signOut} />
