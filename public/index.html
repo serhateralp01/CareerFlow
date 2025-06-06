@@ -69,59 +69,106 @@
     const sourceList  = ["Polimi CareerService", "LinkedIn", "Company Website", "Referral", "Networking Event", "Other"];
     const DOUGHNUT_COLORS = { Offers: '#22C55E', Rejected: '#EF4444', 'In-Progress': '#F59E0B', Other: '#8B5CF6' };
 
+    // Email Templates
+    const emailTemplates = {
+      followUp: {
+        subject: "Following up on my application - [Position Title] at [Company Name]",
+        body: `Dear Hiring Manager,
+
+I hope this email finds you well. I wanted to follow up on my application for the [Position Title] position at [Company Name] that I submitted on [Application Date].
+
+I remain very interested in this opportunity and would welcome the chance to discuss how my skills and experience align with your team's needs.
+
+Please let me know if you need any additional information from me. I look forward to hearing from you.
+
+Best regards,
+[Your Name]`
+      },
+      thankYou: {
+        subject: "Thank you for the interview - [Position Title]",
+        body: `Dear [Interviewer Name],
+
+Thank you for taking the time to meet with me yesterday to discuss the [Position Title] role at [Company Name]. I enjoyed our conversation about [specific topic discussed].
+
+Our discussion reinforced my enthusiasm for this position and confirmed that my background in [relevant experience] would be valuable to your team.
+
+Please don't hesitate to contact me if you need any additional information. I look forward to the next steps in the process.
+
+Best regards,
+[Your Name]`
+      },
+      networking: {
+        subject: "Introduction and career advice request",
+        body: `Dear [Contact Name],
+
+I hope this message finds you well. I'm a [your current status] at [your institution/company] with a strong interest in [relevant field/industry].
+
+I came across your profile and was impressed by your experience at [their company]. I would greatly appreciate the opportunity to learn more about your career journey and gain insights into the industry.
+
+Would you be open to a brief 15-20 minute coffee chat or phone call in the coming weeks? I'm happy to work around your schedule.
+
+Thank you for considering my request.
+
+Best regards,
+[Your Name]`
+      }
+    };
+
     const getTodayPlusDays = (days) => new Date(new Date().setDate(new Date().getDate() + days)).toISOString().split('T')[0];
+    const getRecentDate = (daysAgo) => new Date(new Date().setDate(new Date().getDate() - daysAgo)).toISOString().split('T')[0];
+    
     const sampleJobs  = [
       // Tech Companies
-      { id: "job-1", Status: "Technical Interview", Company: "Google", Title: "Software Engineer Intern", JobType: "Internship", Location: "Mountain View, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(5), DateApplied: "2025-01-02", NextStep: "Coding interview scheduled for Friday" },
-      { id: "job-2", Status: "Offer Received", Company: "Microsoft", Title: "Product Manager", JobType: "Full-Time", Location: "Seattle, WA", Source: "LinkedIn", AppDeadline: getTodayPlusDays(15), DateApplied: "2024-12-20", NextStep: "Negotiating salary and start date" },
-      { id: "job-3", Status: "Applied", Company: "Meta", Title: "Data Scientist", JobType: "Full-Time", Location: "Menlo Park, CA", Source: "Referral", AppDeadline: getTodayPlusDays(8), DateApplied: "2025-01-05", NextStep: "Waiting for initial screening call" },
-      { id: "job-4", Status: "HR Screening", Company: "Apple", Title: "iOS Developer", JobType: "Full-Time", Location: "Cupertino, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(12), DateApplied: "2024-12-28", NextStep: "Technical phone screen next week" },
-      { id: "job-5", Status: "Rejected", Company: "Netflix", Title: "Machine Learning Engineer", JobType: "Full-Time", Location: "Los Gatos, CA", Source: "LinkedIn", AppDeadline: "2024-11-30", DateApplied: "2024-11-25", NextStep: "Rejected after final round - too junior" },
+      { id: "job-1", Status: "Technical Interview", Company: "Google", Title: "Software Engineer Intern", JobType: "Internship", Location: "Mountain View, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(5), DateApplied: getRecentDate(3), NextStep: "Coding interview scheduled for Friday" },
+      { id: "job-2", Status: "Offer Received", Company: "Microsoft", Title: "Product Manager", JobType: "Full-Time", Location: "Seattle, WA", Source: "LinkedIn", AppDeadline: getTodayPlusDays(15), DateApplied: getRecentDate(18), NextStep: "Negotiating salary and start date" },
+      { id: "job-3", Status: "Applied", Company: "Meta", Title: "Data Scientist", JobType: "Full-Time", Location: "Menlo Park, CA", Source: "Referral", AppDeadline: getTodayPlusDays(8), DateApplied: getRecentDate(2), NextStep: "Waiting for initial screening call" },
+      { id: "job-4", Status: "HR Screening", Company: "Apple", Title: "iOS Developer", JobType: "Full-Time", Location: "Cupertino, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(12), DateApplied: getRecentDate(9), NextStep: "Technical phone screen next week" },
+      { id: "job-5", Status: "Rejected", Company: "Netflix", Title: "Machine Learning Engineer", JobType: "Full-Time", Location: "Los Gatos, CA", Source: "LinkedIn", AppDeadline: getRecentDate(60), DateApplied: getRecentDate(65), NextStep: "Rejected after final round - too junior" },
       
       // Consulting
-      { id: "job-6", Status: "Case Study / Assessment", Company: "McKinsey & Company", Title: "Business Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(3), DateApplied: "2024-12-15", NextStep: "Final case interview on Monday" },
-      { id: "job-7", Status: "Final Interview", Company: "Boston Consulting Group", Title: "Associate Consultant", JobType: "Full-Time", Location: "Chicago, IL", Source: "Networking Event", AppDeadline: getTodayPlusDays(7), DateApplied: "2024-12-18", NextStep: "Partner interview scheduled" },
-      { id: "job-8", Status: "Applied", Company: "Bain & Company", Title: "Summer Associate", JobType: "Internship", Location: "London, UK", Source: "Company Website", AppDeadline: getTodayPlusDays(20), DateApplied: "2025-01-03", NextStep: "Application under review" },
-      { id: "job-9", Status: "Offer Accepted", Company: "Deloitte", Title: "Technology Consultant", JobType: "Full-Time", Location: "Milan, Italy", Source: "Polimi CareerService", AppDeadline: "2024-10-15", DateApplied: "2024-10-10", NextStep: "Starting March 1st, 2025" },
+      { id: "job-6", Status: "Case Study / Assessment", Company: "McKinsey & Company", Title: "Business Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(3), DateApplied: getRecentDate(22), NextStep: "Final case interview on Monday" },
+      { id: "job-7", Status: "Final Interview", Company: "Boston Consulting Group", Title: "Associate Consultant", JobType: "Full-Time", Location: "Chicago, IL", Source: "Networking Event", AppDeadline: getTodayPlusDays(7), DateApplied: getRecentDate(19), NextStep: "Partner interview scheduled" },
+      { id: "job-8", Status: "Applied", Company: "Bain & Company", Title: "Summer Associate", JobType: "Internship", Location: "London, UK", Source: "Company Website", AppDeadline: getTodayPlusDays(20), DateApplied: getRecentDate(4), NextStep: "Application under review" },
+      { id: "job-9", Status: "Offer Accepted", Company: "Deloitte", Title: "Technology Consultant", JobType: "Full-Time", Location: "Milan, Italy", Source: "Polimi CareerService", AppDeadline: getRecentDate(90), DateApplied: getRecentDate(95), NextStep: "Starting March 1st, 2025" },
       
       // Finance
-      { id: "job-10", Status: "HR Screening", Company: "Goldman Sachs", Title: "Investment Banking Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Company Website", AppDeadline: getTodayPlusDays(25), DateApplied: "2024-12-22", NextStep: "Superday invitation pending" },
-      { id: "job-11", Status: "Technical Interview", Company: "JPMorgan Chase", Title: "Quantitative Analyst", JobType: "Full-Time", Location: "London, UK", Source: "LinkedIn", AppDeadline: getTodayPlusDays(18), DateApplied: "2024-12-30", NextStep: "Technical modeling test this week" },
-      { id: "job-12", Status: "Rejected", Company: "Morgan Stanley", Title: "Summer Analyst", JobType: "Internship", Location: "New York, NY", Source: "Networking Event", AppDeadline: "2024-11-01", DateApplied: "2024-10-28", NextStep: "Did not pass online assessment" },
+      { id: "job-10", Status: "HR Screening", Company: "Goldman Sachs", Title: "Investment Banking Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Company Website", AppDeadline: getTodayPlusDays(25), DateApplied: getRecentDate(15), NextStep: "Superday invitation pending" },
+      { id: "job-11", Status: "Technical Interview", Company: "JPMorgan Chase", Title: "Quantitative Analyst", JobType: "Full-Time", Location: "London, UK", Source: "LinkedIn", AppDeadline: getTodayPlusDays(18), DateApplied: getRecentDate(7), NextStep: "Technical modeling test this week" },
+      { id: "job-12", Status: "Rejected", Company: "Morgan Stanley", Title: "Summer Analyst", JobType: "Internship", Location: "New York, NY", Source: "Networking Event", AppDeadline: getRecentDate(75), DateApplied: getRecentDate(80), NextStep: "Did not pass online assessment" },
       
       // Automotive
-      { id: "job-13", Status: "Applied", Company: "Tesla", Title: "Mechanical Engineer", JobType: "Full-Time", Location: "Fremont, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(30), DateApplied: "2025-01-06", NextStep: "Resume screening in progress" },
-      { id: "job-14", Status: "Final Interview", Company: "Ferrari", Title: "Aerodynamics Engineer", JobType: "Full-Time", Location: "Maranello, Italy", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(10), DateApplied: "2024-12-12", NextStep: "Final presentation next Friday" },
-      { id: "job-15", Status: "Offer Received", Company: "BMW", Title: "Electric Vehicle Engineer", JobType: "Full-Time", Location: "Munich, Germany", Source: "Referral", AppDeadline: getTodayPlusDays(14), DateApplied: "2024-12-20", NextStep: "Considering offer - deadline Jan 20" },
+      { id: "job-13", Status: "Applied", Company: "Tesla", Title: "Mechanical Engineer", JobType: "Full-Time", Location: "Fremont, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(30), DateApplied: getRecentDate(1), NextStep: "Resume screening in progress" },
+      { id: "job-14", Status: "Final Interview", Company: "Ferrari", Title: "Aerodynamics Engineer", JobType: "Full-Time", Location: "Maranello, Italy", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(10), DateApplied: getRecentDate(25), NextStep: "Final presentation next Friday" },
+      { id: "job-15", Status: "Offer Received", Company: "BMW", Title: "Electric Vehicle Engineer", JobType: "Full-Time", Location: "Munich, Germany", Source: "Referral", AppDeadline: getTodayPlusDays(14), DateApplied: getRecentDate(18), NextStep: "Considering offer - deadline Jan 20" },
       
       // Startups & Scale-ups
-      { id: "job-16", Status: "HR Screening", Company: "Stripe", Title: "Product Marketing Manager", JobType: "Full-Time", Location: "San Francisco, CA", Source: "LinkedIn", AppDeadline: getTodayPlusDays(22), DateApplied: "2025-01-01", NextStep: "Culture fit interview scheduled" },
-      { id: "job-17", Status: "Technical Interview", Company: "Revolut", Title: "Backend Developer", JobType: "Full-Time", Location: "London, UK", Source: "Company Website", AppDeadline: getTodayPlusDays(16), DateApplied: "2024-12-27", NextStep: "System design interview tomorrow" },
-      { id: "job-18", Status: "Applied", Company: "Klarna", Title: "UX Designer", JobType: "Full-Time", Location: "Stockholm, Sweden", Source: "LinkedIn", AppDeadline: getTodayPlusDays(35), DateApplied: "2025-01-04", NextStep: "Portfolio review in progress" },
+      { id: "job-16", Status: "HR Screening", Company: "Stripe", Title: "Product Marketing Manager", JobType: "Full-Time", Location: "San Francisco, CA", Source: "LinkedIn", AppDeadline: getTodayPlusDays(22), DateApplied: getRecentDate(6), NextStep: "Culture fit interview scheduled" },
+      { id: "job-17", Status: "Technical Interview", Company: "Revolut", Title: "Backend Developer", JobType: "Full-Time", Location: "London, UK", Source: "Company Website", AppDeadline: getTodayPlusDays(16), DateApplied: getRecentDate(10), NextStep: "System design interview tomorrow" },
+      { id: "job-18", Status: "Applied", Company: "Klarna", Title: "UX Designer", JobType: "Full-Time", Location: "Stockholm, Sweden", Source: "LinkedIn", AppDeadline: getTodayPlusDays(35), DateApplied: getRecentDate(3), NextStep: "Portfolio review in progress" },
       
       // Energy & Sustainability
-      { id: "job-19", Status: "Case Study / Assessment", Company: "Enel", Title: "Renewable Energy Analyst", JobType: "Full-Time", Location: "Rome, Italy", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(6), DateApplied: "2024-12-19", NextStep: "Sustainability project case study due Friday" },
-      { id: "job-20", Status: "Applied", Company: "Shell", Title: "Energy Transition Consultant", JobType: "Full-Time", Location: "The Hague, Netherlands", Source: "Company Website", AppDeadline: getTodayPlusDays(28), DateApplied: "2025-01-02", NextStep: "Online assessment to complete" },
+      { id: "job-19", Status: "Case Study / Assessment", Company: "Enel", Title: "Renewable Energy Analyst", JobType: "Full-Time", Location: "Rome, Italy", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(6), DateApplied: getRecentDate(18), NextStep: "Sustainability project case study due Friday" },
+      { id: "job-20", Status: "Applied", Company: "Shell", Title: "Energy Transition Consultant", JobType: "Full-Time", Location: "The Hague, Netherlands", Source: "Company Website", AppDeadline: getTodayPlusDays(28), DateApplied: getRecentDate(5), NextStep: "Online assessment to complete" },
       
       // Aerospace
-      { id: "job-21", Status: "HR Screening", Company: "SpaceX", Title: "Propulsion Engineer", JobType: "Full-Time", Location: "Hawthorne, CA", Source: "Referral", AppDeadline: getTodayPlusDays(40), DateApplied: "2024-12-23", NextStep: "Phone interview with hiring manager" },
-      { id: "job-22", Status: "Rejected", Company: "Boeing", Title: "Systems Engineer", JobType: "Full-Time", Location: "Seattle, WA", Source: "Company Website", AppDeadline: "2024-10-20", DateApplied: "2024-10-15", NextStep: "Position filled internally" },
+      { id: "job-21", Status: "HR Screening", Company: "SpaceX", Title: "Propulsion Engineer", JobType: "Full-Time", Location: "Hawthorne, CA", Source: "Referral", AppDeadline: getTodayPlusDays(40), DateApplied: getRecentDate(14), NextStep: "Phone interview with hiring manager" },
+      { id: "job-22", Status: "Rejected", Company: "Boeing", Title: "Systems Engineer", JobType: "Full-Time", Location: "Seattle, WA", Source: "Company Website", AppDeadline: getRecentDate(85), DateApplied: getRecentDate(90), NextStep: "Position filled internally" },
       
       // Consumer Goods
-      { id: "job-23", Status: "Final Interview", Company: "Unilever", Title: "Brand Manager", JobType: "Full-Time", Location: "London, UK", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(9), DateApplied: "2024-12-14", NextStep: "Assessment center next week" },
+      { id: "job-23", Status: "Final Interview", Company: "Unilever", Title: "Brand Manager", JobType: "Full-Time", Location: "London, UK", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(9), DateApplied: getRecentDate(23), NextStep: "Assessment center next week" },
       { id: "job-24", Status: "Applied", Company: "Nestlé", Title: "Supply Chain Analyst", JobType: "Internship", Location: "Vevey, Switzerland", Source: "Company Website", AppDeadline: getTodayPlusDays(45), DateApplied: "2025-01-07", NextStep: "Application submitted today" },
       
       // Thesis Projects
-      { id: "job-25", Status: "HR Screening", Company: "CERN", Title: "Research Associate", JobType: "Thesis Project", Location: "Geneva, Switzerland", Source: "Networking Event", AppDeadline: getTodayPlusDays(60), DateApplied: "2024-12-18", NextStep: "Meeting with supervisor next week" },
-      { id: "job-26", Status: "Applied", Company: "European Space Agency", Title: "Space Technology Researcher", JobType: "Thesis Project", Location: "Noordwijk, Netherlands", Source: "Other", AppDeadline: getTodayPlusDays(75), DateApplied: "2024-12-21", NextStep: "Thesis proposal under review" },
+      { id: "job-25", Status: "HR Screening", Company: "CERN", Title: "Research Associate", JobType: "Thesis Project", Location: "Geneva, Switzerland", Source: "Networking Event", AppDeadline: getTodayPlusDays(60), DateApplied: getRecentDate(19), NextStep: "Meeting with supervisor next week" },
+      { id: "job-26", Status: "Applied", Company: "European Space Agency", Title: "Space Technology Researcher", JobType: "Thesis Project", Location: "Noordwijk, Netherlands", Source: "Other", AppDeadline: getTodayPlusDays(75), DateApplied: getRecentDate(16), NextStep: "Thesis proposal under review" },
       
       // Media & Entertainment
-      { id: "job-27", Status: "Technical Interview", Company: "Spotify", Title: "Data Engineer", JobType: "Full-Time", Location: "Stockholm, Sweden", Source: "LinkedIn", AppDeadline: getTodayPlusDays(19), DateApplied: "2024-12-29", NextStep: "Take-home coding challenge completed" },
-      { id: "job-28", Status: "Applied", Company: "Disney", Title: "Creative Technologist", JobType: "Full-Time", Location: "Burbank, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(50), DateApplied: "2025-01-05", NextStep: "Creative portfolio review" },
+      { id: "job-27", Status: "Technical Interview", Company: "Spotify", Title: "Data Engineer", JobType: "Full-Time", Location: "Stockholm, Sweden", Source: "LinkedIn", AppDeadline: getTodayPlusDays(19), DateApplied: getRecentDate(8), NextStep: "Take-home coding challenge completed" },
+      { id: "job-28", Status: "Applied", Company: "Disney", Title: "Creative Technologist", JobType: "Full-Time", Location: "Burbank, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(50), DateApplied: getRecentDate(2), NextStep: "Creative portfolio review" },
       
       // Financial Services
-      { id: "job-29", Status: "Offer Received", Company: "BlackRock", Title: "Risk Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Networking Event", AppDeadline: getTodayPlusDays(12), DateApplied: "2024-12-16", NextStep: "Offer expires January 18th" },
-      { id: "job-30", Status: "HR Screening", Company: "Visa", Title: "Payment Systems Engineer", JobType: "Full-Time", Location: "San Francisco, CA", Source: "LinkedIn", AppDeadline: getTodayPlusDays(26), DateApplied: "2025-01-01", NextStep: "Behavioral interview scheduled" },
+      { id: "job-29", Status: "Offer Received", Company: "BlackRock", Title: "Risk Analyst", JobType: "Full-Time", Location: "New York, NY", Source: "Networking Event", AppDeadline: getTodayPlusDays(12), DateApplied: getRecentDate(21), NextStep: "Offer expires January 18th" },
+      { id: "job-30", Status: "HR Screening", Company: "Visa", Title: "Payment Systems Engineer", JobType: "Full-Time", Location: "San Francisco, CA", Source: "LinkedIn", AppDeadline: getTodayPlusDays(26), DateApplied: getRecentDate(6), NextStep: "Behavioral interview scheduled" },
       
       // Wishlist Companies
       { id: "job-31", Status: "Wishlist", Company: "OpenAI", Title: "AI Research Engineer", JobType: "Full-Time", Location: "San Francisco, CA", Source: "Other", AppDeadline: getTodayPlusDays(90), DateApplied: "", NextStep: "Waiting for position to open" },
@@ -129,16 +176,16 @@
       { id: "job-33", Status: "Wishlist", Company: "ASML", Title: "Lithography Engineer", JobType: "Full-Time", Location: "Veldhoven, Netherlands", Source: "Company Website", AppDeadline: getTodayPlusDays(100), DateApplied: "", NextStep: "Completing relevant coursework" },
       
       // Healthcare & Biotech
-      { id: "job-34", Status: "Applied", Company: "Johnson & Johnson", Title: "Medical Device Engineer", JobType: "Full-Time", Location: "New Brunswick, NJ", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(33), DateApplied: "2025-01-03", NextStep: "Technical screening pending" },
-      { id: "job-35", Status: "Case Study / Assessment", Company: "Novartis", Title: "Digital Health Analyst", JobType: "Internship", Location: "Basel, Switzerland", Source: "Company Website", AppDeadline: getTodayPlusDays(4), DateApplied: "2024-12-17", NextStep: "Healthcare innovation case study due Monday" },
+      { id: "job-34", Status: "Applied", Company: "Johnson & Johnson", Title: "Medical Device Engineer", JobType: "Full-Time", Location: "New Brunswick, NJ", Source: "Polimi CareerService", AppDeadline: getTodayPlusDays(33), DateApplied: getRecentDate(4), NextStep: "Technical screening pending" },
+      { id: "job-35", Status: "Case Study / Assessment", Company: "Novartis", Title: "Digital Health Analyst", JobType: "Internship", Location: "Basel, Switzerland", Source: "Company Website", AppDeadline: getTodayPlusDays(4), DateApplied: getRecentDate(20), NextStep: "Healthcare innovation case study due Monday" },
       
       // Telecommunications
-      { id: "job-36", Status: "Technical Interview", Company: "Ericsson", Title: "5G Network Engineer", JobType: "Full-Time", Location: "Stockholm, Sweden", Source: "LinkedIn", AppDeadline: getTodayPlusDays(21), DateApplied: "2024-12-26", NextStep: "Technical deep-dive interview" },
-      { id: "job-37", Status: "Rejected", Company: "Nokia", Title: "RF Engineer", JobType: "Full-Time", Location: "Espoo, Finland", Source: "Company Website", AppDeadline: "2024-09-30", DateApplied: "2024-09-25", NextStep: "Position required more experience" },
+      { id: "job-36", Status: "Technical Interview", Company: "Ericsson", Title: "5G Network Engineer", JobType: "Full-Time", Location: "Stockholm, Sweden", Source: "LinkedIn", AppDeadline: getTodayPlusDays(21), DateApplied: getRecentDate(11), NextStep: "Technical deep-dive interview" },
+      { id: "job-37", Status: "Rejected", Company: "Nokia", Title: "RF Engineer", JobType: "Full-Time", Location: "Espoo, Finland", Source: "Company Website", AppDeadline: getRecentDate(120), DateApplied: getRecentDate(125), NextStep: "Position required more experience" },
       
       // Additional Tech
-      { id: "job-38", Status: "Applied", Company: "Palantir", Title: "Forward Deployed Engineer", JobType: "Full-Time", Location: "London, UK", Source: "Referral", AppDeadline: getTodayPlusDays(37), DateApplied: "2025-01-06", NextStep: "Karat technical screen scheduled" },
-      { id: "job-39", Status: "HR Screening", Company: "Databricks", Title: "Solutions Architect", JobType: "Full-Time", Location: "Amsterdam, Netherlands", Source: "LinkedIn", AppDeadline: getTodayPlusDays(27), DateApplied: "2024-12-31", NextStep: "Recruiter call this Thursday" },
+      { id: "job-38", Status: "Applied", Company: "Palantir", Title: "Forward Deployed Engineer", JobType: "Full-Time", Location: "London, UK", Source: "Referral", AppDeadline: getTodayPlusDays(37), DateApplied: getRecentDate(1), NextStep: "Karat technical screen scheduled" },
+      { id: "job-39", Status: "HR Screening", Company: "Databricks", Title: "Solutions Architect", JobType: "Full-Time", Location: "Amsterdam, Netherlands", Source: "LinkedIn", AppDeadline: getTodayPlusDays(27), DateApplied: getRecentDate(6), NextStep: "Recruiter call this Thursday" },
       { id: "job-40", Status: "To Apply", Company: "NVIDIA", Title: "GPU Software Engineer", JobType: "Full-Time", Location: "Santa Clara, CA", Source: "Company Website", AppDeadline: getTodayPlusDays(42), DateApplied: "", NextStep: "Preparing application materials" }
     ];
     const sampleContacts = [
@@ -458,131 +505,286 @@
     
     /********* Main Components *********/
     function ExportModal({ onCancel }) {
-      const [filename, setFilename] = React.useState(`careerflow-backup-${new Date().toISOString().split('T')[0]}`);
+      const [exportOption, setExportOption] = React.useState('computer');
+      const [fileName, setFileName] = React.useState(() => {
+        const today = new Date().toISOString().split('T')[0];
+        return `careerflow-backup-${today}`;
+      });
       const [isExporting, setIsExporting] = React.useState(false);
-      const { jobs, contacts } = useFirebaseData(useAuth().user);
-      
-      const handleExport = async (method) => {
+
+      const handleExport = async () => {
+        if (!fileName.trim()) {
+          showToast('Please enter a filename', 'error');
+          return;
+        }
+
         setIsExporting(true);
+        
         try {
-          const data = { 
-            jobs, 
-            contacts, 
-            exportDate: new Date().toISOString(),
-            exportedBy: useAuth().user?.displayName || useAuth().user?.email || 'User'
-          };
-          const jsonData = JSON.stringify(data, null, 2);
-          
-          if (method === 'local') {
-            const blob = new Blob([jsonData], { type: 'application/json' });
+          if (exportOption === 'computer') {
+            // Export to computer
+            const data = {
+              exportDate: new Date().toISOString(),
+              version: "1.0",
+              jobs: jobs,
+              contacts: contacts
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${filename}.json`;
+            a.download = `${fileName}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showToast(`Successfully exported to Downloads folder!`, 'success');
-          } else if (method === 'drive') {
+            
+            showToast('Data exported successfully!', 'success');
+            onCancel();
+          } else if (exportOption === 'drive') {
             // Google Drive integration would go here
-            // For now, we'll show a helpful message
-            showToast('Google Drive integration coming soon! Using local download instead.', 'info');
-            // Fall back to local download
-            const blob = new Blob([jsonData], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${filename}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            showToast('Google Drive integration coming soon!', 'info');
           }
-          
-          onCancel();
         } catch (error) {
           showToast('Export failed. Please try again.', 'error');
+        } finally {
+          setIsExporting(false);
         }
-        setIsExporting(false);
       };
-      
+
       return (
         <div className="space-y-6">
-          <div className="text-center text-gray-600 text-sm mb-6">
-            Choose how you'd like to save your CareerFlow data backup
+          <div className="text-center mb-6">
+            <Icon name="download-cloud" className="w-16 h-16 text-blue-500 mx-auto mb-4"/>
+            <h3 className="text-xl font-semibold text-gray-800">Export Your Data</h3>
+            <p className="text-sm text-gray-600 mt-2">
+              Save your applications and contacts data
+            </p>
           </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">File Name</label>
-            <input 
-              type="text" 
-              className="input input-bordered w-full" 
-              value={filename}
-              onChange={(e) => setFilename(e.target.value)}
-              placeholder="Enter filename (without .json extension)"
-            />
-            <p className="text-xs text-gray-500 mt-1">File will be saved as: <span className="font-mono">{filename}.json</span></p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button 
-              onClick={() => handleExport('local')}
-              disabled={isExporting || !filename.trim()}
-              className="flex flex-col items-center p-6 border-2 border-blue-200 rounded-xl hover:border-blue-400 hover:bg-blue-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group"
-            >
-              <div className="bg-blue-100 p-3 rounded-full mb-3 group-hover:bg-blue-200 transition-colors">
-                <Icon name="download" className="w-6 h-6 text-blue-600"/>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Export Options</label>
+              <div className="space-y-3">
+                <label className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all ${
+                  exportOption === 'computer' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+                }`}>
+                  <input 
+                    type="radio" 
+                    name="exportOption" 
+                    value="computer" 
+                    checked={exportOption === 'computer'}
+                    onChange={(e) => setExportOption(e.target.value)}
+                    className="sr-only"
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-center">
+                      <Icon name="monitor" className="w-5 h-5 text-blue-600 mr-3"/>
+                      <span className="font-medium text-gray-800">💻 Save to Computer</span>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1 ml-8">Download as JSON file to your Downloads folder</p>
+                  </div>
+                  {exportOption === 'computer' && (
+                    <Icon name="check-circle" className="w-5 h-5 text-blue-600"/>
+                  )}
+                </label>
+
+                <label className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all ${
+                  exportOption === 'drive' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+                }`}>
+                  <input 
+                    type="radio" 
+                    name="exportOption" 
+                    value="drive" 
+                    checked={exportOption === 'drive'}
+                    onChange={(e) => setExportOption(e.target.value)}
+                    className="sr-only"
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-center">
+                      <Icon name="cloud" className="w-5 h-5 text-green-600 mr-3"/>
+                      <span className="font-medium text-gray-800">☁️ Save to Google Drive</span>
+                      <span className="ml-2 px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">Coming Soon</span>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1 ml-8">Backup directly to your Google Drive</p>
+                  </div>
+                  {exportOption === 'drive' && (
+                    <Icon name="check-circle" className="w-5 h-5 text-blue-600"/>
+                  )}
+                </label>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-1">Save to Computer</h3>
-              <p className="text-sm text-gray-600 text-center">Download directly to your Downloads folder</p>
-              <div className="text-xs text-gray-500 mt-2 bg-gray-100 px-2 py-1 rounded">
-                💻 Local Download
-              </div>
-            </button>
-            
-            <button 
-              onClick={() => handleExport('drive')}
-              disabled={isExporting || !filename.trim()}
-              className="flex flex-col items-center p-6 border-2 border-green-200 rounded-xl hover:border-green-400 hover:bg-green-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group relative"
-            >
-              <div className="bg-green-100 p-3 rounded-full mb-3 group-hover:bg-green-200 transition-colors">
-                <Icon name="cloud" className="w-6 h-6 text-green-600"/>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-1">Save to Google Drive</h3>
-              <p className="text-sm text-gray-600 text-center">Store securely in your Google Drive</p>
-              <div className="text-xs text-gray-500 mt-2 bg-green-100 px-2 py-1 rounded">
-                ☁️ Cloud Storage
-              </div>
-              <div className="absolute top-2 right-2 bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full">
-                Coming Soon
-              </div>
-            </button>
-          </div>
-          
-          <div className="flex justify-between items-center pt-4 border-t">
-            <div className="text-sm text-gray-500">
-              {jobs.length} applications • {contacts.length} contacts
             </div>
-            <div className="flex gap-3">
-              <button 
-                onClick={onCancel}
-                className="btn btn-ghost"
-                disabled={isExporting}
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">File Name</label>
+              <input 
+                type="text" 
+                value={fileName}
+                onChange={(e) => setFileName(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter filename (without extension)"
+              />
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h4 className="font-medium text-gray-800 mb-2">Export Summary</h4>
+              <div className="space-y-1 text-sm text-gray-600">
+                <div className="flex justify-between">
+                  <span>Applications:</span>
+                  <span className="font-medium">{jobs.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Contacts:</span>
+                  <span className="font-medium">{contacts.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Export Date:</span>
+                  <span className="font-medium">{new Date().toLocaleDateString()}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <button 
+              onClick={onCancel}
+              className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              disabled={isExporting}
+            >
+              Cancel
+            </button>
+            <button 
+              onClick={handleExport}
+              disabled={isExporting || !fileName.trim()}
+              className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+            >
+              {isExporting ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  Exporting...
+                </>
+              ) : (
+                <>
+                  <Icon name="download" className="w-4 h-4"/>
+                  Export Data
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    function EmailTemplatesModal({ onCancel }) {
+      const [selectedTemplate, setSelectedTemplate] = React.useState('followUp');
+      const [copiedField, setCopiedField] = React.useState(null);
+
+      const copyToClipboard = async (text, field) => {
+        try {
+          await navigator.clipboard.writeText(text);
+          setCopiedField(field);
+          showToast('Copied to clipboard!', 'success');
+          setTimeout(() => setCopiedField(null), 2000);
+        } catch (error) {
+          showToast('Failed to copy to clipboard', 'error');
+        }
+      };
+
+      const templates = [
+        { id: 'followUp', name: 'Follow-up Email', icon: 'send', color: 'blue' },
+        { id: 'thankYou', name: 'Thank You Email', icon: 'heart', color: 'green' },
+        { id: 'networking', name: 'Networking Email', icon: 'users', color: 'purple' }
+      ];
+
+      return (
+        <div className="space-y-6">
+          <div className="text-center mb-6">
+            <Icon name="mail" className="w-16 h-16 text-purple-500 mx-auto mb-4"/>
+            <h3 className="text-xl font-semibold text-gray-800">Email Templates</h3>
+            <p className="text-sm text-gray-600 mt-2">
+              Professional email templates for your job search
+            </p>
+          </div>
+
+          <div className="flex space-x-2 mb-4">
+            {templates.map(template => (
+              <button
+                key={template.id}
+                onClick={() => setSelectedTemplate(template.id)}
+                className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                  selectedTemplate === template.id
+                    ? `bg-${template.color}-100 text-${template.color}-700 border border-${template.color}-200`
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
               >
-                Cancel
+                <Icon name={template.icon} className="w-4 h-4 inline mr-2"/>
+                {template.name}
               </button>
-            </div>
+            ))}
           </div>
-          
-          {isExporting && (
-            <div className="text-center">
-              <div className="inline-flex items-center gap-2 text-blue-600">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                Preparing your export...
+
+          <div className="space-y-4">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700">Subject</label>
+                <button
+                  onClick={() => copyToClipboard(emailTemplates[selectedTemplate].subject, 'subject')}
+                  className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                >
+                  <Icon name={copiedField === 'subject' ? 'check' : 'copy'} className="w-3 h-3"/>
+                  {copiedField === 'subject' ? 'Copied!' : 'Copy'}
+                </button>
+              </div>
+              <div className="p-3 bg-gray-50 rounded-lg border text-sm">
+                {emailTemplates[selectedTemplate].subject}
               </div>
             </div>
-          )}
+
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700">Email Body</label>
+                <button
+                  onClick={() => copyToClipboard(emailTemplates[selectedTemplate].body, 'body')}
+                  className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                >
+                  <Icon name={copiedField === 'body' ? 'check' : 'copy'} className="w-3 h-3"/>
+                  {copiedField === 'body' ? 'Copied!' : 'Copy'}
+                </button>
+              </div>
+              <div className="p-3 bg-gray-50 rounded-lg border text-sm whitespace-pre-line max-h-64 overflow-y-auto">
+                {emailTemplates[selectedTemplate].body}
+              </div>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <div className="flex items-start gap-2">
+                <Icon name="info" className="w-4 h-4 text-blue-600 mt-0.5"/>
+                <div className="text-sm">
+                  <p className="font-medium text-blue-800">Customization Tips:</p>
+                  <p className="text-blue-700 mt-1">
+                    Replace placeholders like [Company Name], [Position Title], [Your Name] with your specific details before sending.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <button 
+              onClick={onCancel}
+              className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              Close
+            </button>
+            <button 
+              onClick={() => copyToClipboard(`${emailTemplates[selectedTemplate].subject}\n\n${emailTemplates[selectedTemplate].body}`, 'full')}
+              className="flex-1 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors flex items-center justify-center gap-2"
+            >
+              <Icon name="copy" className="w-4 h-4"/>
+              Copy Complete Email
+            </button>
+          </div>
         </div>
       );
     }
@@ -709,16 +911,12 @@
         <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl border border-gray-100">
           <div className="p-6 space-y-6">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className={`bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 text-center border transition-all duration-200 cursor-pointer transform hover:scale-105 ${
-                    selectedMetricFilters.includes('total') ? 'border-blue-400 ring-2 ring-blue-200 shadow-lg' : 'border-blue-200/50 hover:shadow-md'
-                  }`} onClick={() => onMetricFilterToggle('total')}>
-                    <div className="text-xs font-medium text-blue-600 uppercase tracking-wide">Total Apps</div>
+                  <div className={`bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 text-center border transition-all duration-200 cursor-pointer transform hover:scale-105 border-blue-200/50 hover:shadow-md`} onClick={() => onMetricFilterToggle('total')}>
+                    <div className="text-xs font-medium text-blue-600 uppercase tracking-wide">Clear Filters</div>
                     <div className="text-2xl font-bold text-blue-700 mt-1 flex items-center justify-center gap-2">
-                      {metrics.total} <Icon name="layers" className="w-5 h-5"/>
+                      {metrics.total} <Icon name="filter-x" className="w-5 h-5"/>
                     </div>
-                    {selectedMetricFilters.includes('total') && (
-                      <div className="mt-2"><span className="inline-block w-2 h-2 bg-blue-500 rounded-full"></span></div>
-                    )}
+                    <div className="text-xs text-blue-600 mt-1">Total Apps</div>
                   </div>
                   <div className={`bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 text-center border transition-all duration-200 cursor-pointer transform hover:scale-105 ${
                     selectedMetricFilters.includes('inProgress') ? 'border-amber-400 ring-2 ring-amber-200 shadow-lg' : 'border-amber-200/50 hover:shadow-md'
@@ -1300,13 +1498,18 @@
       }
 
       const handleMetricFilterToggle = (filterType) => {
-        setSelectedMetricFilters(prev => {
-          if (prev.includes(filterType)) {
-            return prev.filter(f => f !== filterType);
-          } else {
-            return [...prev, filterType];
-          }
-        });
+        if (filterType === 'total') {
+          // Clear all filters when Total Apps is clicked
+          clearAllFilters();
+        } else {
+          setSelectedMetricFilters(prev => {
+            if (prev.includes(filterType)) {
+              return prev.filter(f => f !== filterType);
+            } else {
+              return [...prev, filterType];
+            }
+          });
+        }
       };
 
       const handleFilterToggle = (filterType, value) => {
@@ -1433,6 +1636,8 @@
                       <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[10] p-2 shadow-lg bg-white rounded-xl border border-gray-200 w-56">
                         <li><a onClick={() => handleDataAction('export')} className="text-blue-600 hover:bg-blue-50"><Icon name="download" className="w-4 h-4"/> Export Data</a></li>
                         <li><a onClick={() => handleDataAction('import')} className="text-green-600 hover:bg-green-50"><Icon name="upload" className="w-4 h-4"/> Import Data</a></li>
+                        <li><hr className="my-1"/></li>
+                        <li><a onClick={() => document.getElementById('email_templates_modal').showModal()} className="text-purple-600 hover:bg-purple-50"><Icon name="mail" className="w-4 h-4"/> Email Templates</a></li>
                         <li><hr className="my-1"/></li>
                         <li><a onClick={() => handleDataAction('restore_dummy')} className="text-purple-600 hover:bg-purple-50"><Icon name="refresh-cw" className="w-4 h-4"/> Load Sample Data</a></li>
                         <li><hr className="my-1"/></li>
@@ -1603,6 +1808,10 @@
             
             <Modal id="export_data_modal" title="Export Your Data">
               <ExportModal onCancel={() => document.getElementById('export_data_modal').close()} />
+            </Modal>
+
+            <Modal id="email_templates_modal" title="Email Templates">
+              <EmailTemplatesModal onCancel={() => document.getElementById('email_templates_modal').close()} />
             </Modal>
         </div>
       );
