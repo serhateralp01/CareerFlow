@@ -105,6 +105,10 @@
         try {
           const docRef = window.firebase.db.collection('users').doc(userId).collection('data').doc('jobs');
           const sanitizeJobs = (jobs) => {
+            if (!Array.isArray(jobs)) {
+              console.error('Expected jobs to be an array, but got:', jobs);
+              return [];
+            }
             return jobs.map(job => {
               const sanitizedJob = {};
               for (const key in job) {
@@ -244,12 +248,25 @@
       const updateJobs = async (newJobs) => {
         if (!user) return;
         
-        setJobs(newJobs);
-        try {
-          await FirebaseService.saveJobs(user.uid, newJobs);
-        } catch (error) {
-          console.error('Error saving jobs:', error);
-          showToast('Failed to save jobs. Changes may be lost.', 'error');
+        // Handle both direct array and function updates
+        if (typeof newJobs === 'function') {
+          setJobs(prevJobs => {
+            const updatedJobs = newJobs(prevJobs);
+            // Save to Firebase in the background
+            FirebaseService.saveJobs(user.uid, updatedJobs).catch(error => {
+              console.error('Error saving jobs:', error);
+              showToast('Failed to save jobs. Changes may be lost.', 'error');
+            });
+            return updatedJobs;
+          });
+        } else {
+          setJobs(newJobs);
+          try {
+            await FirebaseService.saveJobs(user.uid, newJobs);
+          } catch (error) {
+            console.error('Error saving jobs:', error);
+            showToast('Failed to save jobs. Changes may be lost.', 'error');
+          }
         }
       };
 
