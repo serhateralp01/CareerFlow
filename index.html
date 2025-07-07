@@ -233,12 +233,12 @@
             return updatedJobs;
           });
         } else {
-          setJobs(newJobs);
-          try {
-            await FirebaseService.saveJobs(user.uid, newJobs);
-          } catch (error) {
-            console.error('Error saving jobs:', error);
-            showToast('Failed to save jobs. Changes may be lost.', 'error');
+        setJobs(newJobs);
+        try {
+          await FirebaseService.saveJobs(user.uid, newJobs);
+        } catch (error) {
+          console.error('Error saving jobs:', error);
+          showToast('Failed to save jobs. Changes may be lost.', 'error');
           }
         }
       };
@@ -702,47 +702,47 @@
               {jobs.length > 0 ? (
                 <div className="space-y-8">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                  <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                       <h3 className="font-semibold text-lg text-gray-800 mb-4">Application Timeline & Success Metrics</h3>
-                      <div style={{height: '300px'}}>
+                    <div style={{height: '300px'}}>
                         <ChartComponent chartId="chart1" type="bar" data={timelineData} options={{
-                          maintainAspectRatio: false,
+                        maintainAspectRatio: false,
                           interaction: { mode: 'index', intersect: false },
-                          plugins: {
-                            legend: { 
-                              display: true, 
-                              position: 'top',
-                              labels: { 
-                                usePointStyle: true,
+                        plugins: {
+                          legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                              usePointStyle: true,
                                 padding: 15,
                                 font: { size: 11 }
-                              }
-                            },
-                            tooltip: {
-                              backgroundColor: 'rgba(0,0,0,0.8)',
-                              titleColor: 'white',
-                              bodyColor: 'white',
-                              borderColor: 'rgba(0,0,0,0.1)',
-                              borderWidth: 1,
+                            }
+                          },
+                          tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleColor: 'white',
+                            bodyColor: 'white',
+                            borderColor: 'rgba(0,0,0,0.1)',
+                            borderWidth: 1,
                               filter: function(tooltipItem) {
                                 return tooltipItem.datasetIndex <= 2; // Only show bars in tooltip
                               }
-                            }
-                          },
-                          scales: {
-                            x: {
+                          }
+                        },
+                        scales: {
+                          x: {
                               grid: { display: false },
                               ticks: { color: '#6B7280', font: { size: 11 } },
-                              border: { display: false }
-                            },
-                            y: {
+                            border: { display: false }
+                          },
+                          y: {
                               type: 'linear',
                               display: true,
                               position: 'left',
-                              beginAtZero: true,
-                              ticks: { 
-                                stepSize: 1, 
-                                color: '#6B7280', 
+                            beginAtZero: true,
+                            ticks: { 
+                              stepSize: 1, 
+                              color: '#6B7280', 
                                 font: { size: 11 } 
                               },
                               grid: { color: '#F3F4F6', lineWidth: 1 },
@@ -777,11 +777,11 @@
                                 font: { size: 12, weight: 'bold' }
                               }
                             }
-                          },
+                        },
                           animation: { duration: 800, easing: 'easeInOutQuart' }
-                        }} />
-                      </div>
-                      
+                      }} />
+                  </div>
+                  
                       {/* Timeline Stats */}
                       <div className="mt-6 grid grid-cols-3 gap-4">
                         {timelineData.stats && timelineData.stats.map((monthData, index) => (
@@ -791,7 +791,7 @@
                               <div className="flex justify-between">
                                 <span>Applied:</span>
                                 <span className="font-medium text-blue-600">{monthData.applied}</span>
-                              </div>
+                          </div>
                               <div className="flex justify-between">
                                 <span>Response Rate:</span>
                                 <span className="font-medium text-purple-600">{monthData.responseRate}%</span>
@@ -805,45 +805,45 @@
                                 <span className="font-medium text-indigo-600">{monthData.interviews}</span>
                               </div>
                             </div>
+                              </div>
+                            ))}
                           </div>
-                        ))}
                       </div>
-                    </div>
-                    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                      <h3 className="font-semibold text-lg text-gray-800 mb-4">Status Distribution</h3>
-                      <div style={{height: '280px'}}>
-                        <ChartComponent chartId="chart2" type="bar" data={barData} options={{
-                          indexAxis:'y', 
-                          maintainAspectRatio: false, 
-                          plugins:{
-                            legend:{display:false},
-                            tooltip: {
-                              backgroundColor: 'rgba(0,0,0,0.8)',
-                              titleColor: 'white',
-                              bodyColor: 'white',
-                              borderColor: 'rgba(0,0,0,0.1)',
-                              borderWidth: 1
-                            }
-                          }, 
-                          scales:{
-                            x:{
-                              beginAtZero:true, 
-                              ticks: {stepSize: 1, color: '#6B7280', font: {size: 11}}, 
-                              grid: {color: '#F3F4F6', lineWidth: 1},
-                              border: {display: false}
-                            }, 
-                            y:{
-                              ticks: {color: '#374151', font: {size: 11, weight: '500'}},
-                              grid: {display: false},
-                              border: {display: false}
-                            }
-                          },
-                          elements: {bar: {borderRadius: 4}},
-                          layout: {padding: {left: 10, right: 20}},
-                          animation: {duration: 800, easing: 'easeInOutQuart'}
-                        }} />
+                      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                          <h3 className="font-semibold text-lg text-gray-800 mb-4">Status Distribution</h3>
+                          <div style={{height: '280px'}}>
+                            <ChartComponent chartId="chart2" type="bar" data={barData} options={{
+                              indexAxis:'y', 
+                              maintainAspectRatio: false, 
+                              plugins:{
+                                legend:{display:false},
+                                tooltip: {
+                                  backgroundColor: 'rgba(0,0,0,0.8)',
+                                  titleColor: 'white',
+                                  bodyColor: 'white',
+                                  borderColor: 'rgba(0,0,0,0.1)',
+                                  borderWidth: 1
+                                }
+                              }, 
+                              scales:{
+                                x:{
+                                  beginAtZero:true, 
+                                  ticks: {stepSize: 1, color: '#6B7280', font: {size: 11}}, 
+                                  grid: {color: '#F3F4F6', lineWidth: 1},
+                                  border: {display: false}
+                                }, 
+                                y:{
+                                  ticks: {color: '#374151', font: {size: 11, weight: '500'}},
+                                  grid: {display: false},
+                                  border: {display: false}
+                                }
+                              },
+                              elements: {bar: {borderRadius: 4}},
+                              layout: {padding: {left: 10, right: 20}},
+                              animation: {duration: 800, easing: 'easeInOutQuart'}
+                            }} />
+                          </div>
                       </div>
-                    </div>
                   </div>
                 </div>
               ) : (
@@ -1054,41 +1054,41 @@
                       {jobs.map((j) => {
                         return (
                           <tr key={j.id} className={`border-b border-gray-100 transition-colors duration-150 ${getStatusColorClass(j.Status)} hover:bg-opacity-80`}>
-                            <td className="py-3 px-3">
+                          <td className="py-3 px-3">
                               <span className="text-sm font-medium">{j.Status}</span>
-                            </td>
-                            <td className="py-3 px-3">
+                          </td>
+                          <td className="py-3 px-3">
                               <span className="text-sm font-medium">{j.Company}</span>
-                            </td>
-                            <td className="py-3 px-3">
+                          </td>
+                          <td className="py-3 px-3">
                               <span className="text-sm">{j.Title}</span>
-                            </td>
-                            <td className="py-3 px-3">
-                              <div className="flex items-center gap-1">
+                          </td>
+                          <td className="py-3 px-3">
+                            <div className="flex items-center gap-1">
                                 <span className="text-sm">{j.Location}</span>
                                 {j.Location && (
-                                  <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(j.Location)}`} target="_blank" rel="noopener noreferrer" 
-                                      className="text-blue-500 hover:text-blue-700 p-1 rounded-full hover:bg-blue-100 transition-colors duration-150">
+                                <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(j.Location)}`} target="_blank" rel="noopener noreferrer" 
+                                    className="text-blue-500 hover:text-blue-700 p-1 rounded-full hover:bg-blue-100 transition-colors duration-150">
                                       <Icon name="map-pin" className="w-3 h-3"/>
-                                  </a>
+                                </a>
                                 )}
-                              </div>
-                            </td>
-                            <td className="py-3 px-3">
+                            </div>
+                          </td>
+                          <td className="py-3 px-3">
                               <span className="text-xs">{j.JobType}</span>
-                            </td>
-                            <td className="py-3 px-3">
+                          </td>
+                          <td className="py-3 px-3">
                               <span className="text-xs">{j.Source}</span>
-                            </td>
+                          </td>
                             <td className="py-3 px-3">
                               <span className="text-xs">{j.DateApplied || 'N/A'}</span>
-                            </td>
-                            <td className="py-3 px-3">
-                              <Tooltip text={j.NextStep}>
+                          </td>
+                          <td className="py-3 px-3">
+                            <Tooltip text={j.NextStep}>
                                 <span className="text-xs truncate block max-w-24">{j.NextStep}</span>
-                              </Tooltip>
-                            </td>
-                            <td className="py-3 px-3">
+                            </Tooltip>
+                          </td>
+                          <td className="py-3 px-3">
                               <div className="flex gap-1">
                                 <button className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded transition-colors duration-150" 
                                         onClick={() => startEditing(j)} title="Edit">
@@ -1096,11 +1096,11 @@
                                 </button>
                                 <button className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1 rounded transition-colors duration-150" 
                                         onClick={() => deleteJob(j.id)} title="Delete">
-                                  <Icon name="trash-2" className="w-4 h-4" />
-                                </button>
+                              <Icon name="trash-2" className="w-4 h-4" />
+                            </button>
                               </div>
-                            </td>
-                          </tr>
+                          </td>
+                        </tr>
                         );
                       })}
                     </tbody>
@@ -1241,7 +1241,7 @@
           {job.Location && (
             <div className="text-xs mt-2 text-blue-600 font-medium">
               📍 {job.Location}
-            </div>
+          </div>
           )}
         </div>
       );
@@ -1715,14 +1715,14 @@
                 <div className="space-y-2 max-h-48 overflow-y-auto bg-white border border-gray-200 rounded-lg p-3">
                     {statusList.map(option => (
                         <label key={option} className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-1 rounded">
-                            <input 
-                                type="checkbox" 
-                                checked={selectedOptions.includes(option)} 
-                                onChange={() => handleToggle(option)}
-                                className="checkbox checkbox-primary checkbox-sm"
-                            />
+                                <input 
+                                    type="checkbox" 
+                                    checked={selectedOptions.includes(option)} 
+                                    onChange={() => handleToggle(option)}
+                                    className="checkbox checkbox-primary checkbox-sm"
+                                />
                             <span className="text-sm text-gray-700">{option}</span>
-                        </label>
+                            </label>
                     ))}
                 </div>
                 {selectedOptions.length > 0 && (
@@ -1775,7 +1775,7 @@
             </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-              <Analytics jobs={jobsForAnalytics} selectedMetricFilters={selectedMetricFilters} onMetricFilterToggle={handleMetricFilterToggle} />
+              <Analytics jobs={filteredJobs} selectedMetricFilters={selectedMetricFilters} onMetricFilterToggle={handleMetricFilterToggle} />
               
               <KanbanComponents.KanbanBoard jobs={jobs} setJobs={updateJobs} />
 
@@ -1804,11 +1804,11 @@
                     </div>
                     
                     {/* Always Visible Filters */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                      <div>
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <div>
                         <StatusDropdownFilter selectedOptions={statusFilters} setSelectedOptions={setStatusFilters} />
-                      </div>
-                      <div>
+                        </div>
+                        <div>
                         <label className="block text-xs font-medium text-gray-700 mb-2">Job Type Filter</label>
                         <div className="space-y-2 max-h-48 overflow-y-auto bg-white border border-gray-200 rounded-lg p-3">
                           {jobTypeList.map(option => (
@@ -1832,8 +1832,8 @@
                             {jobTypeFilters.length} type{jobTypeFilters.length !== 1 ? 's' : ''} selected
                           </div>
                         )}
-                      </div>
-                      <div>
+                        </div>
+                        <div>
                         <label className="block text-xs font-medium text-gray-700 mb-2">Source Filter</label>
                         <div className="space-y-2 max-h-48 overflow-y-auto bg-white border border-gray-200 rounded-lg p-3">
                           {sourceList.map(option => (
@@ -1857,14 +1857,14 @@
                             {sourceFilters.length} source{sourceFilters.length !== 1 ? 's' : ''} selected
                           </div>
                         )}
-                      </div>
-                      <div>
+                        </div>
+                        <div>
                         <label className="block text-xs font-medium text-gray-700 mb-2">Location Filter</label>
-                        <input type="text" placeholder="Filter by location..." 
+                          <input type="text" placeholder="Filter by location..." 
                                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                               value={locationFilter} onChange={e => setLocationFilter(e.target.value)} />
+                                 value={locationFilter} onChange={e => setLocationFilter(e.target.value)} />
+                        </div>
                       </div>
-                    </div>
                   </div>
                 </div>
                 
