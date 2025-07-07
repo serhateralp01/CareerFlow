@@ -146,7 +146,7 @@
     };
 
     /********* Helpers & Custom Hooks *********/
-    const emptyJob = { Status:"Wishlist", Company:"", Title:"", JobType:"Internship", Location:"", Source:"Polimi CareerService", AppDeadline:"", DateApplied:"", NextStep:"" };
+    const emptyJob = { Status:"Wishlist", Company:"", Title:"", JobType:"Internship", Location:"", Source:"Polimi CareerService", DateApplied:"", NextStep:"" };
     const emptyContact = { Name:"", Company:"", Role:"", Location:"", ContactDate:"", Notes:"" };
 
     function useAuth() {
@@ -437,7 +437,7 @@
         for (let i = 2; i >= 0; i--) {
           const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
           const monthKey = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-          monthlyData[monthKey] = { applied: 0, offers: 0, rejected: 0 };
+          monthlyData[monthKey] = { applied: 0, offers: 0, rejected: 0, interviews: 0, responses: 0 };
         }
         
         jobs.forEach(job => {
@@ -449,17 +449,33 @@
               monthlyData[monthKey].applied++;
               if (["Offer Received", "Offer Accepted"].includes(job.Status)) {
                 monthlyData[monthKey].offers++;
+                monthlyData[monthKey].responses++;
               } else if (job.Status === "Rejected") {
                 monthlyData[monthKey].rejected++;
+                monthlyData[monthKey].responses++;
+              } else if (["HR Screening", "Technical Interview", "Case Study / Assessment", "Final Interview"].includes(job.Status)) {
+                monthlyData[monthKey].interviews++;
+                monthlyData[monthKey].responses++;
               }
             }
           }
         });
 
-        const labels = Object.keys(monthlyData);
-        const appliedData = Object.values(monthlyData).map(m => m.applied);
-        const offersData = Object.values(monthlyData).map(m => m.offers);
-        const rejectedData = Object.values(monthlyData).map(m => m.rejected);
+        // Calculate rates
+        const processedData = Object.entries(monthlyData).map(([month, data]) => ({
+          month,
+          ...data,
+          responseRate: data.applied > 0 ? Math.round((data.responses / data.applied) * 100) : 0,
+          successRate: data.applied > 0 ? Math.round((data.offers / data.applied) * 100) : 0,
+          interviewRate: data.applied > 0 ? Math.round((data.interviews / data.applied) * 100) : 0
+        }));
+
+        const labels = processedData.map(d => d.month);
+        const appliedData = processedData.map(d => d.applied);
+        const offersData = processedData.map(d => d.offers);
+        const rejectedData = processedData.map(d => d.rejected);
+        const responseRates = processedData.map(d => d.responseRate);
+        const successRates = processedData.map(d => d.successRate);
 
         return {
           labels,
@@ -467,46 +483,60 @@
             {
               label: 'Applications',
               data: appliedData,
-              borderColor: '#3B82F6',
-              backgroundColor: 'rgba(59, 130, 246, 0.1)',
-              borderWidth: 3,
-              fill: true,
-              tension: 0.4,
-              pointBackgroundColor: '#3B82F6',
-              pointBorderColor: '#ffffff',
-              pointBorderWidth: 2,
-              pointRadius: 6,
-              pointHoverRadius: 8,
+              backgroundColor: 'rgba(59, 130, 246, 0.5)',
+              borderColor: 'rgb(59, 130, 246)',
+              borderWidth: 2,
+              type: 'bar',
+              yAxisID: 'y',
             },
             {
               label: 'Offers',
               data: offersData,
-              borderColor: '#10B981',
-              backgroundColor: 'rgba(16, 185, 129, 0.1)',
-              borderWidth: 3,
-              fill: true,
-              tension: 0.4,
-              pointBackgroundColor: '#10B981',
-              pointBorderColor: '#ffffff',
-              pointBorderWidth: 2,
-              pointRadius: 6,
-              pointHoverRadius: 8,
+              backgroundColor: 'rgba(34, 197, 94, 0.5)',
+              borderColor: 'rgb(34, 197, 94)',
+              borderWidth: 2,
+              type: 'bar',
+              yAxisID: 'y',
             },
             {
-              label: 'Rejections',
+              label: 'Rejected',
               data: rejectedData,
-              borderColor: '#EF4444',
-              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+              backgroundColor: 'rgba(239, 68, 68, 0.5)',
+              borderColor: 'rgb(239, 68, 68)',
+              borderWidth: 2,
+              type: 'bar',
+              yAxisID: 'y',
+            },
+            {
+              label: 'Response Rate (%)',
+              data: responseRates,
+              backgroundColor: 'rgba(147, 51, 234, 0.1)',
+              borderColor: 'rgb(147, 51, 234)',
               borderWidth: 3,
-              fill: true,
+              type: 'line',
+              fill: false,
               tension: 0.4,
-              pointBackgroundColor: '#EF4444',
-              pointBorderColor: '#ffffff',
-              pointBorderWidth: 2,
+              yAxisID: 'y1',
+              pointBackgroundColor: 'rgb(147, 51, 234)',
+              pointBorderColor: 'rgb(147, 51, 234)',
               pointRadius: 6,
-              pointHoverRadius: 8,
+            },
+            {
+              label: 'Success Rate (%)',
+              data: successRates,
+              backgroundColor: 'rgba(245, 158, 11, 0.1)',
+              borderColor: 'rgb(245, 158, 11)',
+              borderWidth: 3,
+              type: 'line',
+              fill: false,
+              tension: 0.4,
+              yAxisID: 'y1',
+              pointBackgroundColor: 'rgb(245, 158, 11)',
+              pointBorderColor: 'rgb(245, 158, 11)',
+              pointRadius: 6,
             }
-          ]
+          ],
+          stats: processedData
         };
       }, [jobs]);
 
@@ -653,17 +683,110 @@
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                          <h3 className="font-semibold text-lg text-gray-800 mb-4 text-center">Pipeline Overview</h3>
-                          <div className="flex justify-center mb-4">
-                            <ChartComponent chartId="chart1" type="doughnut" data={doughnutData} options={{plugins:{legend:{display:false}}, cutout: '70%', maintainAspectRatio: false}} />
+                          <h3 className="font-semibold text-lg text-gray-800 mb-4">Application Timeline & Success Metrics</h3>
+                          <div style={{height: '300px'}}>
+                            <ChartComponent chartId="chart1" type="bar" data={timelineData} options={{
+                              maintainAspectRatio: false,
+                              interaction: { mode: 'index', intersect: false },
+                              plugins: {
+                                legend: { 
+                                  display: true, 
+                                  position: 'top',
+                                  labels: { 
+                                    usePointStyle: true,
+                                    padding: 15,
+                                    font: { size: 11 }
+                                  }
+                                },
+                                tooltip: {
+                                  backgroundColor: 'rgba(0,0,0,0.8)',
+                                  titleColor: 'white',
+                                  bodyColor: 'white',
+                                  borderColor: 'rgba(0,0,0,0.1)',
+                                  borderWidth: 1,
+                                  filter: function(tooltipItem) {
+                                    return tooltipItem.datasetIndex <= 2; // Only show bars in tooltip
+                                  }
+                                }
+                              },
+                              scales: {
+                                x: {
+                                  grid: { display: false },
+                                  ticks: { color: '#6B7280', font: { size: 11 } },
+                                  border: { display: false }
+                                },
+                                y: {
+                                  type: 'linear',
+                                  display: true,
+                                  position: 'left',
+                                  beginAtZero: true,
+                                  ticks: { 
+                                    stepSize: 1, 
+                                    color: '#6B7280', 
+                                    font: { size: 11 } 
+                                  },
+                                  grid: { color: '#F3F4F6', lineWidth: 1 },
+                                  border: { display: false },
+                                  title: {
+                                    display: true,
+                                    text: 'Applications Count',
+                                    color: '#374151',
+                                    font: { size: 12, weight: 'bold' }
+                                  }
+                                },
+                                y1: {
+                                  type: 'linear',
+                                  display: true,
+                                  position: 'right',
+                                  beginAtZero: true,
+                                  max: 100,
+                                  ticks: { 
+                                    stepSize: 20,
+                                    color: '#6B7280', 
+                                    font: { size: 11 },
+                                    callback: function(value) {
+                                      return value + '%';
+                                    }
+                                  },
+                                  grid: { drawOnChartArea: false },
+                                  border: { display: false },
+                                  title: {
+                                    display: true,
+                                    text: 'Success Rate (%)',
+                                    color: '#374151',
+                                    font: { size: 12, weight: 'bold' }
+                                  }
+                                }
+                              },
+                              animation: { duration: 800, easing: 'easeInOutQuart' }
+                            }} />
                           </div>
-                          <div className="grid grid-cols-2 gap-3">
-                            {doughnutData.labels.map((label, i) => (
-                              <div key={label} className="flex items-center gap-2 text-sm bg-gray-50 rounded-lg p-2">
-                                <div className="w-3 h-3 rounded-full" style={{backgroundColor: doughnutData.datasets[0].backgroundColor[i]}}></div>
-                                <span className="font-medium text-gray-700">{label}</span>
+                          
+                          {/* Timeline Stats */}
+                          <div className="mt-6 grid grid-cols-3 gap-4">
+                            {timelineData.stats && timelineData.stats.map((monthData, index) => (
+                              <div key={monthData.month} className="bg-gray-50 rounded-lg p-3">
+                                <div className="text-sm font-semibold text-gray-700 mb-2">{monthData.month}</div>
+                                <div className="space-y-1 text-xs text-gray-600">
+                                  <div className="flex justify-between">
+                                    <span>Applied:</span>
+                                    <span className="font-medium text-blue-600">{monthData.applied}</span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span>Response Rate:</span>
+                                    <span className="font-medium text-purple-600">{monthData.responseRate}%</span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span>Success Rate:</span>
+                                    <span className="font-medium text-amber-600">{monthData.successRate}%</span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span>Interviews:</span>
+                                    <span className="font-medium text-indigo-600">{monthData.interviews}</span>
+                                  </div>
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -797,14 +920,10 @@
                         </select>
                     </label>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <label className="form-control w-full">
                         <div className="label"><span className="label-text">Location</span></div>
                         <input type="text" placeholder="e.g., Milan" className="input input-bordered w-full" value={job.Location} onChange={e => handleChange('Location', e.target.value)} />
-                    </label>
-                    <label className="form-control w-full">
-                        <div className="label"><span className="label-text">Application Deadline</span></div>
-                        <input type="date" className="input input-bordered w-full" value={job.AppDeadline} onChange={e => handleChange('AppDeadline', e.target.value)} />
                     </label>
                     <label className="form-control w-full">
                         <div className="label">
@@ -881,14 +1000,13 @@
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-gray-200">
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '12%'}}>Status</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '14%'}}>Company</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '18%'}}>Role</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Location</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '8%'}}>Type</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Source</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Deadline</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '12%'}}>Next Step</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '14%'}}>Status</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '16%'}}>Company</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '20%'}}>Role</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '12%'}}>Location</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Type</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '12%'}}>Source</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '14%'}}>Next Step</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '6%'}}>Actions</th>
                       </tr>
                     </thead>
@@ -959,14 +1077,6 @@
                                 </select>
                               ) : (
                                 <span className="text-xs">{j.Source}</span>
-                              )}
-                            </td>
-                            <td className={`py-3 px-3 ${getDeadlineClass(j.AppDeadline)}`}>
-                              {isEditing ? (
-                                <input type="date" className="w-full border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
-                                       value={currentData.AppDeadline} onChange={e => updateEditData('AppDeadline', e.target.value)} />
-                              ) : (
-                                <span className="text-xs">{j.AppDeadline || 'N/A'}</span>
                               )}
                             </td>
                             <td className="py-3 px-3">
@@ -1127,9 +1237,11 @@
         >
           <h4 className="font-bold text-sm text-gray-800">{job.Company}</h4>
           <p className="text-xs text-gray-600">{job.Title}</p>
-          <div className={`text-xs mt-2 font-medium ${getDeadlineClass(job.AppDeadline)}`}>
-            Deadline: {job.AppDeadline || 'N/A'}
-          </div>
+          {job.Location && (
+            <div className="text-xs mt-2 text-blue-600 font-medium">
+              📍 {job.Location}
+            </div>
+          )}
         </div>
       );
     }
@@ -1621,21 +1733,7 @@
         );
       };
 
-      const StatusDropdownFilter = ({ selectedOptions, setSelectedOptions }) => {
-        const [isOpen, setIsOpen] = React.useState(false);
-        const dropdownRef = React.useRef(null);
-        
-        React.useEffect(() => {
-          const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-              setIsOpen(false);
-            }
-          };
-          
-          document.addEventListener('mousedown', handleClickOutside);
-          return () => document.removeEventListener('mousedown', handleClickOutside);
-        }, []);
-        
+      const StatusDropdownFilter = ({ selectedOptions, setSelectedOptions }) => {        
         const handleToggle = (option) => {
             setSelectedOptions(prev => 
                 prev.includes(option) ? prev.filter(item => item !== option) : [...prev, option]
@@ -1643,36 +1741,26 @@
         };
 
         return (
-            <div className="relative" ref={dropdownRef}>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Status</label>
-                <div className="dropdown dropdown-bottom w-full">
-                    <div 
-                        tabIndex={0} 
-                        role="button" 
-                        className="btn btn-sm btn-outline w-full justify-between font-normal"
-                        onClick={() => setIsOpen(!isOpen)}
-                    >
-                        <span>Select Status {selectedOptions.length > 0 ? `(${selectedOptions.length})` : ''}</span>
-                        <Icon name={isOpen ? "chevron-up" : "chevron-down"} className="w-4 h-4" />
-                    </div>
-                    {isOpen && (
-                        <ul className="dropdown-content z-[20] menu p-2 shadow-lg bg-white rounded-lg border border-gray-200 w-full max-h-60 overflow-y-auto">
-                            {statusList.map(option => (
-                                <li key={option}>
-                                    <label className="label cursor-pointer justify-start p-2 hover:bg-gray-50">
-                                        <input 
-                                            type="checkbox" 
-                                            checked={selectedOptions.includes(option)} 
-                                            onChange={() => handleToggle(option)}
-                                            className="checkbox checkbox-primary checkbox-sm mr-3"
-                                        />
-                                        <span className="label-text text-sm">{option}</span>
-                                    </label>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
+            <div>
+                <label className="block text-xs font-medium text-gray-700 mb-2">Status Filter</label>
+                <div className="space-y-2 max-h-48 overflow-y-auto bg-white border border-gray-200 rounded-lg p-3">
+                    {statusList.map(option => (
+                        <label key={option} className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-1 rounded">
+                            <input 
+                                type="checkbox" 
+                                checked={selectedOptions.includes(option)} 
+                                onChange={() => handleToggle(option)}
+                                className="checkbox checkbox-primary checkbox-sm"
+                            />
+                            <span className="text-sm text-gray-700">{option}</span>
+                        </label>
+                    ))}
                 </div>
+                {selectedOptions.length > 0 && (
+                    <div className="mt-2 text-xs text-gray-500">
+                        {selectedOptions.length} status{selectedOptions.length !== 1 ? 'es' : ''} selected
+                    </div>
+                )}
             </div>
         );
       };
