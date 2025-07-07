@@ -1,0 +1,162 @@
+{
+  "_instructions": {
+    "description": "Serhat's Job Applications - CareerFlow Import File",
+    "version": "1.0",
+    "created": "2025-01-14",
+    "total_applications": 12,
+    "instructions": [
+      "This file contains Serhat's real job applications in CareerFlow import format.",
+      "Use the 'Import Data' feature in CareerFlow to import these applications.",
+      "All applications are set to 'Applied' status with the correct application dates.",
+      "Most applications are from July 2025 with some from July 3rd."
+    ]
+  },
+  "jobs": [
+    {
+      "id": "job-1",
+      "Status": "Applied",
+      "Company": "Bending Spoons",
+      "Title": "Growth Management Intern (WeTransfer)",
+      "JobType": "Internship",
+      "Location": "Milan",
+      "Source": "Company Website",
+      "AppDeadline": "",
+      "DateApplied": "2025-07-07",
+      "NextStep": "Application received confirmation. Waiting for next steps."
+    },
+    {
+      "id": "job-2",
+      "Status": "Applied",
+      "Company": "Samsung",
+      "Title": "Business Analyst Support (Internship)",
+      "JobType": "Internship",
+      "Location": "Milan",
+      "Source": "Company Website",
+      "AppDeadline": "",
+      "DateApplied": "2025-07-07",
+      "NextStep": "Need to verify candidate account and complete setup."
+    },
+    {
+      "id": "job-3",
+      "Status": "Applied",
+      "Company": "Louis Vuitton",
+      "Title": "Planning & Controlling Intern",
+      "JobType": "Internship",
+      "Location": "Milan",
+      "Source": "Company Website",
+      "AppDeadline": "",
+      "DateApplied": "2025-07-07",
+      "NextStep": "Application submitted. Awaiting HR review."
+    },
+    {
+      "id": "job-4",
+      "Status": "Applied",
+      "Company": "Heineken",
+      "Title": "Strategic Controlling Trainee",
+      "JobType": "Full-Time",
+      "Location": "Milan",
+      "Source": "Company Website",
+      "AppDeadline": "",
+      "DateApplied": "2025-07-07",
+      "NextStep": "Application confirmed. Registered for talent community."
+    },
+    {
+      "id": "job-5",
+      "Status": "Applied",
+      "Company": "Danone",
+      "Title": "Demand Planner Intern",
+      "JobType": "Internship",
+      "Location": "Milan",
+      "Source": "Company Website",
+      "AppDeadline": "",
+      "DateApplied": "2025-07-07",
+      "NextStep": "Application received. Currently under review."
+    },
+    {
+      "id": "job-6",
+      "Status": "Applied",
+      "Company": "Pirelli",
+      "Title": "Internship - Production Planning",
+      "JobType": "Internship",
+      "Location": "Milan",
+      "Source": "Company Website",
+      "AppDeadline": "",
+      "DateApplied": "2025-07-07",
+      "NextStep": "Account created and application submitted successfully."
+    },
+    {
+      "id": "job-7",
+      "Status": "Applied",
+      "Company": "Sennder",
+      "Title": "Business Development Intern",
+      "JobType": "Internship",
+      "Location": "Milan",
+      "Source": "Company Website",
+      "AppDeadline": "",
+      "DateApplied": "2025-07-07",
+      "NextStep": "Application confirmed. Awaiting initial screening."
+    },
+    {
+      "id": "job-8",
+      "Status": "Applied",
+      "Company": "SC Johnson",
+      "Title": "Supply Planning - Data Analytics Intern",
+      "JobType": "Internship",
+      "Location": "Milan",
+      "Source": "Company Website",
+      "AppDeadline": "",
+      "DateApplied": "2025-07-07",
+      "NextStep": "Application received and under review."
+    },
+    {
+      "id": "job-9",
+      "Status": "Applied",
+      "Company": "Moleskine",
+      "Title": "Demand Planning Platform",
+      "JobType": "Internship",
+      "Location": "Milan",
+      "Source": "Company Website",
+      "AppDeadline": "",
+      "DateApplied": "2025-07-07",
+      "NextStep": "Application submitted successfully."
+    },
+    {
+      "id": "job-10",
+      "Status": "Applied",
+      "Company": "Hyundai Motor Company Italy Srl",
+      "Title": "Automotive | Quality Support",
+      "JobType": "Internship",
+      "Location": "Milan",
+      "Source": "Company Website",
+      "AppDeadline": "",
+      "DateApplied": "2025-07-07",
+      "NextStep": "Application received and under review."
+    },
+    {
+      "id": "job-11",
+      "Status": "Applied",
+      "Company": "sennder italia srl",
+      "Title": "Operations Excellence",
+      "JobType": "Internship",
+      "Location": "Milan",
+      "Source": "Company Website",
+      "AppDeadline": "",
+      "DateApplied": "2025-07-03",
+      "NextStep": "Application submitted. Awaiting response."
+    },
+    {
+      "id": "job-12",
+      "Status": "Applied",
+      "Company": "Watts Industries Italia S.r.l.",
+      "Title": "Supporto al Team Logistica",
+      "JobType": "Internship",
+      "Location": "Milan",
+      "Source": "Company Website",
+      "AppDeadline": "",
+      "DateApplied": "2025-07-03",
+      "NextStep": "Application received confirmation."
+    }
+  ],
+  "contacts": [],
+  "exportDate": "2025-01-14T12:00:00.000Z"
+} 
