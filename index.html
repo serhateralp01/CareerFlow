@@ -62,7 +62,7 @@
 
   <script type="text/babel">
     /********* Injected data & Config *********/
-    const statusList = ["Wishlist", "To Apply", "Applied", "HR Screening", "Technical Interview", "Case Study / Assessment", "Final Interview", "Offer Received", "Offer Accepted", "Rejected", "Withdrawn"];
+    const statusList = ["Wishlist", "Applied", "HR Screening", "Technical Interview", "Case Study / Assessment", "Final Interview", "Offer Received", "Offer Accepted", "Rejected", "Withdrawn"];
     const jobTypeList = ["Internship", "Full-Time", "Part-Time", "Thesis Project"];
     const sourceList  = ["Polimi CareerService", "LinkedIn", "Company Website", "Referral", "Networking Event", "Other"];
     const DOUGHNUT_COLORS = { Offers: '#22C55E', Rejected: '#EF4444', 'In-Progress': '#F59E0B', Other: '#8B5CF6' };
@@ -836,9 +836,9 @@
         );
     }
     
-    function TrackerTable({ jobs, setJobs, searchTerm }) {
-      const updateJob = (id, field, value) => setJobs(jobs.map(j => j.id === id ? { ...j, [field]: value } : j));
-      const deleteJob = (id) => { if(confirm('Are you sure?')) setJobs(jobs.filter(j => j.id !== id)); };
+    function TrackerTable({ jobs, updateJobs, searchTerm }) {
+      const updateJob = (id, field, value) => updateJobs(jobs.map(j => j.id === id ? { ...j, [field]: value } : j));
+      const deleteJob = (id) => { if(confirm('Are you sure?')) updateJobs(jobs.filter(j => j.id !== id)); };
       
       return (
         <div className="p-6">
@@ -1338,7 +1338,7 @@
                 "This is a template file showing the correct format for importing data into CareerFlow.",
                 "Replace the sample data below with your actual job applications and contacts.",
                 "All fields are optional except for Company, Title, and DateApplied for jobs.",
-                "Status must be one of: Wishlist, To Apply, Applied, HR Screening, Technical Interview, Case Study / Assessment, Final Interview, Offer Received, Offer Accepted, Rejected, Withdrawn",
+                "Status must be one of: Wishlist, Applied, HR Screening, Technical Interview, Case Study / Assessment, Final Interview, Offer Received, Offer Accepted, Rejected, Withdrawn",
                 "JobType must be one of: Internship, Full-Time, Part-Time, Thesis Project",
                 "Source must be one of: Polimi CareerService, LinkedIn, Company Website, Referral, Networking Event, Other",
                 "Dates should be in YYYY-MM-DD format",
@@ -1537,6 +1537,33 @@
         );
       };
 
+      const StatusGridFilter = ({ selectedOptions, setSelectedOptions }) => {
+        const handleToggle = (option) => {
+            setSelectedOptions(prev => 
+                prev.includes(option) ? prev.filter(item => item !== option) : [...prev, option]
+            );
+        };
+
+        return (
+            <div>
+                <label className="block text-xs font-medium text-gray-700 mb-2">Status</label>
+                <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
+                    {statusList.map(option => (
+                        <label key={option} className="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50 border border-gray-200">
+                            <input 
+                                type="checkbox" 
+                                checked={selectedOptions.includes(option)} 
+                                onChange={() => handleToggle(option)}
+                                className="checkbox checkbox-primary checkbox-sm"
+                            />
+                            <span className="text-xs">{option}</span>
+                        </label>
+                    ))}
+                </div>
+            </div>
+        );
+      };
+
       return (
         <div className="space-y-8 bg-gray-50 min-h-screen">
             <div className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-10">
@@ -1609,8 +1636,7 @@
                     {showAdvancedFilters && (
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">Status</label>
-                          <MultiSelectFilter title="Select Status" options={statusList} selectedOptions={statusFilters} setSelectedOptions={setStatusFilters} />
+                          <StatusGridFilter selectedOptions={statusFilters} setSelectedOptions={setStatusFilters} />
                         </div>
                         <div>
                           <label className="block text-xs font-medium text-gray-700 mb-1">Job Type</label>
@@ -1666,7 +1692,7 @@
                       )}
                     </div>
                   </div>
-                  <TrackerTable jobs={filteredJobs} setJobs={updateJobs} />
+                  <TrackerTable jobs={filteredJobs} updateJobs={updateJobs} />
                 </div>
                 
                 <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
