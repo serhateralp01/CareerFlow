@@ -746,16 +746,119 @@
     
     function JobForm({ jobData, onSave, onCancel }) {
         const [job, setJob] = React.useState(jobData);
-        const handleChange = (field, value) => setJob(prev => ({ ...prev, [field]: value }));
-        const handleSave = () => onSave({ ...job, id: job.id || `job-${Date.now()}` });
+        const [errors, setErrors] = React.useState({});
+        
+        const handleChange = (field, value) => {
+            setJob(prev => ({ ...prev, [field]: value }));
+            // Clear error when user starts typing
+            if (errors[field]) {
+                setErrors(prev => ({ ...prev, [field]: false }));
+            }
+        };
+        
+        const validateForm = () => {
+            const newErrors = {};
+            if (!job.Company?.trim()) newErrors.Company = true;
+            if (!job.Title?.trim()) newErrors.Title = true;
+            if (!job.DateApplied?.trim()) newErrors.DateApplied = true;
+            
+            setErrors(newErrors);
+            return Object.keys(newErrors).length === 0;
+        };
+        
+        const handleSave = () => {
+            if (!validateForm()) {
+                showToast('Please fill in all required fields: Company, Job Title, and Date Applied', 'error');
+                return;
+            }
+            onSave({ ...job, id: job.id || `job-${Date.now()}` });
+        };
         
         return (
             <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4"><label className="form-control w-full"><div className="label"><span className="label-text">Company</span></div><input type="text" placeholder="e.g., Google" className="input input-bordered w-full" value={job.Company} onChange={e => handleChange('Company', e.target.value)} /></label><label className="form-control w-full"><div className="label"><span className="label-text">Job Title</span></div><input type="text" placeholder="e.g., Software Engineer" className="input input-bordered w-full" value={job.Title} onChange={e => handleChange('Title', e.target.value)} /></label></div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4"><label className="form-control w-full"><div className="label"><span className="label-text">Status</span></div><select className="select select-bordered" value={job.Status} onChange={e => handleChange('Status', e.target.value)}>{statusList.map(s => <option key={s}>{s}</option>)}</select></label><label className="form-control w-full"><div className="label"><span className="label-text">Job Type</span></div><select className="select select-bordered" value={job.JobType} onChange={e => handleChange('JobType', e.target.value)}>{jobTypeList.map(t => <option key={t}>{t}</option>)}</select></label><label className="form-control w-full"><div className="label"><span className="label-text">Source</span></div><select className="select select-bordered" value={job.Source} onChange={e => handleChange('Source', e.target.value)}>{sourceList.map(s => <option key={s}>{s}</option>)}</select></label></div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4"><label className="form-control w-full"><div className="label"><span className="label-text">Location</span></div><input type="text" placeholder="e.g., Milan" className="input input-bordered w-full" value={job.Location} onChange={e => handleChange('Location', e.target.value)} /></label><label className="form-control w-full"><div className="label"><span className="label-text">Application Deadline</span></div><input type="date" className="input input-bordered w-full" value={job.AppDeadline} onChange={e => handleChange('AppDeadline', e.target.value)} /></label><label className="form-control w-full"><div className="label"><span className="label-text">Date Applied</span></div><input type="date" className="input input-bordered w-full" value={job.DateApplied} onChange={e => handleChange('DateApplied', e.target.value)} /></label></div>
-                <label className="form-control w-full"><div className="label"><span className="label-text">Next Step / Notes</span></div><input type="text" placeholder="e.g., Prepare for interview" className="input input-bordered w-full" value={job.NextStep} onChange={e => handleChange('NextStep', e.target.value)} /></label>
-                <div className="modal-action"><button className="btn" onClick={onCancel}>Cancel</button><button className="btn btn-primary" onClick={handleSave}>Save</button></div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label className="form-control w-full">
+                        <div className="label">
+                            <span className="label-text">Company <span className="text-red-500">*</span></span>
+                        </div>
+                        <input 
+                            type="text" 
+                            placeholder="e.g., Google" 
+                            className={`input input-bordered w-full ${errors.Company ? 'input-error' : ''}`}
+                            value={job.Company} 
+                            onChange={e => handleChange('Company', e.target.value)} 
+                        />
+                        {errors.Company && <div className="label"><span className="label-text-alt text-red-500">Company is required</span></div>}
+                    </label>
+                    <label className="form-control w-full">
+                        <div className="label">
+                            <span className="label-text">Job Title <span className="text-red-500">*</span></span>
+                        </div>
+                        <input 
+                            type="text" 
+                            placeholder="e.g., Software Engineer" 
+                            className={`input input-bordered w-full ${errors.Title ? 'input-error' : ''}`}
+                            value={job.Title} 
+                            onChange={e => handleChange('Title', e.target.value)} 
+                        />
+                        {errors.Title && <div className="label"><span className="label-text-alt text-red-500">Job Title is required</span></div>}
+                    </label>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <label className="form-control w-full">
+                        <div className="label"><span className="label-text">Status</span></div>
+                        <select className="select select-bordered" value={job.Status} onChange={e => handleChange('Status', e.target.value)}>
+                            {statusList.map(s => <option key={s}>{s}</option>)}
+                        </select>
+                    </label>
+                    <label className="form-control w-full">
+                        <div className="label"><span className="label-text">Job Type</span></div>
+                        <select className="select select-bordered" value={job.JobType} onChange={e => handleChange('JobType', e.target.value)}>
+                            {jobTypeList.map(t => <option key={t}>{t}</option>)}
+                        </select>
+                    </label>
+                    <label className="form-control w-full">
+                        <div className="label"><span className="label-text">Source</span></div>
+                        <select className="select select-bordered" value={job.Source} onChange={e => handleChange('Source', e.target.value)}>
+                            {sourceList.map(s => <option key={s}>{s}</option>)}
+                        </select>
+                    </label>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <label className="form-control w-full">
+                        <div className="label"><span className="label-text">Location</span></div>
+                        <input type="text" placeholder="e.g., Milan" className="input input-bordered w-full" value={job.Location} onChange={e => handleChange('Location', e.target.value)} />
+                    </label>
+                    <label className="form-control w-full">
+                        <div className="label"><span className="label-text">Application Deadline</span></div>
+                        <input type="date" className="input input-bordered w-full" value={job.AppDeadline} onChange={e => handleChange('AppDeadline', e.target.value)} />
+                    </label>
+                    <label className="form-control w-full">
+                        <div className="label">
+                            <span className="label-text">Date Applied <span className="text-red-500">*</span></span>
+                        </div>
+                        <input 
+                            type="date" 
+                            className={`input input-bordered w-full ${errors.DateApplied ? 'input-error' : ''}`}
+                            value={job.DateApplied} 
+                            onChange={e => handleChange('DateApplied', e.target.value)} 
+                        />
+                        {errors.DateApplied && <div className="label"><span className="label-text-alt text-red-500">Date Applied is required</span></div>}
+                    </label>
+                </div>
+                <label className="form-control w-full">
+                    <div className="label"><span className="label-text">Next Step / Notes</span></div>
+                    <input type="text" placeholder="e.g., Prepare for interview" className="input input-bordered w-full" value={job.NextStep} onChange={e => handleChange('NextStep', e.target.value)} />
+                </label>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <p className="text-sm text-blue-700">
+                        <span className="text-red-500">*</span> Required fields: Company, Job Title, and Date Applied must be filled to save the application.
+                    </p>
+                </div>
+                <div className="modal-action">
+                    <button className="btn" onClick={onCancel}>Cancel</button>
+                    <button className="btn btn-primary" onClick={handleSave}>Save</button>
+                </div>
             </div>
         );
     }
