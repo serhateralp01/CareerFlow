@@ -104,8 +104,20 @@
       async saveJobs(userId, jobs) {
         try {
           const docRef = window.firebase.db.collection('users').doc(userId).collection('data').doc('jobs');
+          const sanitizeJobs = (jobs) => {
+            return jobs.map(job => {
+              const sanitizedJob = {};
+              for (const key in job) {
+                if (typeof job[key] !== 'function') {
+                  sanitizedJob[key] = job[key];
+                }
+              }
+              return sanitizedJob;
+            });
+          };
+          const sanitizedJobs = sanitizeJobs(jobs);
           await docRef.set({
-            jobs: jobs,
+            jobs: sanitizedJobs,
             lastUpdated: window.firebase.serverTimestamp()
           });
         } catch (error) {
