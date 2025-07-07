@@ -433,8 +433,8 @@
         const monthlyData = {};
         const today = new Date();
         
-        // Initialize last 6 months
-        for (let i = 5; i >= 0; i--) {
+        // Initialize last 3 months
+        for (let i = 2; i >= 0; i--) {
           const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
           const monthKey = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
           monthlyData[monthKey] = { applied: 0, offers: 0, rejected: 0 };
@@ -590,7 +590,7 @@
                   <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
                     <h3 className="font-semibold text-lg text-gray-800 mb-6 flex items-center gap-2">
                       <Icon name="trending-up" className="w-5 h-5 text-blue-500"/>
-                      Application Timeline - Last 6 Months
+                      Application Timeline - Last 3 Months
                     </h3>
                     <div style={{height: '300px'}}>
                       <ChartComponent chartId="timeline-chart" type="line" data={timelineData} options={{
@@ -837,8 +837,36 @@
     }
     
     function TrackerTable({ jobs, updateJobs, searchTerm }) {
-      const updateJob = (id, field, value) => updateJobs(jobs.map(j => j.id === id ? { ...j, [field]: value } : j));
-      const deleteJob = (id) => { if(confirm('Are you sure?')) updateJobs(jobs.filter(j => j.id !== id)); };
+      const [editingJob, setEditingJob] = React.useState(null);
+      const [editData, setEditData] = React.useState({});
+      
+      const startEditing = (job) => {
+        setEditingJob(job.id);
+        setEditData({ ...job });
+      };
+      
+      const cancelEditing = () => {
+        setEditingJob(null);
+        setEditData({});
+      };
+      
+      const saveChanges = () => {
+        updateJobs(jobs.map(j => j.id === editingJob ? editData : j));
+        setEditingJob(null);
+        setEditData({});
+        showToast('Job updated successfully!', 'success');
+      };
+      
+      const updateEditData = (field, value) => {
+        setEditData(prev => ({ ...prev, [field]: value }));
+      };
+      
+      const deleteJob = (id) => { 
+        if(confirm('Are you sure you want to delete this application?')) {
+          updateJobs(jobs.filter(j => j.id !== id));
+          showToast('Application deleted!', 'info');
+        }
+      };
       
       return (
         <div className="p-6">
@@ -853,76 +881,132 @@
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-gray-200">
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '14%'}}>Status</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '16%'}}>Company</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '20%'}}>Role</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '12%'}}>Status</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '14%'}}>Company</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '18%'}}>Role</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Location</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Type</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '12%'}}>Source</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '8%'}}>Type</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Source</th>
                         <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Deadline</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '10%'}}>Next Step</th>
-                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '3%'}}></th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '12%'}}>Next Step</th>
+                        <th className="text-left py-4 px-3 font-semibold text-gray-700 text-sm" style={{width: '6%'}}>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {jobs.map((j) => (
-                        <tr key={j.id} className={`border-b border-gray-100 transition-colors duration-150 ${getStatusColorClass(j.Status)} hover:bg-opacity-80`} title={`[${j.Company}] ${j.Title}`}>
-                          <td className="py-3 px-3">
-                            <select className="w-full bg-transparent border-none text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
-                                    value={j.Status} onChange={e => updateJob(j.id, 'Status', e.target.value)}>
-                              {statusList.map(s => <option key={s}>{s}</option>)}
-                            </select>
-                          </td>
-                          <td className="py-3 px-3">
-                            <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
-                                   value={j.Company} onChange={e => updateJob(j.id, 'Company', e.target.value)} placeholder="Company" />
-                          </td>
-                          <td className="py-3 px-3">
-                            <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
-                                   value={j.Title} onChange={e => updateJob(j.id, 'Title', e.target.value)} placeholder="Job title" />
-                          </td>
-                          <td className="py-3 px-3">
-                            <div className="flex items-center gap-1">
-                                <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
-                                        value={j.Location} onChange={e => updateJob(j.id, 'Location', e.target.value)} placeholder="Location" />
-                                {j.Location && (
-                                <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(j.Location)}`} target="_blank" rel="noopener noreferrer" 
-                                    className="text-blue-500 hover:text-blue-700 p-1 rounded-full hover:bg-blue-100 transition-colors duration-150">
-                                    <Icon name="map-pin" className="w-4 h-4"/>
-                                </a>
-                                )}
-                            </div>
-                          </td>
-                          <td className="py-3 px-3">
-                            <select className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
-                                    value={j.JobType} onChange={e => updateJob(j.id, 'JobType', e.target.value)}>
-                              {jobTypeList.map(s => <option key={s}>{s}</option>)}
-                            </select>
-                          </td>
-                          <td className="py-3 px-3">
-                            <select className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
-                                    value={j.Source} onChange={e => updateJob(j.id, 'Source', e.target.value)}>
-                              {sourceList.map(s => <option key={s}>{s}</option>)}
-                            </select>
-                          </td>
-                          <td className={`py-3 px-3 ${getDeadlineClass(j.AppDeadline)}`}>
-                            <input type="date" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
-                                   value={j.AppDeadline} onChange={e => updateJob(j.id, 'AppDeadline', e.target.value)} />
-                          </td>
-                          <td className="py-3 px-3">
-                            <Tooltip text={j.NextStep}>
-                                <input type="text" className="w-full bg-transparent border-none text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2 truncate" 
-                                    value={j.NextStep} onChange={e => updateJob(j.id, 'NextStep', e.target.value)} placeholder="Next step" />
-                            </Tooltip>
-                          </td>
-                          <td className="py-3 px-3">
-                            <button className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-colors duration-150" 
-                                    onClick={() => deleteJob(j.id)}>
-                              <Icon name="trash-2" className="w-4 h-4" />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
+                      {jobs.map((j) => {
+                        const isEditing = editingJob === j.id;
+                        const currentData = isEditing ? editData : j;
+                        
+                        return (
+                          <tr key={j.id} className={`border-b border-gray-100 transition-colors duration-150 ${getStatusColorClass(j.Status)} ${isEditing ? 'ring-2 ring-blue-300 bg-blue-50' : 'hover:bg-opacity-80'}`}>
+                            <td className="py-3 px-3">
+                              {isEditing ? (
+                                <select className="w-full border border-gray-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                                        value={currentData.Status} onChange={e => updateEditData('Status', e.target.value)}>
+                                  {statusList.map(s => <option key={s}>{s}</option>)}
+                                </select>
+                              ) : (
+                                <span className="text-sm font-medium">{j.Status}</span>
+                              )}
+                            </td>
+                            <td className="py-3 px-3">
+                              {isEditing ? (
+                                <input type="text" className="w-full border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                                       value={currentData.Company} onChange={e => updateEditData('Company', e.target.value)} placeholder="Company" />
+                              ) : (
+                                <span className="text-sm font-medium">{j.Company}</span>
+                              )}
+                            </td>
+                            <td className="py-3 px-3">
+                              {isEditing ? (
+                                <input type="text" className="w-full border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                                       value={currentData.Title} onChange={e => updateEditData('Title', e.target.value)} placeholder="Job title" />
+                              ) : (
+                                <span className="text-sm">{j.Title}</span>
+                              )}
+                            </td>
+                            <td className="py-3 px-3">
+                              {isEditing ? (
+                                <input type="text" className="w-full border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                                       value={currentData.Location} onChange={e => updateEditData('Location', e.target.value)} placeholder="Location" />
+                              ) : (
+                                <div className="flex items-center gap-1">
+                                  <span className="text-sm">{j.Location}</span>
+                                  {j.Location && (
+                                    <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(j.Location)}`} target="_blank" rel="noopener noreferrer" 
+                                        className="text-blue-500 hover:text-blue-700 p-1 rounded-full hover:bg-blue-100 transition-colors duration-150">
+                                        <Icon name="map-pin" className="w-3 h-3"/>
+                                    </a>
+                                  )}
+                                </div>
+                              )}
+                            </td>
+                            <td className="py-3 px-3">
+                              {isEditing ? (
+                                <select className="w-full border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                                        value={currentData.JobType} onChange={e => updateEditData('JobType', e.target.value)}>
+                                  {jobTypeList.map(s => <option key={s}>{s}</option>)}
+                                </select>
+                              ) : (
+                                <span className="text-xs">{j.JobType}</span>
+                              )}
+                            </td>
+                            <td className="py-3 px-3">
+                              {isEditing ? (
+                                <select className="w-full border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                                        value={currentData.Source} onChange={e => updateEditData('Source', e.target.value)}>
+                                  {sourceList.map(s => <option key={s}>{s}</option>)}
+                                </select>
+                              ) : (
+                                <span className="text-xs">{j.Source}</span>
+                              )}
+                            </td>
+                            <td className={`py-3 px-3 ${getDeadlineClass(j.AppDeadline)}`}>
+                              {isEditing ? (
+                                <input type="date" className="w-full border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                                       value={currentData.AppDeadline} onChange={e => updateEditData('AppDeadline', e.target.value)} />
+                              ) : (
+                                <span className="text-xs">{j.AppDeadline || 'N/A'}</span>
+                              )}
+                            </td>
+                            <td className="py-3 px-3">
+                              {isEditing ? (
+                                <input type="text" className="w-full border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-2" 
+                                       value={currentData.NextStep} onChange={e => updateEditData('NextStep', e.target.value)} placeholder="Next step" />
+                              ) : (
+                                <Tooltip text={j.NextStep}>
+                                  <span className="text-xs truncate block max-w-24">{j.NextStep}</span>
+                                </Tooltip>
+                              )}
+                            </td>
+                            <td className="py-3 px-3">
+                              {isEditing ? (
+                                <div className="flex gap-1">
+                                  <button className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded transition-colors duration-150" 
+                                          onClick={saveChanges} title="Save">
+                                    <Icon name="check" className="w-4 h-4" />
+                                  </button>
+                                  <button className="text-gray-600 hover:text-gray-800 hover:bg-gray-50 p-1 rounded transition-colors duration-150" 
+                                          onClick={cancelEditing} title="Cancel">
+                                    <Icon name="x" className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              ) : (
+                                <div className="flex gap-1">
+                                  <button className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded transition-colors duration-150" 
+                                          onClick={() => startEditing(j)} title="Edit">
+                                    <Icon name="edit-2" className="w-4 h-4" />
+                                  </button>
+                                  <button className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1 rounded transition-colors duration-150" 
+                                          onClick={() => deleteJob(j.id)} title="Delete">
+                                    <Icon name="trash-2" className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
@@ -1537,7 +1621,21 @@
         );
       };
 
-      const StatusGridFilter = ({ selectedOptions, setSelectedOptions }) => {
+      const StatusDropdownFilter = ({ selectedOptions, setSelectedOptions }) => {
+        const [isOpen, setIsOpen] = React.useState(false);
+        const dropdownRef = React.useRef(null);
+        
+        React.useEffect(() => {
+          const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+              setIsOpen(false);
+            }
+          };
+          
+          document.addEventListener('mousedown', handleClickOutside);
+          return () => document.removeEventListener('mousedown', handleClickOutside);
+        }, []);
+        
         const handleToggle = (option) => {
             setSelectedOptions(prev => 
                 prev.includes(option) ? prev.filter(item => item !== option) : [...prev, option]
@@ -1545,20 +1643,35 @@
         };
 
         return (
-            <div>
-                <label className="block text-xs font-medium text-gray-700 mb-2">Status</label>
-                <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
-                    {statusList.map(option => (
-                        <label key={option} className="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50 border border-gray-200">
-                            <input 
-                                type="checkbox" 
-                                checked={selectedOptions.includes(option)} 
-                                onChange={() => handleToggle(option)}
-                                className="checkbox checkbox-primary checkbox-sm"
-                            />
-                            <span className="text-xs">{option}</span>
-                        </label>
-                    ))}
+            <div className="relative" ref={dropdownRef}>
+                <label className="block text-xs font-medium text-gray-700 mb-1">Status</label>
+                <div className="dropdown dropdown-bottom w-full">
+                    <div 
+                        tabIndex={0} 
+                        role="button" 
+                        className="btn btn-sm btn-outline w-full justify-between font-normal"
+                        onClick={() => setIsOpen(!isOpen)}
+                    >
+                        <span>Select Status {selectedOptions.length > 0 ? `(${selectedOptions.length})` : ''}</span>
+                        <Icon name={isOpen ? "chevron-up" : "chevron-down"} className="w-4 h-4" />
+                    </div>
+                    {isOpen && (
+                        <ul className="dropdown-content z-[20] menu p-2 shadow-lg bg-white rounded-lg border border-gray-200 w-full max-h-60 overflow-y-auto">
+                            {statusList.map(option => (
+                                <li key={option}>
+                                    <label className="label cursor-pointer justify-start p-2 hover:bg-gray-50">
+                                        <input 
+                                            type="checkbox" 
+                                            checked={selectedOptions.includes(option)} 
+                                            onChange={() => handleToggle(option)}
+                                            className="checkbox checkbox-primary checkbox-sm mr-3"
+                                        />
+                                        <span className="label-text text-sm">{option}</span>
+                                    </label>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
             </div>
         );
@@ -1636,7 +1749,7 @@
                     {showAdvancedFilters && (
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <div>
-                          <StatusGridFilter selectedOptions={statusFilters} setSelectedOptions={setStatusFilters} />
+                          <StatusDropdownFilter selectedOptions={statusFilters} setSelectedOptions={setStatusFilters} />
                         </div>
                         <div>
                           <label className="block text-xs font-medium text-gray-700 mb-1">Job Type</label>
