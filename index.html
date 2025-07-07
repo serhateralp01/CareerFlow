@@ -325,6 +325,90 @@
         );
     }
 
+    function AutocompleteInput({ value, onChange, placeholder, suggestions, className, hasError }) {
+        const [showSuggestions, setShowSuggestions] = React.useState(false);
+        const [filteredSuggestions, setFilteredSuggestions] = React.useState([]);
+        const inputRef = React.useRef(null);
+        const suggestionRef = React.useRef(null);
+
+        React.useEffect(() => {
+            if (value && suggestions.length > 0) {
+                const filtered = suggestions
+                    .filter(suggestion => 
+                        suggestion.toLowerCase().includes(value.toLowerCase()) && 
+                        suggestion.toLowerCase() !== value.toLowerCase()
+                    )
+                    .slice(0, 5); // Limit to 5 suggestions
+                setFilteredSuggestions(filtered);
+                setShowSuggestions(filtered.length > 0);
+            } else {
+                setShowSuggestions(false);
+            }
+        }, [value, suggestions]);
+
+        React.useEffect(() => {
+            const handleClickOutside = (event) => {
+                if (suggestionRef.current && !suggestionRef.current.contains(event.target) && 
+                    inputRef.current && !inputRef.current.contains(event.target)) {
+                    setShowSuggestions(false);
+                }
+            };
+
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => document.removeEventListener('mousedown', handleClickOutside);
+        }, []);
+
+        const handleInputChange = (e) => {
+            onChange(e.target.value);
+        };
+
+        const handleSuggestionClick = (suggestion) => {
+            onChange(suggestion);
+            setShowSuggestions(false);
+            inputRef.current?.focus();
+        };
+
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                setShowSuggestions(false);
+            }
+        };
+
+        return (
+            <div className="relative w-full">
+                <input
+                    ref={inputRef}
+                    type="text"
+                    value={value}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
+                    placeholder={placeholder}
+                    className={className}
+                    autoComplete="off"
+                />
+                {showSuggestions && (
+                    <div 
+                        ref={suggestionRef}
+                        className="absolute top-full left-0 right-0 z-50 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto"
+                    >
+                        {filteredSuggestions.map((suggestion, index) => (
+                            <div
+                                key={index}
+                                onClick={() => handleSuggestionClick(suggestion)}
+                                className="px-3 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0 text-sm"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <Icon name="clock" className="w-3 h-3 text-gray-400" />
+                                    <span>{suggestion}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        );
+    }
+
     function Modal({ id, title, children }) {
         return (
             <dialog id={id} className="modal">
@@ -774,9 +858,34 @@
       );
     }
     
-    function JobForm({ jobData, onSave, onCancel }) {
+    function JobForm({ jobData, onSave, onCancel, existingJobs = [] }) {
         const [job, setJob] = React.useState(jobData);
         const [errors, setErrors] = React.useState({});
+        
+        // Extract unique companies and titles from existing jobs
+        const companySuggestions = React.useMemo(() => {
+            const companies = existingJobs
+                .map(job => job.Company)
+                .filter(company => company && company.trim())
+                .filter((company, index, self) => self.indexOf(company) === index); // Remove duplicates
+            return companies.sort();
+        }, [existingJobs]);
+
+        const titleSuggestions = React.useMemo(() => {
+            const titles = existingJobs
+                .map(job => job.Title)
+                .filter(title => title && title.trim())
+                .filter((title, index, self) => self.indexOf(title) === index); // Remove duplicates
+            return titles.sort();
+        }, [existingJobs]);
+
+        const locationSuggestions = React.useMemo(() => {
+            const locations = existingJobs
+                .map(job => job.Location)
+                .filter(location => location && location.trim())
+                .filter((location, index, self) => self.indexOf(location) === index); // Remove duplicates
+            return locations.sort();
+        }, [existingJobs]);
         
         const handleChange = (field, value) => {
             setJob(prev => ({ ...prev, [field]: value }));
@@ -811,12 +920,12 @@
                         <div className="label">
                             <span className="label-text">Company <span className="text-red-500">*</span></span>
                         </div>
-                        <input 
-                            type="text" 
-                            placeholder="e.g., Google" 
+                        <AutocompleteInput
+                            value={job.Company}
+                            onChange={(value) => handleChange('Company', value)}
+                            placeholder="e.g., Google"
+                            suggestions={companySuggestions}
                             className={`input input-bordered w-full ${errors.Company ? 'input-error' : ''}`}
-                            value={job.Company} 
-                            onChange={e => handleChange('Company', e.target.value)} 
                         />
                         {errors.Company && <div className="label"><span className="label-text-alt text-red-500">Company is required</span></div>}
                     </label>
@@ -824,12 +933,12 @@
                         <div className="label">
                             <span className="label-text">Job Title <span className="text-red-500">*</span></span>
                         </div>
-                        <input 
-                            type="text" 
-                            placeholder="e.g., Software Engineer" 
+                        <AutocompleteInput
+                            value={job.Title}
+                            onChange={(value) => handleChange('Title', value)}
+                            placeholder="e.g., Software Engineer"
+                            suggestions={titleSuggestions}
                             className={`input input-bordered w-full ${errors.Title ? 'input-error' : ''}`}
-                            value={job.Title} 
-                            onChange={e => handleChange('Title', e.target.value)} 
                         />
                         {errors.Title && <div className="label"><span className="label-text-alt text-red-500">Job Title is required</span></div>}
                     </label>
@@ -857,7 +966,13 @@
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <label className="form-control w-full">
                         <div className="label"><span className="label-text">Location</span></div>
-                        <input type="text" placeholder="e.g., Milan" className="input input-bordered w-full" value={job.Location} onChange={e => handleChange('Location', e.target.value)} />
+                        <AutocompleteInput
+                            value={job.Location}
+                            onChange={(value) => handleChange('Location', value)}
+                            placeholder="e.g., Milan, Italy"
+                            suggestions={locationSuggestions}
+                            className="input input-bordered w-full"
+                        />
                     </label>
                     <label className="form-control w-full">
                         <div className="label">
@@ -998,6 +1113,7 @@
             <Modal id="edit_job_modal" title="Edit Job Application">
               <JobForm 
                 jobData={editingJob} 
+                existingJobs={jobs}
                 onSave={handleSaveEdit} 
                 onCancel={() => {
                   document.getElementById('edit_job_modal').close();
@@ -1291,7 +1407,6 @@
       const [jobTypeFilters, setJobTypeFilters] = React.useState([]);
       const [sourceFilters, setSourceFilters] = React.useState([]);
       const [locationFilter, setLocationFilter] = React.useState('');
-      const [showAdvancedFilters, setShowAdvancedFilters] = React.useState(false);
       const [selectedMetricFilters, setSelectedMetricFilters] = React.useState([]);
       const [newJob, setNewJob] = React.useState(emptyJob);
       const [selectedJobForEmail, setSelectedJobForEmail] = React.useState(null);
@@ -1355,7 +1470,7 @@
         setSourceFilters([]);
         setLocationFilter('');
         setJobSearchTerm('');
-        // This is a bit of a hack to clear the input field manually if it's not controlled by state
+        // Clear the search input field manually
         const searchInput = document.querySelector('input[placeholder="Search by company, title, or notes..."]');
         if (searchInput) searchInput.value = '';
       };
@@ -1587,38 +1702,7 @@
         }
       };
 
-      const MultiSelectFilter = ({ title, options, selectedOptions, setSelectedOptions }) => {
-        const handleToggle = (option) => {
-            setSelectedOptions(prev => 
-                prev.includes(option) ? prev.filter(item => item !== option) : [...prev, option]
-            );
-        };
-
-        return (
-            <div className="dropdown">
-                <div tabIndex={0} role="button" className="btn btn-sm btn-outline w-full justify-start font-normal">
-                    {title} {selectedOptions.length > 0 ? `(${selectedOptions.length})` : ''}
-                </div>
-                <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 max-h-60 overflow-y-auto">
-                    {options.map(option => (
-                        <li key={option}>
-                            <label className="label cursor-pointer p-2">
-                                <span className="label-text">{option}</span>
-                                <input 
-                                    type="checkbox" 
-                                    checked={selectedOptions.includes(option)} 
-                                    onChange={() => handleToggle(option)}
-                                    className="checkbox checkbox-primary checkbox-sm"
-                                />
-                            </label>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        );
-      };
-
-      const StatusDropdownFilter = ({ selectedOptions, setSelectedOptions }) => {        
+      const StatusDropdownFilter = ({ selectedOptions, setSelectedOptions }) => {
         const handleToggle = (option) => {
             setSelectedOptions(prev => 
                 prev.includes(option) ? prev.filter(item => item !== option) : [...prev, option]
@@ -1711,57 +1795,76 @@
                              className="flex-1 min-w-64 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" 
                              onChange={e => setJobSearchTerm(e.target.value)} />
                       <button 
-                        className="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg border border-blue-200 text-sm flex items-center gap-2 transition-colors duration-200"
-                        onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                        className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg border border-red-200 text-sm flex items-center gap-2 transition-colors duration-200"
+                        onClick={clearAllFilters}
                       >
-                        <Icon name="filter" className="w-4 h-4"/>
-                        {showAdvancedFilters ? 'Hide Filters' : 'Advanced Filters'}
+                        <Icon name="x-circle" className="w-4 h-4"/>
+                        Clear All Filters
                       </button>
                     </div>
                     
-                    {showAdvancedFilters && (
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                        <div>
-                          <StatusDropdownFilter selectedOptions={statusFilters} setSelectedOptions={setStatusFilters} />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">Job Type</label>
-                          <MultiSelectFilter title="Select Type" options={jobTypeList} selectedOptions={jobTypeFilters} setSelectedOptions={setJobTypeFilters} />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">Source</label>
-                          <MultiSelectFilter title="Select Source" options={sourceList} selectedOptions={sourceFilters} setSelectedOptions={setSourceFilters} />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">Location</label>
-                          <input type="text" placeholder="Filter by location..." 
-                                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                 value={locationFilter} onChange={e => setLocationFilter(e.target.value)} />
-                        </div>
+                    {/* Always Visible Filters */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                      <div>
+                        <StatusDropdownFilter selectedOptions={statusFilters} setSelectedOptions={setStatusFilters} />
                       </div>
-                    )}
-                    
-                    {(selectedMetricFilters.length > 0 || statusFilters.length > 0 || jobTypeFilters.length > 0 || sourceFilters.length > 0 || locationFilter !== '' || jobSearchTerm !== '') && (
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-sm text-gray-600">Active filters:</span>
-                        {selectedMetricFilters.map(filter => {
-                          const labels = { total: 'All Applications', inProgress: 'In Progress', offers: 'Offers', rejected: 'Rejected' };
-                          const colors = { total: 'bg-blue-100 text-blue-800', inProgress: 'bg-amber-100 text-amber-800', offers: 'bg-emerald-100 text-emerald-800', rejected: 'bg-red-100 text-red-800' };
-                          return <span key={filter} className={`px-2 py-1 text-xs rounded-full ${colors[filter]}`}>{labels[filter]}</span>;
-                        })}
-                        {statusFilters.map(f => <span key={f} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">{f}</span>)}
-                        {jobTypeFilters.map(f => <span key={f} className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">{f}</span>)}
-                        {sourceFilters.map(f => <span key={f} className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">{f}</span>)}
-                        {locationFilter !== '' && <span className="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">Location: {locationFilter}</span>}
-                        {jobSearchTerm !== '' && <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">Search: "{jobSearchTerm}"</span>}
-                        <button 
-                          className="text-xs text-red-600 hover:text-red-800 ml-2"
-                          onClick={clearAllFilters}
-                        >
-                          Clear all
-                        </button>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-2">Job Type Filter</label>
+                        <div className="space-y-2 max-h-48 overflow-y-auto bg-white border border-gray-200 rounded-lg p-3">
+                          {jobTypeList.map(option => (
+                            <label key={option} className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-1 rounded">
+                              <input 
+                                type="checkbox" 
+                                checked={jobTypeFilters.includes(option)} 
+                                onChange={() => {
+                                  setJobTypeFilters(prev => 
+                                    prev.includes(option) ? prev.filter(item => item !== option) : [...prev, option]
+                                  );
+                                }}
+                                className="checkbox checkbox-primary checkbox-sm"
+                              />
+                              <span className="text-sm text-gray-700">{option}</span>
+                            </label>
+                          ))}
+                        </div>
+                        {jobTypeFilters.length > 0 && (
+                          <div className="mt-2 text-xs text-gray-500">
+                            {jobTypeFilters.length} type{jobTypeFilters.length !== 1 ? 's' : ''} selected
+                          </div>
+                        )}
                       </div>
-                    )}
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-2">Source Filter</label>
+                        <div className="space-y-2 max-h-48 overflow-y-auto bg-white border border-gray-200 rounded-lg p-3">
+                          {sourceList.map(option => (
+                            <label key={option} className="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-1 rounded">
+                              <input 
+                                type="checkbox" 
+                                checked={sourceFilters.includes(option)} 
+                                onChange={() => {
+                                  setSourceFilters(prev => 
+                                    prev.includes(option) ? prev.filter(item => item !== option) : [...prev, option]
+                                  );
+                                }}
+                                className="checkbox checkbox-primary checkbox-sm"
+                              />
+                              <span className="text-sm text-gray-700">{option}</span>
+                            </label>
+                          ))}
+                        </div>
+                        {sourceFilters.length > 0 && (
+                          <div className="mt-2 text-xs text-gray-500">
+                            {sourceFilters.length} source{sourceFilters.length !== 1 ? 's' : ''} selected
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-2">Location Filter</label>
+                        <input type="text" placeholder="Filter by location..." 
+                               className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                               value={locationFilter} onChange={e => setLocationFilter(e.target.value)} />
+                      </div>
+                    </div>
                   </div>
                 </div>
                 
@@ -1799,7 +1902,7 @@
             </div>
             
             <Modal id="add_job_modal" title="Add New Job Application">
-              <JobForm jobData={newJob} onSave={handleSaveNewJob} onCancel={() => document.getElementById('add_job_modal').close()} />
+              <JobForm jobData={newJob} existingJobs={jobs} onSave={handleSaveNewJob} onCancel={() => document.getElementById('add_job_modal').close()} />
             </Modal>
 
             <EmailTemplatesModal jobData={selectedJobForEmail} onCancel={() => setSelectedJobForEmail(null)} />
