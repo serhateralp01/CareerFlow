@@ -1238,29 +1238,53 @@
         <div 
           draggable
           onDragStart={(e) => onDragStart(e, job.id)}
-          className="bg-white rounded-lg p-3 mb-2 shadow-sm border border-gray-200 cursor-grab active:cursor-grabbing"
+          className="bg-white rounded-md p-2 mb-1.5 shadow-sm border border-gray-200 cursor-grab active:cursor-grabbing hover:shadow-md transition-all duration-200 hover:border-blue-300"
         >
-          <h4 className="font-bold text-sm text-gray-800">{job.Company}</h4>
-          <p className="text-xs text-gray-600">{job.Title}</p>
+          <div className="font-semibold text-xs text-gray-800 truncate">{job.Company}</div>
+          <div className="text-xs text-gray-600 truncate mt-0.5">{job.Title}</div>
           {job.Location && (
-            <div className="text-xs mt-2 text-blue-600 font-medium">
+            <div className="text-xs mt-1 text-blue-600 truncate">
               📍 {job.Location}
-          </div>
+            </div>
           )}
         </div>
       );
     }
 
     KanbanComponents.KanbanColumn = function({ title, jobs, onDragOver, onDrop, onDragStart }) {
+      const getColumnColor = (title) => {
+        const colors = {
+          "Backlog": "bg-slate-50 border-slate-200",
+          "Applied": "bg-blue-50 border-blue-200",
+          "HR Email Received": "bg-amber-50 border-amber-200",
+          "Online Assessment": "bg-orange-50 border-orange-200",
+          "Case Study": "bg-indigo-50 border-indigo-200",
+          "Phone Screening": "bg-yellow-50 border-yellow-200",
+          "Technical Interview": "bg-purple-50 border-purple-200",
+          "Panel Interview": "bg-violet-50 border-violet-200",
+          "Final Interview": "bg-pink-50 border-pink-200",
+          "Offer Received": "bg-green-50 border-green-200"
+        };
+        return colors[title] || "bg-gray-50 border-gray-200";
+      };
+
       return (
         <div 
-          className="bg-gray-100 rounded-xl p-3 w-64 md:w-72 flex-shrink-0"
+          className={`${getColumnColor(title)} rounded-lg p-2 w-44 flex-shrink-0 border transition-all duration-200 hover:shadow-sm`}
           onDragOver={onDragOver}
           onDrop={(e) => onDrop(e, title)}
         >
-          <h3 className="font-semibold text-sm text-gray-700 mb-3 px-1">{title} ({jobs.length})</h3>
-          <div className="space-y-2 min-h-[100px]">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="font-medium text-xs text-gray-700 truncate flex-1">{title}</h3>
+            <span className="bg-white text-gray-600 text-xs px-1.5 py-0.5 rounded-full ml-1">{jobs.length}</span>
+          </div>
+          <div className="space-y-1 min-h-[60px] max-h-[300px] overflow-y-auto">
             {jobs.map(job => <KanbanComponents.KanbanCard key={job.id} job={job} onDragStart={onDragStart} />)}
+            {jobs.length === 0 && (
+              <div className="text-xs text-gray-400 text-center py-4 border-2 border-dashed border-gray-300 rounded-md">
+                Drop here
+              </div>
+            )}
           </div>
         </div>
       );
@@ -1278,52 +1302,62 @@
       };
 
       const handleDrop = (e, targetStatus) => {
+        e.preventDefault();
         const jobId = e.dataTransfer.getData("jobId");
+        if (!jobId) return;
+        
         const updatedJobs = jobs.map(job => {
           if (job.id === jobId) {
-            // If dropped on backlog, set status to "Wishlist". Otherwise, use the column's status.
             const newStatus = targetStatus === "Backlog" ? "Wishlist" : targetStatus;
             return { ...job, Status: newStatus };
           }
           return job;
         });
         setJobs(updatedJobs);
+        showToast(`Application moved to ${targetStatus}`, 'success');
       };
 
       const boardJobs = jobs.filter(j => KANBAN_COLUMNS.slice(1).includes(j.Status));
       const backlogJobs = jobs.filter(j => !KANBAN_COLUMNS.slice(1).includes(j.Status));
+      const totalJobs = boardJobs.length + backlogJobs.length;
 
       return (
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100">
-          <div className="p-6 cursor-pointer hover:bg-gray-50 transition-colors duration-150" onClick={() => setShowBoard(!showBoard)}>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="p-3 cursor-pointer hover:bg-gray-50 transition-colors duration-150" onClick={() => setShowBoard(!showBoard)}>
             <div className="flex justify-between items-center">
-              <div className="flex items-center gap-3">
-                <Icon name="trello" className="w-6 h-6 text-blue-500"/>
-                <h2 className="text-xl font-semibold text-gray-800">Kanban View</h2>
+              <div className="flex items-center gap-2">
+                <Icon name="columns" className="w-4 h-4 text-blue-500"/>
+                <h3 className="text-sm font-medium text-gray-800">Pipeline View</h3>
+                <span className="text-xs text-gray-500">({totalJobs} applications)</span>
               </div>
-              <Icon name={showBoard ? "chevron-up" : "chevron-down"} className="w-6 h-6" />
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-500">Drag & Drop to Update</span>
+                <Icon name={showBoard ? "chevron-up" : "chevron-down"} className="w-4 h-4 text-gray-400" />
+              </div>
             </div>
           </div>
           {showBoard && (
-            <div className="px-6 pb-6 pt-2 overflow-x-auto">
-              <div className="flex space-x-4">
-                <KanbanComponents.KanbanColumn 
-                    title="Backlog" 
-                    jobs={backlogJobs} 
-                    onDragOver={handleDragOver} 
-                    onDrop={handleDrop} 
-                    onDragStart={handleDragStart} 
-                />
-                {KANBAN_COLUMNS.slice(1).map(status => (
-                  <KanbanComponents.KanbanColumn
-                    key={status}
-                    title={status}
-                    jobs={boardJobs.filter(job => job.Status === status)}
-                    onDragOver={handleDragOver}
-                    onDrop={handleDrop}
-                    onDragStart={handleDragStart}
+            <div className="px-3 pb-3 border-t border-gray-100">
+              <div className="overflow-x-auto">
+                <div className="flex space-x-2 py-3 min-w-max">
+                  <KanbanComponents.KanbanColumn 
+                      title="Backlog" 
+                      jobs={backlogJobs} 
+                      onDragOver={handleDragOver} 
+                      onDrop={handleDrop} 
+                      onDragStart={handleDragStart} 
                   />
-                ))}
+                  {KANBAN_COLUMNS.slice(1).map(status => (
+                    <KanbanComponents.KanbanColumn
+                      key={status}
+                      title={status}
+                      jobs={boardJobs.filter(job => job.Status === status)}
+                      onDragOver={handleDragOver}
+                      onDrop={handleDrop}
+                      onDragStart={handleDragStart}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           )}
