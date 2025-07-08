@@ -62,11 +62,11 @@
 
   <script type="text/babel">
     /********* Injected data & Config *********/
-    const statusList = ["Wishlist", "Applied", "HR Screening", "Technical Interview", "Case Study / Assessment", "Final Interview", "Offer Received", "Offer Accepted", "Rejected", "Withdrawn"];
+    const statusList = ["Wishlist", "Applied", "HR Email Received", "Online Assessment", "Case Study", "Phone Screening", "Technical Interview", "Panel Interview", "Final Interview", "Offer Received", "Offer Accepted", "Rejected", "Withdrawn"];
     const jobTypeList = ["Internship", "Full-Time", "Part-Time", "Thesis Project"];
     const sourceList  = ["Polimi CareerService", "LinkedIn", "Company Website", "Referral", "Networking Event", "Other"];
     const DOUGHNUT_COLORS = { Offers: '#22C55E', Rejected: '#EF4444', 'In-Progress': '#F59E0B', Other: '#8B5CF6' };
-    const KANBAN_COLUMNS = ["Backlog", "Applied", "HR Screening", "Technical Interview", "Case Study / Assessment", "Final Interview", "Offer Received"];
+    const KANBAN_COLUMNS = ["Backlog", "Applied", "HR Email Received", "Online Assessment", "Case Study", "Phone Screening", "Technical Interview", "Panel Interview", "Final Interview", "Offer Received"];
 
     const getTodayPlusDays = (days) => new Date(new Date().setDate(new Date().getDate() + days)).toISOString().split('T')[0];
     const sampleJobs  = [];
@@ -298,10 +298,14 @@
 
     const getStatusColorClass = (status) => {
         const colors = {
+            "Wishlist": "bg-slate-50 border-l-4 border-slate-400",
             "Applied": "bg-blue-50 border-l-4 border-blue-400",
-            "HR Screening": "bg-amber-50 border-l-4 border-amber-400",
+            "HR Email Received": "bg-amber-50 border-l-4 border-amber-400",
+            "Online Assessment": "bg-orange-50 border-l-4 border-orange-400",
+            "Case Study": "bg-indigo-50 border-l-4 border-indigo-400",
+            "Phone Screening": "bg-yellow-50 border-l-4 border-yellow-500",
             "Technical Interview": "bg-purple-50 border-l-4 border-purple-400",
-            "Case Study / Assessment": "bg-indigo-50 border-l-4 border-indigo-400",
+            "Panel Interview": "bg-violet-50 border-l-4 border-violet-400",
             "Final Interview": "bg-pink-50 border-l-4 border-pink-400",
             "Offer Received": "bg-green-50 border-l-4 border-green-500",
             "Offer Accepted": "bg-emerald-50 border-l-4 border-emerald-600",
@@ -507,7 +511,7 @@
           acc.total++;
           if (["Offer Received", "Offer Accepted"].includes(job.Status)) acc.offers++;
           else if (job.Status === "Rejected") acc.rejected++;
-          else if (["Applied", "HR Screening", "Technical Interview", "Case Study / Assessment", "Final Interview"].includes(job.Status)) acc.inProgress++;
+          else if (["Applied", "HR Email Received", "Online Assessment", "Case Study", "Phone Screening", "Technical Interview", "Panel Interview", "Final Interview"].includes(job.Status)) acc.inProgress++;
           return acc;
         }, { total: 0, offers: 0, rejected: 0, inProgress: 0 });
       }, [jobs]);
@@ -537,7 +541,7 @@
               } else if (job.Status === "Rejected") {
                 monthlyData[monthKey].rejected++;
                 monthlyData[monthKey].responses++;
-              } else if (["HR Screening", "Technical Interview", "Case Study / Assessment", "Final Interview"].includes(job.Status)) {
+              } else if (["HR Email Received", "Online Assessment", "Case Study", "Phone Screening", "Technical Interview", "Panel Interview", "Final Interview"].includes(job.Status)) {
                 monthlyData[monthKey].interviews++;
                 monthlyData[monthKey].responses++;
               }
@@ -1437,7 +1441,7 @@
               case 'rejected':
                 return job.Status === "Rejected";
               case 'inProgress':
-                return ["Applied", "HR Screening", "Technical Interview", "Case Study / Assessment", "Final Interview"].includes(job.Status);
+                return ["Applied", "HR Email Received", "Online Assessment", "Case Study", "Phone Screening", "Technical Interview", "Panel Interview", "Final Interview"].includes(job.Status);
               case 'total':
                 return true; 
               default:
@@ -1534,7 +1538,7 @@
                 "This is a template file showing the correct format for importing data into CareerFlow.",
                 "Replace the sample data below with your actual job applications and contacts.",
                 "All fields are optional except for Company, Title, and DateApplied for jobs.",
-                "Status must be one of: Wishlist, Applied, HR Screening, Technical Interview, Case Study / Assessment, Final Interview, Offer Received, Offer Accepted, Rejected, Withdrawn",
+                "Status must be one of: Wishlist, Applied, HR Email Received, Online Assessment, Case Study, Phone Screening, Technical Interview, Panel Interview, Final Interview, Offer Received, Offer Accepted, Rejected, Withdrawn",
                 "JobType must be one of: Internship, Full-Time, Part-Time, Thesis Project",
                 "Source must be one of: Polimi CareerService, LinkedIn, Company Website, Referral, Networking Event, Other",
                 "Dates should be in YYYY-MM-DD format",
@@ -1556,7 +1560,7 @@
               },
               {
                 "id": "job-template-2", 
-                "Status": "HR Screening",
+                "Status": "HR Email Received",
                 "Company": "Tech Startup Inc",
                 "Title": "Product Manager",
                 "JobType": "Full-Time",
@@ -1564,7 +1568,7 @@
                 "Source": "Company Website",
                 "AppDeadline": "2025-11-30",
                 "DateApplied": "2025-01-10",
-                "NextStep": "Completed initial call, technical interview scheduled"
+                "NextStep": "HR sent email for next steps, preparing for phone screening"
               },
               {
                 "id": "job-template-3",
