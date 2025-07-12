@@ -1813,6 +1813,29 @@
       const [newJob, setNewJob] = React.useState(emptyJob);
       const [newThesis, setNewThesis] = React.useState(emptyThesis);
       const [selectedJobForEmail, setSelectedJobForEmail] = React.useState(null);
+      
+      // Section collapse states with localStorage persistence
+      const [sectionsCollapsed, setSectionsCollapsed] = React.useState(() => {
+        const saved = localStorage.getItem('careerflow-sections-collapsed');
+        return saved ? JSON.parse(saved) : {
+          analytics: false,
+          kanban: false,
+          jobs: false,
+          networking: false,
+          thesis: false
+        };
+      });
+
+      const toggleSection = (section) => {
+        setSectionsCollapsed(prev => {
+          const newState = {
+            ...prev,
+            [section]: !prev[section]
+          };
+          localStorage.setItem('careerflow-sections-collapsed', JSON.stringify(newState));
+          return newState;
+        });
+      };
 
       const jobsForAnalytics = React.useMemo(() => {
         return jobs
@@ -2203,6 +2226,24 @@
                     <h1 className="text-2xl font-bold text-gray-900">CareerFlow</h1>
                   </div>
                   <div className="flex items-center gap-3">
+                    <button 
+                      className="btn btn-ghost btn-sm text-gray-600 hover:text-gray-900"
+                      onClick={() => {
+                        const allCollapsed = Object.values(sectionsCollapsed).every(collapsed => collapsed);
+                        const newState = {
+                          analytics: !allCollapsed,
+                          kanban: !allCollapsed,
+                          jobs: !allCollapsed,
+                          networking: !allCollapsed,
+                          thesis: !allCollapsed
+                        };
+                        setSectionsCollapsed(newState);
+                        localStorage.setItem('careerflow-sections-collapsed', JSON.stringify(newState));
+                      }}
+                    >
+                      <Icon name={Object.values(sectionsCollapsed).every(collapsed => collapsed) ? "chevrons-down" : "chevrons-up"} className="w-4 h-4"/>
+                      {Object.values(sectionsCollapsed).every(collapsed => collapsed) ? "Expand All" : "Collapse All"}
+                    </button>
                     {dataLoading && (
                       <div className="flex items-center gap-2 text-sm text-gray-600">
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
@@ -2232,19 +2273,59 @@
             </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-              <Analytics jobs={filteredJobs} selectedMetricFilters={selectedMetricFilters} onMetricFilterToggle={handleMetricFilterToggle} />
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+                <div className="flex justify-between items-center p-6 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                     onClick={() => toggleSection('analytics')}>
+                  <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <Icon name="bar-chart-2" className="w-6 h-6 text-blue-500"/>
+                    Analytics
+                  </h2>
+                  <Icon name={sectionsCollapsed.analytics ? "chevron-down" : "chevron-up"} className="w-5 h-5 text-gray-500"/>
+                </div>
+                {!sectionsCollapsed.analytics && (
+                  <div className="p-6 animate-in slide-in-from-top duration-200">
+                    <Analytics jobs={filteredJobs} selectedMetricFilters={selectedMetricFilters} onMetricFilterToggle={handleMetricFilterToggle} />
+                  </div>
+                )}
+              </div>
               
-              <KanbanComponents.KanbanBoard jobs={jobs} setJobs={updateJobs} />
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+                <div className="flex justify-between items-center p-6 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                     onClick={() => toggleSection('kanban')}>
+                  <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <Icon name="columns" className="w-6 h-6 text-green-500"/>
+                    Pipeline View
+                  </h2>
+                  <Icon name={sectionsCollapsed.kanban ? "chevron-down" : "chevron-up"} className="w-5 h-5 text-gray-500"/>
+                </div>
+                {!sectionsCollapsed.kanban && (
+                  <div className="p-0 animate-in slide-in-from-top duration-200">
+                    <KanbanComponents.KanbanBoard jobs={jobs} setJobs={updateJobs} />
+                  </div>
+                )}
+              </div>
 
               <div className="space-y-6">
-                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                  <div className="flex justify-between items-center mb-4">
-                      <h2 className="text-2xl font-bold text-gray-900">Job Applications</h2>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+                  <div className="flex justify-between items-center p-6 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                       onClick={() => toggleSection('jobs')}>
+                    <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                      <Icon name="briefcase" className="w-6 h-6 text-blue-500"/>
+                      Job Applications
+                    </h2>
+                    <div className="flex items-center gap-4">
                       <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200" 
-                              onClick={() => document.getElementById('add_job_modal').showModal()}>
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                document.getElementById('add_job_modal').showModal();
+                              }}>
                           <Icon name="plus" className="w-5 h-5"/> New Application
                       </button>
+                      <Icon name={sectionsCollapsed.jobs ? "chevron-down" : "chevron-up"} className="w-5 h-5 text-gray-500"/>
+                    </div>
                   </div>
+                  {!sectionsCollapsed.jobs && (
+                    <div className="p-6 animate-in slide-in-from-top duration-200">
                   
                   <div className="space-y-4">
                     <div className="flex flex-wrap items-center gap-4">
@@ -2323,58 +2404,86 @@
                         </div>
                       </div>
                   </div>
+                  
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+                    <div className="p-4 border-b border-gray-100">
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm text-gray-600">
+                          Showing {filteredJobs.length} of {jobs.length} applications
+                        </div>
+                        {filteredJobs.length !== jobs.length && (
+                          <div className="text-xs text-blue-600">
+                            {jobs.length - filteredJobs.length} applications filtered out
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <TrackerTable jobs={filteredJobs} updateJobs={updateJobs} />
+                  </div>
+                  
+                  </div>
+                )}
                 </div>
                 
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-                  <div className="p-4 border-b border-gray-100">
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm text-gray-600">
-                        Showing {filteredJobs.length} of {jobs.length} applications
-                      </div>
-                      {filteredJobs.length !== jobs.length && (
-                        <div className="text-xs text-blue-600">
-                          {jobs.length - filteredJobs.length} applications filtered out
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <TrackerTable jobs={filteredJobs} updateJobs={updateJobs} />
-                </div>
-                
-                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                  <div className="flex justify-between items-center mb-4">
-                      <h2 className="text-2xl font-bold text-gray-900">Networking</h2>
+                  <div className="flex justify-between items-center p-6 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                       onClick={() => toggleSection('networking')}>
+                    <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                      <Icon name="users" className="w-6 h-6 text-orange-500"/>
+                      Networking
+                    </h2>
+                    <div className="flex items-center gap-4">
                       <input type="text" placeholder="Search contacts by name, company, or role..." 
                              className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-80" 
-                             onChange={e => setContactSearchTerm(e.target.value)} />
+                             onChange={e => setContactSearchTerm(e.target.value)}
+                             onClick={(e) => e.stopPropagation()} />
+                      <Icon name={sectionsCollapsed.networking ? "chevron-down" : "chevron-up"} className="w-5 h-5 text-gray-500"/>
+                    </div>
                   </div>
-                  {filteredContacts.length !== contacts.length && (
-                    <div className="mb-4 text-sm text-gray-600">
-                      Showing {filteredContacts.length} of {contacts.length} contacts
+                  {!sectionsCollapsed.networking && (
+                    <div className="p-6 animate-in slide-in-from-top duration-200">
+                      {filteredContacts.length !== contacts.length && (
+                        <div className="mb-4 text-sm text-gray-600">
+                          Showing {filteredContacts.length} of {contacts.length} contacts
+                        </div>
+                      )}
+                      <ContactsTable contacts={filteredContacts} setContacts={updateContacts} />
                     </div>
                   )}
-                                     <ContactsTable contacts={filteredContacts} setContacts={updateContacts} />
                 </div>
                 
-                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                  <div className="flex justify-between items-center mb-4">
-                      <h2 className="text-2xl font-bold text-gray-900">Thesis Applications</h2>
-                      <div className="flex items-center gap-4">
-                        <input type="text" placeholder="Search thesis topics, schools, or supervisors..." 
-                               className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-80" 
-                               onChange={e => setThesisSearchTerm(e.target.value)} />
-                        <button className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200" 
-                                onClick={() => document.getElementById('add_thesis_modal').showModal()}>
-                            <Icon name="plus" className="w-5 h-5"/> New Thesis Application
-                        </button>
-                      </div>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+                  <div className="flex justify-between items-center p-6 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                       onClick={() => toggleSection('thesis')}>
+                    <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                      <Icon name="book-open" className="w-6 h-6 text-purple-500"/>
+                      Thesis Applications
+                    </h2>
+                    <div className="flex items-center gap-4">
+                      <input type="text" placeholder="Search thesis topics, schools, or supervisors..." 
+                             className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-80" 
+                             onChange={e => setThesisSearchTerm(e.target.value)}
+                             onClick={(e) => e.stopPropagation()} />
+                      <button className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-lg flex items-center gap-2 transition-colors duration-200" 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                document.getElementById('add_thesis_modal').showModal();
+                              }}>
+                          <Icon name="plus" className="w-5 h-5"/> New Thesis Application
+                      </button>
+                      <Icon name={sectionsCollapsed.thesis ? "chevron-down" : "chevron-up"} className="w-5 h-5 text-gray-500"/>
+                    </div>
                   </div>
-                  {filteredTheses.length !== theses.length && (
-                    <div className="mb-4 text-sm text-gray-600">
-                      Showing {filteredTheses.length} of {theses.length} thesis applications
+                  {!sectionsCollapsed.thesis && (
+                    <div className="p-6 animate-in slide-in-from-top duration-200">
+                      {filteredTheses.length !== theses.length && (
+                        <div className="mb-4 text-sm text-gray-600">
+                          Showing {filteredTheses.length} of {theses.length} thesis applications
+                        </div>
+                      )}
+                      <ThesisTable theses={filteredTheses} updateTheses={updateTheses} />
                     </div>
                   )}
-                  <ThesisTable theses={filteredTheses} updateTheses={updateTheses} />
                 </div>
               </div>
             </div>
