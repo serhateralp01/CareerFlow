@@ -551,15 +551,48 @@
     }
     
     /********* Main Components *********/
-    function Analytics({ jobs, selectedMetricFilters, onMetricFilterToggle }) {
+    function JobAnalytics({ jobs, selectedMetricFilters, onMetricFilterToggle }) {
       const metrics = React.useMemo(() => {
-        return jobs.reduce((acc, job) => {
+        const stats = jobs.reduce((acc, job) => {
           acc.total++;
           if (["Offer Received", "Offer Accepted"].includes(job.Status)) acc.offers++;
           else if (job.Status === "Rejected") acc.rejected++;
           else if (["Applied", "HR Email Received", "Online Assessment", "Case Study", "Phone Screening", "Technical Interview", "Panel Interview", "Final Interview"].includes(job.Status)) acc.inProgress++;
+          
+          // Track by job type
+          acc.byType[job.JobType] = (acc.byType[job.JobType] || 0) + 1;
+          
+          // Track by source
+          acc.bySource[job.Source] = (acc.bySource[job.Source] || 0) + 1;
+          
+          // Track response times (if DateApplied exists)
+          if (job.DateApplied) {
+            const appliedDate = new Date(job.DateApplied);
+            const today = new Date();
+            const daysSinceApplied = Math.ceil((today - appliedDate) / (1000 * 60 * 60 * 24));
+            
+            if (["HR Email Received", "Online Assessment", "Case Study", "Phone Screening", "Technical Interview", "Panel Interview", "Final Interview", "Offer Received", "Offer Accepted"].includes(job.Status)) {
+              acc.responseTimes.push(daysSinceApplied);
+            }
+          }
+          
           return acc;
-        }, { total: 0, offers: 0, rejected: 0, inProgress: 0 });
+        }, { 
+          total: 0, 
+          offers: 0, 
+          rejected: 0, 
+          inProgress: 0, 
+          byType: {}, 
+          bySource: {}, 
+          responseTimes: [] 
+        });
+        
+        // Calculate additional metrics
+        stats.successRate = stats.total > 0 ? Math.round((stats.offers / stats.total) * 100) : 0;
+        stats.responseRate = stats.total > 0 ? Math.round(((stats.offers + stats.rejected + stats.inProgress) / stats.total) * 100) : 0;
+        stats.averageResponseTime = stats.responseTimes.length > 0 ? Math.round(stats.responseTimes.reduce((a, b) => a + b, 0) / stats.responseTimes.length) : 0;
+        
+        return stats;
       }, [jobs]);
 
       const timelineData = React.useMemo(() => {
@@ -699,10 +732,47 @@
         }]
       };
 
+      const jobTypeData = {
+        labels: Object.keys(metrics.byType),
+        datasets: [{
+          data: Object.values(metrics.byType),
+          backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'],
+          borderWidth: 0,
+          borderRadius: 8,
+          spacing: 2,
+        }]
+      };
+
+      const sourceEffectivenessData = {
+        labels: Object.keys(metrics.bySource),
+        datasets: [{
+          label: 'Applications',
+          data: Object.keys(metrics.bySource).map(source => {
+            const sourceJobs = jobs.filter(j => j.Source === source);
+            return sourceJobs.length;
+          }),
+          backgroundColor: 'rgba(59, 130, 246, 0.6)',
+          borderColor: 'rgb(59, 130, 246)',
+          borderWidth: 1,
+          borderRadius: 4,
+        }, {
+          label: 'Success Rate (%)',
+          data: Object.keys(metrics.bySource).map(source => {
+            const sourceJobs = jobs.filter(j => j.Source === source);
+            const successfulJobs = sourceJobs.filter(j => ["Offer Received", "Offer Accepted"].includes(j.Status));
+            return sourceJobs.length > 0 ? Math.round((successfulJobs.length / sourceJobs.length) * 100) : 0;
+          }),
+          backgroundColor: 'rgba(34, 197, 94, 0.6)',
+          borderColor: 'rgb(34, 197, 94)',
+          borderWidth: 1,
+          borderRadius: 4,
+        }]
+      };
+
       return (
         <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl border border-gray-100">
           <div className="p-6 space-y-6">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
                   <div className={`bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 text-center border transition-all duration-200 cursor-pointer transform hover:scale-105 ${
                     selectedMetricFilters.includes('total') ? 'border-blue-400 ring-2 ring-blue-200 shadow-lg' : 'border-blue-200/50 hover:shadow-md'
                   }`} onClick={() => onMetricFilterToggle('total')}>
@@ -747,13 +817,28 @@
                       <div className="mt-2"><span className="inline-block w-2 h-2 bg-red-500 rounded-full"></span></div>
                     )}
                   </div>
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 text-center border border-purple-200/50">
+                    <div className="text-xs font-medium text-purple-600 uppercase tracking-wide">Success Rate</div>
+                    <div className="text-2xl font-bold text-purple-700 mt-1 flex items-center justify-center gap-2">
+                      {metrics.successRate}% <Icon name="target" className="w-5 h-5"/>
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-4 text-center border border-indigo-200/50">
+                    <div className="text-xs font-medium text-indigo-600 uppercase tracking-wide">Avg Response</div>
+                    <div className="text-2xl font-bold text-indigo-700 mt-1 flex items-center justify-center gap-2">
+                      {metrics.averageResponseTime}d <Icon name="clock" className="w-5 h-5"/>
+                    </div>
+                  </div>
               </div>
 
               {jobs.length > 0 ? (
                 <div className="space-y-8">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                      <h3 className="font-semibold text-lg text-gray-800 mb-4">Application Timeline & Success Metrics</h3>
+                      <h3 className="font-semibold text-lg text-gray-800 mb-4 flex items-center gap-2">
+                        <Icon name="trending-up" className="w-5 h-5 text-blue-500"/>
+                        Application Timeline & Success Metrics
+                      </h3>
                     <div style={{height: '300px'}}>
                         <ChartComponent chartId="chart1" type="bar" data={timelineData} options={{
                         maintainAspectRatio: false,
@@ -860,7 +945,10 @@
                           </div>
                       </div>
                       <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                          <h3 className="font-semibold text-lg text-gray-800 mb-4">Status Distribution</h3>
+                          <h3 className="font-semibold text-lg text-gray-800 mb-4 flex items-center gap-2">
+                            <Icon name="bar-chart" className="w-5 h-5 text-green-500"/>
+                            Status Distribution
+                          </h3>
                           <div style={{height: '280px'}}>
                             <ChartComponent chartId="chart2" type="bar" data={barData} options={{
                               indexAxis:'y', 
@@ -895,6 +983,94 @@
                           </div>
                       </div>
                   </div>
+                  
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                      <h3 className="font-semibold text-lg text-gray-800 mb-4 flex items-center gap-2">
+                        <Icon name="pie-chart" className="w-5 h-5 text-purple-500"/>
+                        Job Type Distribution
+                      </h3>
+                      <div style={{height: '280px'}}>
+                        <ChartComponent chartId="chart3" type="doughnut" data={jobTypeData} options={{
+                          maintainAspectRatio: false,
+                          plugins: {
+                            legend: {
+                              position: 'bottom',
+                              labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: { size: 12 }
+                              }
+                            },
+                            tooltip: {
+                              backgroundColor: 'rgba(0,0,0,0.8)',
+                              titleColor: 'white',
+                              bodyColor: 'white',
+                              borderColor: 'rgba(0,0,0,0.1)',
+                              borderWidth: 1,
+                              callbacks: {
+                                label: function(context) {
+                                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                  const percentage = Math.round((context.parsed / total) * 100);
+                                  return `${context.label}: ${context.parsed} (${percentage}%)`;
+                                }
+                              }
+                            }
+                          },
+                          animation: { duration: 800, easing: 'easeInOutQuart' }
+                        }} />
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                      <h3 className="font-semibold text-lg text-gray-800 mb-4 flex items-center gap-2">
+                        <Icon name="activity" className="w-5 h-5 text-orange-500"/>
+                        Source Effectiveness
+                      </h3>
+                      <div style={{height: '280px'}}>
+                        <ChartComponent chartId="chart4" type="bar" data={sourceEffectivenessData} options={{
+                          maintainAspectRatio: false,
+                          plugins: {
+                            legend: {
+                              display: true,
+                              position: 'top',
+                              labels: {
+                                usePointStyle: true,
+                                padding: 15,
+                                font: { size: 11 }
+                              }
+                            },
+                            tooltip: {
+                              backgroundColor: 'rgba(0,0,0,0.8)',
+                              titleColor: 'white',
+                              bodyColor: 'white',
+                              borderColor: 'rgba(0,0,0,0.1)',
+                              borderWidth: 1
+                            }
+                          },
+                          scales: {
+                            x: {
+                              grid: { display: false },
+                              ticks: { color: '#6B7280', font: { size: 10 } },
+                              border: { display: false }
+                            },
+                            y: {
+                              beginAtZero: true,
+                              ticks: { 
+                                stepSize: 1, 
+                                color: '#6B7280', 
+                                font: { size: 11 } 
+                              },
+                              grid: { color: '#F3F4F6', lineWidth: 1 },
+                              border: { display: false }
+                            }
+                          },
+                          elements: { bar: { borderRadius: 4 } },
+                          animation: { duration: 800, easing: 'easeInOutQuart' }
+                        }} />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <div className="text-center py-12 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
@@ -903,6 +1079,348 @@
                     <p className="text-sm text-gray-500 mt-1">Add your first application to see analytics</p>
                 </div>
               )}
+          </div>
+        </div>
+      );
+    }
+
+    function ThesisAnalytics({ theses }) {
+      const metrics = React.useMemo(() => {
+        const stats = theses.reduce((acc, thesis) => {
+          acc.total++;
+          
+          // Track by school
+          acc.bySchool[thesis.School] = (acc.bySchool[thesis.School] || 0) + 1;
+          
+          // Track by status
+          acc.byStatus[thesis.Status] = (acc.byStatus[thesis.Status] || 0) + 1;
+          
+          // Count statuses
+          if (thesis.Status === "Accepted") acc.accepted++;
+          else if (thesis.Status === "Rejected") acc.rejected++;
+          else if (["Applied", "Under Review", "Interview Scheduled"].includes(thesis.Status)) acc.inProgress++;
+          else acc.interested++;
+          
+          // Track application timeline
+          if (thesis.DateApplied) {
+            const appliedDate = new Date(thesis.DateApplied);
+            const today = new Date();
+            const daysSinceApplied = Math.ceil((today - appliedDate) / (1000 * 60 * 60 * 24));
+            acc.applicationTimes.push(daysSinceApplied);
+          }
+          
+          return acc;
+        }, { 
+          total: 0, 
+          accepted: 0, 
+          rejected: 0, 
+          inProgress: 0, 
+          interested: 0,
+          bySchool: {}, 
+          byStatus: {},
+          applicationTimes: []
+        });
+        
+        // Calculate rates
+        stats.acceptanceRate = stats.total > 0 ? Math.round((stats.accepted / stats.total) * 100) : 0;
+        stats.applicationRate = stats.total > 0 ? Math.round(((stats.accepted + stats.rejected + stats.inProgress) / stats.total) * 100) : 0;
+        stats.averageApplicationTime = stats.applicationTimes.length > 0 ? Math.round(stats.applicationTimes.reduce((a, b) => a + b, 0) / stats.applicationTimes.length) : 0;
+        
+        return stats;
+      }, [theses]);
+
+      const schoolComparisonData = {
+        labels: Object.keys(metrics.bySchool),
+        datasets: [{
+          label: 'Total Applications',
+          data: Object.keys(metrics.bySchool).map(school => {
+            const schoolTheses = theses.filter(t => t.School === school);
+            return schoolTheses.length;
+          }),
+          backgroundColor: 'rgba(147, 51, 234, 0.6)',
+          borderColor: 'rgb(147, 51, 234)',
+          borderWidth: 1,
+          borderRadius: 4,
+        }, {
+          label: 'Accepted',
+          data: Object.keys(metrics.bySchool).map(school => {
+            const schoolTheses = theses.filter(t => t.School === school);
+            return schoolTheses.filter(t => t.Status === "Accepted").length;
+          }),
+          backgroundColor: 'rgba(34, 197, 94, 0.6)',
+          borderColor: 'rgb(34, 197, 94)',
+          borderWidth: 1,
+          borderRadius: 4,
+        }, {
+          label: 'In Progress',
+          data: Object.keys(metrics.bySchool).map(school => {
+            const schoolTheses = theses.filter(t => t.School === school);
+            return schoolTheses.filter(t => ["Applied", "Under Review", "Interview Scheduled"].includes(t.Status)).length;
+          }),
+          backgroundColor: 'rgba(245, 158, 11, 0.6)',
+          borderColor: 'rgb(245, 158, 11)',
+          borderWidth: 1,
+          borderRadius: 4,
+        }]
+      };
+
+      const statusDistributionData = {
+        labels: Object.keys(metrics.byStatus),
+        datasets: [{
+          data: Object.values(metrics.byStatus),
+          backgroundColor: [
+            '#8B5CF6', // Interested
+            '#3B82F6', // Applied
+            '#F59E0B', // Under Review
+            '#10B981', // Interview Scheduled
+            '#22C55E', // Accepted
+            '#EF4444', // Rejected
+            '#6B7280'  // Withdrawn
+          ],
+          borderWidth: 0,
+          borderRadius: 8,
+          spacing: 2,
+        }]
+      };
+
+      const timelineData = React.useMemo(() => {
+        const monthlyData = {};
+        const today = new Date();
+        
+        // Initialize last 6 months
+        for (let i = 5; i >= 0; i--) {
+          const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+          const monthKey = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+          monthlyData[monthKey] = { applied: 0, accepted: 0, rejected: 0, interviews: 0 };
+        }
+        
+        theses.forEach(thesis => {
+          if (thesis.DateApplied) {
+            const appDate = new Date(thesis.DateApplied);
+            const monthKey = appDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+            
+            if (monthlyData[monthKey]) {
+              monthlyData[monthKey].applied++;
+              if (thesis.Status === "Accepted") monthlyData[monthKey].accepted++;
+              else if (thesis.Status === "Rejected") monthlyData[monthKey].rejected++;
+              else if (thesis.Status === "Interview Scheduled") monthlyData[monthKey].interviews++;
+            }
+          }
+        });
+
+        return {
+          labels: Object.keys(monthlyData),
+          datasets: [
+            {
+              label: 'Applications',
+              data: Object.values(monthlyData).map(d => d.applied),
+              backgroundColor: 'rgba(147, 51, 234, 0.5)',
+              borderColor: 'rgb(147, 51, 234)',
+              borderWidth: 2,
+              type: 'bar',
+            },
+            {
+              label: 'Accepted',
+              data: Object.values(monthlyData).map(d => d.accepted),
+              backgroundColor: 'rgba(34, 197, 94, 0.5)',
+              borderColor: 'rgb(34, 197, 94)',
+              borderWidth: 2,
+              type: 'bar',
+            },
+            {
+              label: 'Interviews',
+              data: Object.values(monthlyData).map(d => d.interviews),
+              backgroundColor: 'rgba(245, 158, 11, 0.5)',
+              borderColor: 'rgb(245, 158, 11)',
+              borderWidth: 2,
+              type: 'bar',
+            }
+          ]
+        };
+      }, [theses]);
+
+      return (
+        <div className="bg-gradient-to-br from-purple-50 to-white rounded-2xl shadow-xl border border-purple-100">
+          <div className="p-6 space-y-6">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 text-center border border-purple-200/50">
+                <div className="text-xs font-medium text-purple-600 uppercase tracking-wide">Total Topics</div>
+                <div className="text-2xl font-bold text-purple-700 mt-1 flex items-center justify-center gap-2">
+                  {metrics.total} <Icon name="book-open" className="w-5 h-5"/>
+                </div>
+              </div>
+              <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 text-center border border-amber-200/50">
+                <div className="text-xs font-medium text-amber-600 uppercase tracking-wide">In Progress</div>
+                <div className="text-2xl font-bold text-amber-700 mt-1 flex items-center justify-center gap-2">
+                  {metrics.inProgress} <Icon name="clock" className="w-5 h-5"/>
+                </div>
+              </div>
+              <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-4 text-center border border-emerald-200/50">
+                <div className="text-xs font-medium text-emerald-600 uppercase tracking-wide">Accepted</div>
+                <div className="text-2xl font-bold text-emerald-700 mt-1 flex items-center justify-center gap-2">
+                  {metrics.accepted} <Icon name="check-circle" className="w-5 h-5"/>
+                </div>
+              </div>
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 text-center border border-blue-200/50">
+                <div className="text-xs font-medium text-blue-600 uppercase tracking-wide">Acceptance Rate</div>
+                <div className="text-2xl font-bold text-blue-700 mt-1 flex items-center justify-center gap-2">
+                  {metrics.acceptanceRate}% <Icon name="target" className="w-5 h-5"/>
+                </div>
+              </div>
+              <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-4 text-center border border-indigo-200/50">
+                <div className="text-xs font-medium text-indigo-600 uppercase tracking-wide">Avg Time</div>
+                <div className="text-2xl font-bold text-indigo-700 mt-1 flex items-center justify-center gap-2">
+                  {metrics.averageApplicationTime}d <Icon name="calendar" className="w-5 h-5"/>
+                </div>
+              </div>
+            </div>
+
+            {theses.length > 0 ? (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                    <h3 className="font-semibold text-lg text-gray-800 mb-4 flex items-center gap-2">
+                      <Icon name="trending-up" className="w-5 h-5 text-purple-500"/>
+                      Application Timeline
+                    </h3>
+                    <div style={{height: '280px'}}>
+                      <ChartComponent chartId="thesis-chart1" type="bar" data={timelineData} options={{
+                        maintainAspectRatio: false,
+                        plugins: {
+                          legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                              usePointStyle: true,
+                              padding: 15,
+                              font: { size: 11 }
+                            }
+                          },
+                          tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleColor: 'white',
+                            bodyColor: 'white',
+                            borderColor: 'rgba(0,0,0,0.1)',
+                            borderWidth: 1
+                          }
+                        },
+                        scales: {
+                          x: {
+                            grid: { display: false },
+                            ticks: { color: '#6B7280', font: { size: 11 } },
+                            border: { display: false }
+                          },
+                          y: {
+                            beginAtZero: true,
+                            ticks: { 
+                              stepSize: 1, 
+                              color: '#6B7280', 
+                              font: { size: 11 } 
+                            },
+                            grid: { color: '#F3F4F6', lineWidth: 1 },
+                            border: { display: false }
+                          }
+                        },
+                        elements: { bar: { borderRadius: 4 } },
+                        animation: { duration: 800, easing: 'easeInOutQuart' }
+                      }} />
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                    <h3 className="font-semibold text-lg text-gray-800 mb-4 flex items-center gap-2">
+                      <Icon name="pie-chart" className="w-5 h-5 text-purple-500"/>
+                      Status Distribution
+                    </h3>
+                    <div style={{height: '280px'}}>
+                      <ChartComponent chartId="thesis-chart2" type="doughnut" data={statusDistributionData} options={{
+                        maintainAspectRatio: false,
+                        plugins: {
+                          legend: {
+                            position: 'bottom',
+                            labels: {
+                              usePointStyle: true,
+                              padding: 15,
+                              font: { size: 11 }
+                            }
+                          },
+                          tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleColor: 'white',
+                            bodyColor: 'white',
+                            borderColor: 'rgba(0,0,0,0.1)',
+                            borderWidth: 1,
+                            callbacks: {
+                              label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((context.parsed / total) * 100);
+                                return `${context.label}: ${context.parsed} (${percentage}%)`;
+                              }
+                            }
+                          }
+                        },
+                        animation: { duration: 800, easing: 'easeInOutQuart' }
+                      }} />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                  <h3 className="font-semibold text-lg text-gray-800 mb-4 flex items-center gap-2">
+                    <Icon name="bar-chart-2" className="w-5 h-5 text-purple-500"/>
+                    School Comparison
+                  </h3>
+                  <div style={{height: '300px'}}>
+                    <ChartComponent chartId="thesis-chart3" type="bar" data={schoolComparisonData} options={{
+                      maintainAspectRatio: false,
+                      plugins: {
+                        legend: {
+                          display: true,
+                          position: 'top',
+                          labels: {
+                            usePointStyle: true,
+                            padding: 15,
+                            font: { size: 11 }
+                          }
+                        },
+                        tooltip: {
+                          backgroundColor: 'rgba(0,0,0,0.8)',
+                          titleColor: 'white',
+                          bodyColor: 'white',
+                          borderColor: 'rgba(0,0,0,0.1)',
+                          borderWidth: 1
+                        }
+                      },
+                      scales: {
+                        x: {
+                          grid: { display: false },
+                          ticks: { color: '#6B7280', font: { size: 11 } },
+                          border: { display: false }
+                        },
+                        y: {
+                          beginAtZero: true,
+                          ticks: { 
+                            stepSize: 1, 
+                            color: '#6B7280', 
+                            font: { size: 11 } 
+                          },
+                          grid: { color: '#F3F4F6', lineWidth: 1 },
+                          border: { display: false }
+                        }
+                      },
+                      elements: { bar: { borderRadius: 4 } },
+                      animation: { duration: 800, easing: 'easeInOutQuart' }
+                    }} />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-purple-50 rounded-xl border-2 border-dashed border-purple-200">
+                <Icon name="book-open" className="w-16 h-16 mx-auto text-purple-300" />
+                <p className="mt-4 text-xl font-semibold text-purple-600">No thesis data to display</p>
+                <p className="text-sm text-purple-500 mt-1">Add your first thesis application to see analytics</p>
+              </div>
+            )}
           </div>
         </div>
       );
@@ -1818,7 +2336,8 @@
       const [sectionsCollapsed, setSectionsCollapsed] = React.useState(() => {
         const saved = localStorage.getItem('careerflow-sections-collapsed');
         return saved ? JSON.parse(saved) : {
-          analytics: false,
+          jobAnalytics: false,
+          thesisAnalytics: false,
           kanban: false,
           jobs: false,
           networking: false,
@@ -2231,7 +2750,8 @@
                       onClick={() => {
                         const allCollapsed = Object.values(sectionsCollapsed).every(collapsed => collapsed);
                         const newState = {
-                          analytics: !allCollapsed,
+                          jobAnalytics: !allCollapsed,
+                          thesisAnalytics: !allCollapsed,
                           kanban: !allCollapsed,
                           jobs: !allCollapsed,
                           networking: !allCollapsed,
@@ -2275,16 +2795,32 @@
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
               <div className="bg-white rounded-xl shadow-sm border border-gray-100">
                 <div className="flex justify-between items-center p-6 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
-                     onClick={() => toggleSection('analytics')}>
+                     onClick={() => toggleSection('jobAnalytics')}>
                   <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                    <Icon name="bar-chart-2" className="w-6 h-6 text-blue-500"/>
-                    Analytics
+                    <Icon name="briefcase" className="w-6 h-6 text-blue-500"/>
+                    Job Applications Analytics
                   </h2>
-                  <Icon name={sectionsCollapsed.analytics ? "chevron-down" : "chevron-up"} className="w-5 h-5 text-gray-500"/>
+                  <Icon name={sectionsCollapsed.jobAnalytics ? "chevron-down" : "chevron-up"} className="w-5 h-5 text-gray-500"/>
                 </div>
-                {!sectionsCollapsed.analytics && (
+                {!sectionsCollapsed.jobAnalytics && (
                   <div className="p-6 animate-in slide-in-from-top duration-200">
-                    <Analytics jobs={filteredJobs} selectedMetricFilters={selectedMetricFilters} onMetricFilterToggle={handleMetricFilterToggle} />
+                    <JobAnalytics jobs={filteredJobs} selectedMetricFilters={selectedMetricFilters} onMetricFilterToggle={handleMetricFilterToggle} />
+                  </div>
+                )}
+              </div>
+              
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+                <div className="flex justify-between items-center p-6 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors duration-200" 
+                     onClick={() => toggleSection('thesisAnalytics')}>
+                  <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <Icon name="book-open" className="w-6 h-6 text-purple-500"/>
+                    Thesis Applications Analytics
+                  </h2>
+                  <Icon name={sectionsCollapsed.thesisAnalytics ? "chevron-down" : "chevron-up"} className="w-5 h-5 text-gray-500"/>
+                </div>
+                {!sectionsCollapsed.thesisAnalytics && (
+                  <div className="p-6 animate-in slide-in-from-top duration-200">
+                    <ThesisAnalytics theses={filteredTheses} />
                   </div>
                 )}
               </div>
