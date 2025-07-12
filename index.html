@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8" />
@@ -76,6 +76,7 @@
     const FirebaseService = {
       async saveJobs(userId, jobs) {
         try {
+          console.log(`[CareerFlow Debug] Saving ${jobs.length} jobs for user ${userId}`);
           const docRef = window.firebase.db.collection('users').doc(userId).collection('data').doc('jobs');
           const sanitizeJobs = (jobs) => {
             if (!Array.isArray(jobs)) {
@@ -97,6 +98,7 @@
             jobs: sanitizedJobs,
             lastUpdated: window.firebase.serverTimestamp()
           });
+          console.log(`[CareerFlow Debug] Successfully saved ${sanitizedJobs.length} jobs`);
         } catch (error) {
           console.error('Error saving jobs:', error);
           throw error;
@@ -320,13 +322,14 @@
     }
     
     const showToast = (message, type = 'success') => {
+        console.log(`[CareerFlow Toast] ${type.toUpperCase()}: ${message}`);
         const toastContainer = document.getElementById('toast-container');
         const toastId = `toast-${Date.now()}`;
         const alertClass = { success: 'alert-success', error: 'alert-error', info: 'alert-info' }[type];
         const toastElement = document.createElement('div');
         toastElement.id = toastId;
         toastElement.className = `alert ${alertClass} shadow-lg`;
-        toastElement.innerHTML = `<span>${message}</span>`;
+        toastElement.innerHTML = `<span>${message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`;
         toastContainer.appendChild(toastElement);
         setTimeout(() => { toastElement.remove() }, 3000);
     };
@@ -553,6 +556,7 @@
     /********* Main Components *********/
     function JobAnalytics({ jobs, selectedMetricFilters, onMetricFilterToggle }) {
       const metrics = React.useMemo(() => {
+        console.log(`[CareerFlow Debug] Calculating job analytics for ${jobs.length} jobs`);
         const stats = jobs.reduce((acc, job) => {
           acc.total++;
           if (["Offer Received", "Offer Accepted"].includes(job.Status)) acc.offers++;

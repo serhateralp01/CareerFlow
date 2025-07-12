@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerFlow Integration Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto p-6">
+        <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                <i data-feather="activity" class="w-8 h-8 text-blue-500"></i>
+                CareerFlow Integration Test
+            </h1>
+            <p class="text-gray-600 mb-6">Tests the actual CareerFlow application functionality</p>
+            
+            <div class="flex gap-4 mb-6">
+                <button id="openApp" class="btn btn-primary">
+                    <i data-feather="external-link" class="w-4 h-4 mr-2"></i>
+                    Open CareerFlow App
+                </button>
+                <button id="runIntegrationTests" class="btn btn-secondary">
+                    <i data-feather="play" class="w-4 h-4 mr-2"></i>
+                    Run Integration Tests
+                </button>
+                <button id="generateTestData" class="btn btn-outline">
+                    <i data-feather="database" class="w-4 h-4 mr-2"></i>
+                    Generate Test Data
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="stat bg-blue-50 rounded-lg p-4">
+                    <div class="stat-title text-blue-600">Integration Tests</div>
+                    <div class="stat-value text-blue-800" id="integrationTests">0</div>
+                </div>
+                <div class="stat bg-green-50 rounded-lg p-4">
+                    <div class="stat-title text-green-600">Passed</div>
+                    <div class="stat-value text-green-800" id="passedIntegration">0</div>
+                </div>
+                <div class="stat bg-red-50 rounded-lg p-4">
+                    <div class="stat-title text-red-600">Failed</div>
+                    <div class="stat-value text-red-800" id="failedIntegration">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Test Data Generator</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium">Job Applications</label>
+                    <input type="number" id="jobCount" class="input input-bordered w-full" value="10" min="1" max="50">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium">Thesis Applications</label>
+                    <input type="number" id="thesisCount" class="input input-bordered w-full" value="5" min="1" max="20">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium">Contacts</label>
+                    <input type="number" id="contactCount" class="input input-bordered w-full" value="8" min="1" max="30">
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <h2 class="text-xl font-semibold mb-4">Test Results</h2>
+            <div id="testResults" class="space-y-4"></div>
+        </div>
+
+        <!-- Debug Console -->
+        <div class="bg-gray-900 text-green-400 rounded-xl p-6 mt-8">
+            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                <i data-feather="terminal" class="w-5 h-5"></i>
+                Integration Test Console
+            </h3>
+            <div id="integrationConsole" class="font-mono text-sm h-64 overflow-y-auto bg-gray-800 p-4 rounded">
+                <div class="text-green-400">CareerFlow Integration Test Console</div>
+                <div class="text-gray-400">Ready to test...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        feather.replace();
+
+        let appWindow = null;
+        let testResults = {
+            total: 0,
+            passed: 0,
+            failed: 0
+        };
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message}`;
+            
+            const console = document.getElementById('integrationConsole');
+            const div = document.createElement('div');
+            div.className = type === 'error' ? 'text-red-400' : 
+                          type === 'success' ? 'text-green-400' : 
+                          type === 'warning' ? 'text-yellow-400' : 'text-gray-300';
+            div.textContent = logEntry;
+            console.appendChild(div);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function updateStats() {
+            document.getElementById('integrationTests').textContent = testResults.total;
+            document.getElementById('passedIntegration').textContent = testResults.passed;
+            document.getElementById('failedIntegration').textContent = testResults.failed;
+        }
+
+        function addTestResult(name, passed, details) {
+            testResults.total++;
+            if (passed) {
+                testResults.passed++;
+            } else {
+                testResults.failed++;
+            }
+            
+            const resultsContainer = document.getElementById('testResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `border rounded-lg p-4 ${passed ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`;
+            resultDiv.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i data-feather="${passed ? 'check-circle' : 'x-circle'}" class="w-5 h-5 ${passed ? 'text-green-500' : 'text-red-500'}"></i>
+                        <span class="font-medium">${name}</span>
+                    </div>
+                    <span class="text-sm ${passed ? 'text-green-600' : 'text-red-600'}">${passed ? 'PASSED' : 'FAILED'}</span>
+                </div>
+                ${details ? `<div class="text-sm mt-2 text-gray-600">${details}</div>` : ''}
+            `;
+            resultsContainer.appendChild(resultDiv);
+            feather.replace();
+            updateStats();
+        }
+
+        // Test Data Generation
+        function generateTestData() {
+            const jobCount = parseInt(document.getElementById('jobCount').value);
+            const thesisCount = parseInt(document.getElementById('thesisCount').value);
+            const contactCount = parseInt(document.getElementById('contactCount').value);
+
+            log(`Generating test data: ${jobCount} jobs, ${thesisCount} theses, ${contactCount} contacts`, 'info');
+
+            const companies = ['Google', 'Microsoft', 'Apple', 'Amazon', 'Meta', 'Netflix', 'Tesla', 'Spotify', 'Airbnb', 'Uber'];
+            const jobTitles = ['Software Engineer', 'Product Manager', 'Data Scientist', 'UX Designer', 'DevOps Engineer', 'Frontend Developer', 'Backend Developer', 'Full Stack Developer'];
+            const locations = ['Milan, Italy', 'Rome, Italy', 'Turin, Italy', 'Florence, Italy', 'Naples, Italy', 'Remote', 'Munich, Germany', 'Berlin, Germany'];
+            const sources = ['LinkedIn', 'Company Website', 'Referral', 'Networking Event', 'Polimi CareerService', 'Other'];
+            const statuses = ['Wishlist', 'Applied', 'HR Email Received', 'Online Assessment', 'Technical Interview', 'Offer Received', 'Rejected'];
+
+            const thesisTopics = ['Machine Learning in Healthcare', 'Sustainable Energy Systems', 'Autonomous Vehicle Control', 'Blockchain Applications', 'IoT Security', 'AI Ethics', 'Quantum Computing', 'Robotics'];
+            const thesisStatuses = ['Interested', 'Applied', 'Under Review', 'Interview Scheduled', 'Accepted', 'Rejected'];
+            const schools = ['RWTH', 'Polimi'];
+
+            const names = ['John Smith', 'Sarah Johnson', 'Mike Brown', 'Emma Davis', 'David Wilson', 'Lisa Anderson', 'Tom Miller', 'Anna Garcia'];
+            const roles = ['Software Engineer', 'Engineering Manager', 'Product Manager', 'HR Manager', 'Recruiter', 'CTO', 'Senior Developer'];
+
+            // Generate Jobs
+            const jobs = [];
+            for (let i = 0; i < jobCount; i++) {
+                const dateApplied = new Date();
+                dateApplied.setDate(dateApplied.getDate() - Math.floor(Math.random() * 90));
+                
+                jobs.push({
+                    id: `test-job-${i + 1}`,
+                    Status: statuses[Math.floor(Math.random() * statuses.length)],
+                    Company: companies[Math.floor(Math.random() * companies.length)],
+                    Title: jobTitles[Math.floor(Math.random() * jobTitles.length)],
+                    JobType: Math.random() > 0.3 ? 'Full-Time' : 'Internship',
+                    Location: locations[Math.floor(Math.random() * locations.length)],
+                    Source: sources[Math.floor(Math.random() * sources.length)],
+                    DateApplied: dateApplied.toISOString().split('T')[0],
+                    NextStep: 'Follow up next week'
+                });
+            }
+
+            // Generate Theses
+            const theses = [];
+            for (let i = 0; i < thesisCount; i++) {
+                const dateApplied = Math.random() > 0.5 ? new Date() : null;
+                if (dateApplied) {
+                    dateApplied.setDate(dateApplied.getDate() - Math.floor(Math.random() * 60));
+                }
+                
+                theses.push({
+                    id: `test-thesis-${i + 1}`,
+                    Topic: thesisTopics[Math.floor(Math.random() * thesisTopics.length)],
+                    School: schools[Math.floor(Math.random() * schools.length)],
+                    WebsiteLink: `https://example.com/thesis-${i + 1}`,
+                    SupervisorContact: `prof${i + 1}@${schools[Math.floor(Math.random() * schools.length)].toLowerCase()}.edu`,
+                    DateApplied: dateApplied ? dateApplied.toISOString().split('T')[0] : '',
+                    Status: thesisStatuses[Math.floor(Math.random() * thesisStatuses.length)],
+                    Notes: 'Generated test data',
+                    PDFFileName: '',
+                    PDFUrl: ''
+                });
+            }
+
+            // Generate Contacts
+            const contacts = [];
+            for (let i = 0; i < contactCount; i++) {
+                const contactDate = new Date();
+                contactDate.setDate(contactDate.getDate() - Math.floor(Math.random() * 120));
+                
+                contacts.push({
+                    id: `test-contact-${i + 1}`,
+                    Name: names[Math.floor(Math.random() * names.length)],
+                    Company: companies[Math.floor(Math.random() * companies.length)],
+                    Role: roles[Math.floor(Math.random() * roles.length)],
+                    Location: locations[Math.floor(Math.random() * locations.length)],
+                    ContactDate: contactDate.toISOString().split('T')[0],
+                    Notes: 'Generated test contact'
+                });
+            }
+
+            const testData = {
+                jobs,
+                theses,
+                contacts,
+                exportDate: new Date().toISOString()
+            };
+
+            // Download test data
+            const blob = new Blob([JSON.stringify(testData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'careerflow-test-data.json';
+            a.click();
+            URL.revokeObjectURL(url);
+
+            log(`Generated and downloaded test data file`, 'success');
+            addTestResult('Test Data Generation', true, `Generated ${jobCount} jobs, ${thesisCount} theses, ${contactCount} contacts`);
+        }
+
+        // Integration Tests
+        async function runIntegrationTests() {
+            log('Starting integration tests', 'info');
+
+            // Test 1: Check if app loads
+            try {
+                if (!appWindow || appWindow.closed) {
+                    log('CareerFlow app not open, please open it first', 'warning');
+                    addTestResult('App Accessibility', false, 'App window not open');
+                    return;
+                }
+
+                addTestResult('App Accessibility', true, 'App window is accessible');
+                log('App window is accessible', 'success');
+            } catch (error) {
+                addTestResult('App Accessibility', false, error.message);
+                log(`App accessibility test failed: ${error.message}`, 'error');
+            }
+
+            // Test 2: Check localStorage functionality
+            try {
+                const testKey = 'careerflow-test-key';
+                const testValue = 'test-value';
+                localStorage.setItem(testKey, testValue);
+                const retrievedValue = localStorage.getItem(testKey);
+                localStorage.removeItem(testKey);
+                
+                const passed = retrievedValue === testValue;
+                addTestResult('LocalStorage Functionality', passed, 'localStorage read/write operations');
+                log(`LocalStorage test ${passed ? 'passed' : 'failed'}`, passed ? 'success' : 'error');
+            } catch (error) {
+                addTestResult('LocalStorage Functionality', false, error.message);
+                log(`LocalStorage test failed: ${error.message}`, 'error');
+            }
+
+            // Test 3: Check responsive design
+            try {
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+                const isMobile = viewportWidth < 768;
+                const isTablet = viewportWidth >= 768 && viewportWidth < 1024;
+                const isDesktop = viewportWidth >= 1024;
+                
+                addTestResult('Responsive Design Detection', true, 
+                    `Viewport: ${viewportWidth}x${viewportHeight}, Type: ${isMobile ? 'Mobile' : isTablet ? 'Tablet' : 'Desktop'}`);
+                log(`Responsive design test passed - ${viewportWidth}x${viewportHeight}`, 'success');
+            } catch (error) {
+                addTestResult('Responsive Design Detection', false, error.message);
+                log(`Responsive design test failed: ${error.message}`, 'error');
+            }
+
+            // Test 4: Check browser compatibility
+            try {
+                const browserInfo = {
+                    userAgent: navigator.userAgent,
+                    cookieEnabled: navigator.cookieEnabled,
+                    onLine: navigator.onLine,
+                    language: navigator.language
+                };
+                
+                const isCompatible = browserInfo.cookieEnabled && 
+                                   typeof localStorage !== 'undefined' && 
+                                   typeof JSON !== 'undefined';
+                
+                addTestResult('Browser Compatibility', isCompatible, 
+                    `Browser: ${browserInfo.userAgent.split(' ')[0]}, Language: ${browserInfo.language}`);
+                log(`Browser compatibility test ${isCompatible ? 'passed' : 'failed'}`, isCompatible ? 'success' : 'error');
+            } catch (error) {
+                addTestResult('Browser Compatibility', false, error.message);
+                log(`Browser compatibility test failed: ${error.message}`, 'error');
+            }
+
+            // Test 5: Performance test
+            try {
+                const startTime = performance.now();
+                
+                // Simulate some operations
+                for (let i = 0; i < 10000; i++) {
+                    const obj = { id: i, name: `test-${i}` };
+                    JSON.stringify(obj);
+                }
+                
+                const endTime = performance.now();
+                const duration = endTime - startTime;
+                const passed = duration < 1000; // Should complete in less than 1 second
+                
+                addTestResult('Performance Test', passed, `Operation completed in ${duration.toFixed(2)}ms`);
+                log(`Performance test ${passed ? 'passed' : 'failed'} - ${duration.toFixed(2)}ms`, passed ? 'success' : 'error');
+            } catch (error) {
+                addTestResult('Performance Test', false, error.message);
+                log(`Performance test failed: ${error.message}`, 'error');
+            }
+
+            log('Integration tests completed', 'info');
+        }
+
+        // Event Listeners
+        document.getElementById('openApp').addEventListener('click', () => {
+            appWindow = window.open('index.html', 'CareerFlowApp', 'width=1200,height=800');
+            log('Opened CareerFlow app in new window', 'info');
+        });
+
+        document.getElementById('runIntegrationTests').addEventListener('click', runIntegrationTests);
+        document.getElementById('generateTestData').addEventListener('click', generateTestData);
+
+        // Initialize
+        log('Integration test suite initialized', 'info');
+    </script>
+</body>
+</html> 

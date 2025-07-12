@@ -1,0 +1,193 @@
+{
+  "timestamp": "2025-07-12T14:01:11.529Z",
+  "summary": {
+    "totalFeatures": 16,
+    "foundFeatures": 16,
+    "coverage": "100%",
+    "htmlIssues": 7,
+    "jsFeatures": 5
+  },
+  "htmlAnalysis": [
+    {
+      "file": "index.html",
+      "issue": "Inline JavaScript",
+      "severity": "INFO"
+    },
+    {
+      "file": "index.html",
+      "issue": "External dependencies",
+      "severity": "INFO"
+    },
+    {
+      "file": "index.html",
+      "issue": "Firebase integration",
+      "severity": "INFO"
+    },
+    {
+      "file": "test-app.html",
+      "issue": "Inline JavaScript",
+      "severity": "INFO"
+    },
+    {
+      "file": "test-app.html",
+      "issue": "External dependencies",
+      "severity": "INFO"
+    },
+    {
+      "file": "integration-test.html",
+      "issue": "Inline JavaScript",
+      "severity": "INFO"
+    },
+    {
+      "file": "integration-test.html",
+      "issue": "External dependencies",
+      "severity": "INFO"
+    }
+  ],
+  "jsAnalysis": [
+    {
+      "script": "Script block 11",
+      "feature": "Console.log statements",
+      "severity": "INFO"
+    },
+    {
+      "script": "Script block 11",
+      "feature": "Try-catch blocks",
+      "severity": "INFO"
+    },
+    {
+      "script": "Script block 11",
+      "feature": "Async/await usage",
+      "severity": "INFO"
+    },
+    {
+      "script": "Script block 11",
+      "feature": "Event listeners",
+      "severity": "INFO"
+    },
+    {
+      "script": "Script block 11",
+      "feature": "LocalStorage usage",
+      "severity": "INFO"
+    }
+  ],
+  "dataStructures": [
+    {
+      "name": "emptyJob",
+      "found": true,
+      "type": "Data Structure"
+    },
+    {
+      "name": "emptyContact",
+      "found": true,
+      "type": "Data Structure"
+    },
+    {
+      "name": "emptyThesis",
+      "found": true,
+      "type": "Data Structure"
+    },
+    {
+      "name": "statusList",
+      "found": true,
+      "type": "Data Structure"
+    },
+    {
+      "name": "thesisStatusList",
+      "found": true,
+      "type": "Data Structure"
+    },
+    {
+      "name": "jobTypeList",
+      "found": true,
+      "type": "Data Structure"
+    },
+    {
+      "name": "sourceList",
+      "found": true,
+      "type": "Data Structure"
+    },
+    {
+      "name": "schoolList",
+      "found": true,
+      "type": "Data Structure"
+    },
+    {
+      "name": "useAuth",
+      "found": true,
+      "type": "Function"
+    },
+    {
+      "name": "useFirebaseData",
+      "found": true,
+      "type": "Function"
+    },
+    {
+      "name": "JobAnalytics",
+      "found": true,
+      "type": "Function"
+    },
+    {
+      "name": "ThesisAnalytics",
+      "found": true,
+      "type": "Function"
+    },
+    {
+      "name": "JobForm",
+      "found": true,
+      "type": "Function"
+    },
+    {
+      "name": "ThesisForm",
+      "found": true,
+      "type": "Function"
+    },
+    {
+      "name": "ContactsTable",
+      "found": true,
+      "type": "Function"
+    },
+    {
+      "name": "TrackerTable",
+      "found": true,
+      "type": "Function"
+    }
+  ],
+  "recommendations": [],
+  "performance": {
+    "stats": {
+      "fileSize": 158845,
+      "lines": 3047,
+      "characters": 158831,
+      "scriptBlocks": 11,
+      "externalDependencies": 15
+    },
+    "recommendations": [
+      "High number of external dependencies may impact loading time",
+      "Consider consolidating JavaScript into fewer script blocks"
+    ]
+  },
+  "security": [
+    {
+      "feature": "Firebase Authentication",
+      "implemented": true,
+      "importance": "HIGH"
+    },
+    {
+      "feature": "Input Validation",
+      "implemented": true,
+      "importance": "HIGH"
+    },
+    {
+      "feature": "XSS Prevention",
+      "implemented": false,
+      "importance": "MEDIUM"
+    },
+    {
+      "feature": "HTTPS External Resources",
+      "implemented": true,
+      "importance": "HIGH"
+    }
+  ],
+  "executionTime": "2025-07-12T14:01:11.533Z"
+}
